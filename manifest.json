@@ -1,0 +1,9 @@
+{
+  "name": "PropertEaseWeb",
+  "short_name": "PropertEase",
+  "lang": "en-US",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "black"
+}
