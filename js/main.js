@@ -9,4 +9,15 @@ $(() => {
                 console.log('Service Worker Registered');
             });
     }
+
+    $('#select-search-type-vendita')
+        .on('click', () => {
+            $('#select-search-type-arrow-container')
+                .css('transform', 'translate(-36px)');
+        });
+    $('#select-search-type-affitto')
+        .on('click', () => {
+            $('#select-search-type-arrow-container')
+                .css('transform', 'translate(36px)');
+        });
 });
