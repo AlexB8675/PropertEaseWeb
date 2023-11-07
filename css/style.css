@@ -1,12 +1,14 @@
 * {
     color: white;
-    font-size: 3rem;
-    font-family: Verdana, monospace;
+    font-size: 36px;
+    font-family: Nunito, Arial, sans-serif;
+    user-select: none;
 }
 
 body, div {
     position: relative;
-    display: flex;
+    display: grid;
+    overflow: hidden;
 }
 
 body {
@@ -20,8 +22,24 @@ body {
     width: 100%;
     height: 100%;
     background-color: #202020;
-    overflow: hidden;
 
-    justify-content: center;
-    align-items: center;
+    grid-auto-flow: row;
+    grid-template-rows: 3fr 16px 7fr;
+    box-sizing: border-box;
+
+    .search-bar-container {
+        justify-content: center;
+        align-items: center;
+
+        background-color: #323232;
+    }
+
+    .interpolator {
+        height: 16px;
+        background: linear-gradient(to bottom, #323232 0%, #202020 100%);
+    }
+
+    .info-container {
+        background-color: #202020;
+    }
 }
