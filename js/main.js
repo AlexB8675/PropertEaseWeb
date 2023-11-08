@@ -20,4 +20,10 @@ $(() => {
             $('#select-search-type-arrow-container')
                 .css('transform', 'translate(36px)');
         });
+    $('#search-bar-main')
+        .on('keydown', (event) => {
+            if (event.code === 'Enter') {
+                event.preventDefault();
+            }
+        });
 });
