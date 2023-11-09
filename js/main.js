@@ -26,4 +26,11 @@ $(() => {
                 event.preventDefault();
             }
         });
+
+    $.ajax({
+        url: 'http://localhost:8080/api/data/houses',
+        dataType: 'json',
+    }).done((data) => {
+        console.log(data);
+    })
 });
