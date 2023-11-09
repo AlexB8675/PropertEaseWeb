@@ -18,7 +18,7 @@ $(() => {
     $('#select-search-type-affitto')
         .on('click', () => {
             $('#select-search-type-arrow-container')
-                .css('transform', 'translate(36px)');
+                .css('transform', 'translate(32px)');
         });
     $('#search-bar-main')
         .on('keydown', (event) => {

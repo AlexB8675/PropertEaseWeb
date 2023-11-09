@@ -136,6 +136,8 @@ body {
 
                     .text {
                         position: absolute;
+                        height: 36px;
+                        line-height: 36px;
                         resize: none;
                         outline: none;
                         border: none;
