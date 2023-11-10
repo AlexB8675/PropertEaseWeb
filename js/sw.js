@@ -1,9 +1,9 @@
 function getUrlsToCache() {
     return [
-        '/css/style.css',
-        '/js/main.js',
-        '/index.html',
-        '/manifest.json',
+        '../css/style.css',
+        '../index.html',
+        '../manifest.json',
+        'main.js',
     ];
 }
 
