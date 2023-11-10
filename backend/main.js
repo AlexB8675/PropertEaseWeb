@@ -1,4 +1,5 @@
 const express = require('express');
+const circularJson = require('circular-json');
 const cors = require('cors');
 const sqlite = require('sqlite3').verbose();
 const app = express();
@@ -9,7 +10,8 @@ function registerApiEndpoint(app, database, info) {
             if (error) {
                 console.error(error);
             }
-            console.log(request.params);
+            console.log(`request received: "${circularJson.stringify(request)}"\n`);
+            console.log(`sent: "${circularJson.stringify(rows)}"\n\n`);
             info.callback(result, rows);
         });
     });

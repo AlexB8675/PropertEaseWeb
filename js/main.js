@@ -28,7 +28,7 @@ $(() => {
         });
 
     $.ajax({
-        url: 'http://localhost:8080/api/data/houses',
+        url: 'http://93.41.228.90:8080/api/data/houses',
         dataType: 'json',
     }).done((data) => {
         const mainCardContainer = $('.card-container > .wrapper');
