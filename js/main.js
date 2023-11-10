@@ -4,7 +4,7 @@ $(() => {
     if ('serviceWorker' in navigator) {
         navigator
             .serviceWorker
-            .register('./js/sw.js')
+            .register('/js/sw.js')
             .then((registration) => {
                 console.log('Service Worker Registered');
             });
@@ -32,5 +32,5 @@ $(() => {
         dataType: 'json',
     }).done((data) => {
         console.log(data);
-    })
+    });
 });
