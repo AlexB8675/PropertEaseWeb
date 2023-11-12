@@ -68,7 +68,7 @@ $(() => {
         const cardTemplate = (address, city, cap, contract, price, image, type) => `
             <div class="card tilt">
                 <div>
-                    <img draggable="false" src="${image}">
+                    <img draggable="false" src="${image}" alt>
                 </div>
                 <div class="content">
                     <div class="text">${type + " for " + ((contract) ? "Sale" : "Rent")}</div>
@@ -90,43 +90,36 @@ $(() => {
                     house.e_type
                 )
             );
+            const cardImage = card.find('img');
             card
-                .on('mouseover', function () {
-                    $(this).find('img').css('transform', 'scale(1)');
+                .on('mouseover', () => {
+                    cardImage.css('transform', 'scale(1)');
                 })
-                .on('mouseleave', function () {
-                    $(this).find('img').css('transform', 'scale(1.05)');
+                .on('mouseleave', () => {
+                    cardImage.css('transform', 'scale(1.05)');
+                })
+                .on('mousemove', (event) => {
+                    const height = card.height();
+                    const width = card.width();
+                    const xVal = 2 * event.offsetX;
+                    const yVal = 2 * event.offsetY;
+
+                    const yRotation = 2 * ((xVal - width / 2) / width);
+                    const xRotation = -2 * ((yVal - height / 2) / height);
+
+                    const transformString = 'perspective(600px) scale(1.02) rotateX(' + xRotation + 'deg) rotateY(' + yRotation + 'deg)';
+                    card.css('transform', transformString);
+                })
+                .on('mouseout', () => {
+                    card.css('transform', 'perspective(600px) scale(1) rotateX(0) rotateY(0)');
+                })
+                .on('mousedown', () => {
+                    card.css('transform', 'perspective(600px) scale(0.98) rotateX(0) rotateY(0)');
+                })
+                .on('mouseup', () => {
+                    card.css('transform', 'perspective(600px) scale(1.02) rotateX(0) rotateY(0)');
                 });
             mainCardContainer.append(card);
         }
-
-        $('.card').each(function () {
-            const element = $(this);
-            const height = element.height();
-            const width = element.width();
-
-            element.on('mousemove', function (event) {
-                const xVal = 2 * event.offsetX;
-                const yVal = 2 * event.offsetY;
-
-                const yRotation = 2 * ((xVal - width / 2) / width);
-                const xRotation = -2 * ((yVal - height / 2) / height);
-
-                const transformString = 'perspective(600px) scale(1.02) rotateX(' + xRotation + 'deg) rotateY(' + yRotation + 'deg)';
-                element.css('transform', transformString);
-            });
-
-            element.on('mouseout', function () {
-                element.css('transform', 'perspective(600px) scale(1) rotateX(0) rotateY(0)');
-            });
-
-            element.on('mousedown', function () {
-                element.css('transform', 'perspective(600px) scale(0.98) rotateX(0) rotateY(0)');
-            });
-
-            element.on('mouseup', function () {
-                element.css('transform', 'perspective(600px) scale(1.02) rotateX(0) rotateY(0)');
-            });
-        });
     });
 });
