@@ -13,13 +13,13 @@
         <script src="./js/main.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="black">
-        <title>Title</title>
+        <title>PropertEaseWeb</title>
     </head>
-    <body>
+    <body class="main">
         <div class="main-container">
             <div class="header">
                 <div class="title">PropertEase</div>
-                <div class="menu">Menu</div>
+                <div id="user-login-button" class="user fa fa-user"></div>
             </div>
             <div class="header-separator"></div>
             <div class="scroller">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="search-bar">
                             <div class="wrapper">
-                                <div id="search-bar-main" class="text" contenteditable></div>
+                                <input id="search-bar-main" class="text">
                             </div>
                         </div>
                     </div>
@@ -51,6 +51,23 @@
                     </div>
                     <div class="card-container-separator"></div>
                     <div class="footer">footer pazzesco</div>
+                </div>
+            </div>
+        </div>
+        <div class="login">
+            <div class="main">
+                <div class="title">Login</div>
+                <div class="container">
+                    <div class="wrapper">
+                        <input id="login-username-input" class="text" placeholder="Username" type="text">
+                    </div>
+                    <div class="wrapper">
+                        <input id="login-password-input" class="text" placeholder="Password" type="password">
+                    </div>
+                </div>
+                <div class="button">
+                    <button id="login-button" class="generic-button">Sign In</button>
+                    <button id="register-button" class="generic-button">Sign Up</button>
                 </div>
             </div>
         </div>

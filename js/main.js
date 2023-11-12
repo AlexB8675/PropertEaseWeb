@@ -26,12 +26,37 @@ $(() => {
                 event.preventDefault();
             }
         });
+    $('#user-login-button').on('click', () => {
+        $('.login')
+            .css({
+                'visibility': 'visible',
+                'background': '#181818c0',
+            })
+            .on('click', function (event) {
+                if (event.target !== this) {
+                    return;
+                }
+                $(this)
+                    .css({
+                        'visibility': 'hidden',
+                        'background': '#16161600',
+                    })
+                    .children('.main')
+                    .css({
+                        'background': '#20202000',
+                    })
+            })
+            .children('.main')
+            .css({
+                'background': '#202020ff',
+            });
+    });
 
     $.ajax({
         url: 'http://93.41.228.90:8080/api/data/houses',
         dataType: 'json',
     }).done((data) => {
-        const mainCardContainer = $('.card-container > .wrapper');
+        const mainCardContainer = $('.main').find('.card-container > .wrapper');
         const cardTemplate = (title, city, address, postalCode) => `
             <div class="card">
                 <div class="image"></div>
