@@ -1,3 +1,11 @@
+function makePriceAsCurrency(price) {
+    return price.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    });
+}
+
 $(() => {
     'use strict';
 
@@ -64,9 +72,9 @@ $(() => {
                     <div class="triangle"></div>
                 </div>
                 <div class="content">
-                    <div class="text">${type + " for " + ((contract) ? "sale" : "rent")}</div>
+                    <div class="text">${type + " for " + ((contract) ? "Sale" : "Rent")}</div>
                     <div class="text address">${city + " " + cap + ", " + address}</div>
-                    <div class="text price">${price.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</div>
+                    <div class="text price">${makePriceAsCurrency(price)}</div>
                 </div>
             </div>
         `.trim();
@@ -81,41 +89,8 @@ $(() => {
                     house.price,
                     house.e_type
                 )
-            ).on('mouseover', function (){
-                $(this).find('img').css('transform', 'scale(1)').addClass("shimmer-effect");
-            }).on('mouseleave', function() {
-                $(this).find('img').css('transform', 'scale(1.05)').removeClass("shimmer-effect");
-            });
+            );
             mainCardContainer.append(card);
         }
-
-        $('.card').each(function() {
-            const element = $(this);
-            const height = element.height();
-            const width = element.width();
-
-            element.on('mousemove', function(e) {
-                const xVal = e.offsetX;
-                const yVal = e.offsetY;
-
-                const yRotation = 2 * ((xVal - width / 2) / width);
-                const xRotation = -2 * ((yVal - height / 2) / height);
-
-                const transformString = 'perspective(500px) scale(1.02) rotateX(' + xRotation + 'deg) rotateY(' + yRotation + 'deg)';
-                element.css('transform', transformString);
-            });
-
-            element.on('mouseout', function() {
-                element.css('transform', 'perspective(500px) scale(1) rotateX(0) rotateY(0)');
-            });
-
-            element.on('mousedown', function() {
-                element.css('transform', 'perspective(500px) scale(0.98) rotateX(0) rotateY(0)');
-            });
-
-            element.on('mouseup', function() {
-                element.css('transform', 'perspective(500px) scale(1.02) rotateX(0) rotateY(0)');
-            });
-        });
     });
 });
