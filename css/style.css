@@ -3,7 +3,7 @@
 
 * {
     color: white;
-    font-size: 1.5rem;
+    font-size: 20pt;
     font-family: 'Nunito', Arial, sans-serif;
     user-select: none;
     box-sizing: border-box;
@@ -188,43 +188,67 @@ input, button {
                             flex-flow: column;
                             background-color: #181818;
                             border-radius: 8px;
-                            width: 384px;
-                            height: 512px;
-                            transition: transform 250ms ease-in-out;
-
-                            .image {
-                                display: flex;
-                                flex: 0 0 256px;
-                                background: url("../images/placeholder.svg") no-repeat center center;
-                                align-items: center;
-                                justify-content: center;
-                                background-size: contain;
+                            width: 325pt;
+                            filter: drop-shadow(0px 0px 15px #000000);
+                            perspective: 600px;
+    
+                            & > div {
+                                position: relative;
+                                width: 100%;
+                                padding-top: 100%; /* Set the padding to create a 1:1 aspect ratio */
+                                overflow: hidden;
                             }
-
+    
+                            & > div > img {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                transition: transform 250ms ease-in-out;
+                                transform: scale(1.05);
+                            }
+    
                             .content {
                                 flex: 0 1 auto;
                                 display: flex;
                                 flex-flow: column;
                                 width: inherit;
                                 height: auto;
-
+                                padding: 5pt 20pt 20pt 20pt;
+    
                                 .title {
                                     flex: 0 0 auto;
                                     padding: 0 0 0 8px;
                                     font-weight: bold;
                                     font-size: 1rem;
                                 }
-
+    
                                 .text {
                                     flex: 0 0 auto;
                                     padding: 0 0 0 8px;
-                                    font-size: 1rem;
+                                    font-size: 20pt;
+                                }
+    
+                                .address {
+                                    font-size: 15pt;
+                                    color: #808080;
+                                }
+    
+                                .price {
+                                    padding: 5pt 10pt;
+                                    border: 2pt solid darkgreen;
+                                    background-color: #b4ffbb;
+                                    color: #181818;
+                                    border-radius: 10pt;
+                                    width: max-content;
+                                    margin-top: 6pt;
                                 }
                             }
-
+    
                             &:hover {
                                 cursor: pointer;
-                                transform: scale(1.025);
                             }
                         }
                     }
@@ -315,4 +339,47 @@ input, button {
             }
         }
     }
+}
+
+.shimmer-effect {
+    color: white;
+    display: inline-block;
+    /* adding gradients */
+    -webkit-mask: linear-gradient(120deg, #fff 25%, #fff5 50%, #fff 75%) right/500% 100%;
+    /* shimmer effect animation */
+    animation: shimmer .6s forwards;
+    background-repeat: no-repeat;
+    width: 500px;
+}
+@keyframes shimmer {
+    100% {
+        /* setting up mask position at left side */
+        -webkit-mask-position: left
+    }
+}
+
+.triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    text-indent: -9999px;
+    border-bottom: 30px solid #181818;
+    border-left: 325pt solid transparent;
+    bottom: 0;
+}
+
+.tilt {
+    display: block;
+    width: max-content;
+    background-color: grey;
+    margin: 0 auto;
+    transition: box-shadow 0.1s, transform 0.1s;
+    background-image: url(http://unsplash.it/300/200);
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.tilt:hover {
+    box-shadow: 0px 0px 30px rgba(0,0,0, 0.6);
+    cursor: pointer;
 }
