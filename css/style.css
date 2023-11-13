@@ -59,14 +59,14 @@ input, button {
 
 .generic-triangle {
     position: absolute;
-    bottom: -10px;
+    bottom: 162px;
+    right: -36px;
     width: inherit;
     height: 36pt;
     background: #181818;
-    clip-path: polygon(82% 14%, 0% 79%, 100% 100%);
+    border: 1px solid #181818;
+    clip-path: polygon(90% 20%, 0% 100%, 100% 100%);
     transform: translateZ(0) scale(1.5);
-    z-index: 100;
-    perspective: 1px;
 }
 
 .generic-button {

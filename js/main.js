@@ -69,8 +69,8 @@ $(() => {
             <div class="card">
                 <div>
                     <img draggable="false" src="${image}" alt>
-                    <div class="generic-triangle"></div>
                 </div>
+                <div class="generic-triangle"></div>
                 <div class="content">
                     <div class="text">${type + " for " + ((contract) ? "Sale" : "Rent")}</div>
                     <div class="text address">${city + " " + cap + ", " + address}</div>

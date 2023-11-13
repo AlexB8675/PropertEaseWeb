@@ -24,6 +24,7 @@ const database = new sqlite.Database('../main.sqlite', (error) => {
     console.log('connected to the main database.');
 });
 app.use(cors());
+
 registerApiEndpoint(app, database, {
     endpoint: '/api/data/houses',
     query: 'select * from House',
@@ -42,7 +43,7 @@ registerApiEndpoint(app, database, {
 });
 registerApiEndpoint(app, database, {
     endpoint: '/api/data/houses/city/:city',
-    query: 'select * from House where city = ?',
+    query: `select * from House where city like '%?%'`,
     parameters: (request) => [request.params.city],
     callback: (result, rows) => {
         result.send(rows);
