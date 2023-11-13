@@ -6,21 +6,23 @@
     font-size: 20pt;
     font-family: 'Nunito', Arial, sans-serif;
     user-select: none;
+    outline: none;
     box-sizing: border-box;
 
-    -webkit-transform: translateZ(0);
-    -moz-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    -o-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
     transform: translateZ(0);
+    -o-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 body, div {
     position: relative;
     display: grid;
     overflow: hidden;
-    user-select: none;
-    outline: none;
 }
 
 body {
@@ -28,12 +30,6 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
-}
-
-img {
-    user-select: none;
-    user-focus: none;
-    outline: none;
 }
 
 input, button {
@@ -45,13 +41,32 @@ input, button {
     margin: 0;
 }
 
-.triangle {
+.shimmer-effect {
+    --gradient: linear-gradient(120deg, #ffffff 25%, #ffffffdd 50%, #ffffff 75%) right / 500% 100% no-repeat;
+
+    color: white;
+    mask: var(--gradient);
+    -webkit-mask: var(--gradient);
+    animation: shimmer 500ms forwards;
+}
+
+@keyframes shimmer {
+    100% {
+        mask-position: left;
+        -webkit-mask-position: left;
+    }
+}
+
+.generic-triangle {
     position: absolute;
-    width: 0;
-    height: 0;
-    bottom: 0;
-    border-bottom: 30px solid #181818;
-    border-left: 330pt solid transparent;
+    bottom: -10px;
+    width: inherit;
+    height: 36pt;
+    background: #181818;
+    clip-path: polygon(82% 14%, 0% 79%, 100% 100%);
+    transform: translateZ(0) scale(1.5);
+    z-index: 100;
+    perspective: 1px;
 }
 
 .generic-button {
@@ -196,17 +211,29 @@ input, button {
                 }
 
                 .card-container {
+                    --grid-column-gap: 40px;
+                    --grid-padding: 64px;
+                    --grid-max-width: 330pt;
+                    --grid-max-column: 3;
+                    --grid-total-width: calc(var(--grid-max-width) * var(--grid-max-column));
+                    --grid-total-padding: calc(var(--grid-padding) * 2);
+                    --grid-total-column-gap: calc(var(--grid-column-gap) * (var(--grid-max-column) - 1));
+
                     background-color: #242424;
                     height: auto;
+                    align-items: center;
+                    justify-content: center;
+                    grid-template-columns: 1fr;
 
                     .wrapper {
-                        width: inherit;
-                        grid-template-columns: repeat(3, 330pt);
-                        column-gap: 40px;
+                        width: min(calc(var(--grid-total-width) + var(--grid-total-padding) + var(--grid-total-column-gap)), 100%);
+                        grid-template-columns: repeat(auto-fill, var(--grid-max-width));
+                        column-gap: var(--grid-column-gap);
                         row-gap: 32px;
                         align-items: center;
                         justify-content: center;
-                        padding: 32px 16px;
+                        justify-self: center;
+                        padding: 32px var(--grid-padding);
 
                         .card {
                             display: flex;
@@ -216,20 +243,28 @@ input, button {
                             width: 330pt;
                             filter: drop-shadow(0px 0px 15px #000000);
                             perspective: 600px;
+                            transition: box-shadow 250ms, transform 250ms;
 
-                            & > div {
-                                width: 100%;
-                                overflow: hidden;
+                            &:hover {
+                                box-shadow: 0 0 30px #00000080;
+                                transform: translateZ(0) scale(1);
+                                cursor: pointer;
                             }
 
-                            & > div > img {
+                            & > div:nth-child(1) {
+                                width: inherit;
+                                overflow: hidden;
+                                transform: translateZ(0) scale(1.05);
+                            }
+
+                            & > div:nth-child(1) > img {
                                 width: inherit;
                                 aspect-ratio: 1;
                                 object-fit: cover;
                                 transition: transform 250ms ease-in-out;
-                                transform: scale(1.05);
+                                transform: translateZ(0) scale(1.05);
                             }
-    
+
                             .content {
                                 flex: 0 1 auto;
                                 display: flex;
@@ -238,25 +273,25 @@ input, button {
                                 height: auto;
                                 padding: 5pt 20pt 20pt 20pt;
                                 margin: 8pt 0 0 0;
-    
+
                                 .title {
                                     flex: 0 0 auto;
                                     padding: 0 0 0 8px;
                                     font-weight: bold;
                                     font-size: 20pt;
                                 }
-    
+
                                 .text {
                                     flex: 0 0 auto;
                                     padding: 0 0 0 8px;
                                     font-size: 20pt;
                                 }
-    
+
                                 .address {
                                     font-size: 15pt;
                                     color: #808080;
                                 }
-    
+
                                 .price {
                                     padding: 5pt 10pt;
                                     border: 2pt solid darkgreen;
@@ -266,11 +301,6 @@ input, button {
                                     width: max-content;
                                     margin-top: 6pt;
                                 }
-                            }
-
-                            &:hover {
-                                cursor: pointer;
-                                transform: scale(1);
                             }
                         }
                     }
@@ -306,11 +336,10 @@ input, button {
             background: #16161600;
             border-radius: 8px;
             padding: 32pt 16pt;
-            width: min(540pt, 100%);
+            width: min(600pt, 100%);
             transition: background 250ms ease-in;
             grid-template-rows: repeat(3, max-content);
             grid-template-columns: 1fr;
-            grid-row-gap: 32pt;
             align-items: center;
             justify-content: center;
 
@@ -323,9 +352,9 @@ input, button {
             .container {
                 grid-template-rows: 1fr 1fr;
                 grid-template-columns: 1fr;
+                grid-row-gap: 24pt;
                 align-items: center;
-                grid-row-gap: 16px;
-                padding: 12pt 48pt;
+                padding: 32pt 48pt 64pt 48pt;
 
                 .wrapper {
                     background-color: #181818;
@@ -342,7 +371,7 @@ input, button {
                 }
             }
 
-            .button {
+            .button-wrapper {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: 1fr;
                 grid-column-gap: 32pt;
@@ -364,45 +393,4 @@ input, button {
             }
         }
     }
-}
-
-/*.shimmer-effect {
-    color: white;
-    display: inline-block;
-    !* adding gradients *!
-    -webkit-mask: linear-gradient(120deg, #fff 25%, #fff5 50%, #fff 75%) right/500% 100%;
-    !* shimmer effect animation *!
-    animation: shimmer .6s forwards;
-    background-repeat: no-repeat;
-    width: 500px;
-}
-
-@keyframes shimmer {
-    100% {
-        !* setting up mask position at left side *!
-        -webkit-mask-position: left
-    }
-}
-
-.triangle {
-    position: absolute;
-    width: 0;
-    height: 0;
-    text-indent: -9999px;
-    border-bottom: 30px solid #181818;
-    border-left: 325pt solid transparent;
-    bottom: 0;
-}*/
-
-.tilt {
-    display: block;
-    width: max-content;
-    background-color: grey;
-    margin: 0 auto;
-    transition: box-shadow 250ms, transform 250ms;
-}
-
-.tilt:hover {
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
 }
