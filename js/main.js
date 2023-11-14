@@ -6,6 +6,23 @@ function makePriceAsCurrency(price) {
     });
 }
 
+function makeLoginRequest(info) {
+    if (info.username === '' || info.password === '') {
+        return;
+    }
+    // make post request
+    $.ajax({
+        url: 'http://93.41.228.90:8080/login/signin',
+        method: 'post',
+        data: {
+            username: info.username,
+            password: info.password,
+        }
+    }).done((data) => {
+        console.log(data);
+    });
+}
+
 $(() => {
     'use strict';
 
@@ -35,29 +52,54 @@ $(() => {
             }
         });
     $('#user-login-button').on('click', () => {
+        $('.main-container').css({ 'filter': 'blur(4px)' });
         $('.login')
             .css({
                 'visibility': 'visible',
                 'background': '#181818c0',
             })
-            .on('click', function (event) {
+            .on('mousedown', function (event) {
                 if (event.target !== this) {
                     return;
                 }
                 $(this)
                     .css({
-                        'visibility': 'hidden',
                         'background': '#16161600',
                     })
                     .children('.main')
                     .css({
-                        'background': '#20202000',
+                        'opacity': 0,
                     });
+                $('.main-container').css({ 'filter': 'blur(0px)' });
+                setTimeout(() => {
+                    $(this).css({ 'visibility': 'hidden' });
+                }, 250);
             })
             .children('.main')
             .css({
-                'background': '#202020ff',
+                'opacity': 1,
             });
+    });
+    $('#main-login-form').on('submit', (event) => {
+        event.preventDefault();
+    });
+    $('#login-button').on('click', () => {
+        const username = $('#login-username-input').val();
+        const password = $('#login-password-input').val();
+        makeLoginRequest({
+            username: username,
+            password: password,
+            type: 'login',
+        });
+    });
+    $('#register-button').on('click', () => {
+        const username = $('#login-username-input').val();
+        const password = $('#login-password-input').val();
+        makeLoginRequest({
+            username: username,
+            password: password,
+            type: 'register',
+        });
     });
 
     $.ajax({

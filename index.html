@@ -55,17 +55,19 @@
         <div class="login">
             <div class="main">
                 <div class="title">Login</div>
-                <div class="container">
-                    <div class="wrapper">
-                        <input id="login-username-input" class="text" placeholder="Username" type="text">
+                <form id="main-login-form">
+                    <div class="container">
+                        <div class="wrapper">
+                            <input id="login-username-input" class="text" placeholder="Username" type="text" required>
+                        </div>
+                        <div class="wrapper">
+                            <input id="login-password-input" class="text" placeholder="Password" type="password" required>
+                        </div>
                     </div>
-                    <div class="wrapper">
-                        <input id="login-password-input" class="text" placeholder="Password" type="password">
-                    </div>
-                </div>
+                </form>
                 <div class="button-wrapper">
-                    <button id="register-button" class="generic-button">Sign Up</button>
-                    <button id="login-button" class="generic-button">Sign In</button>
+                    <button type="submit" id="register-button" class="generic-button" form="main-login-form">Sign Up</button>
+                    <button type="submit" id="login-button" class="generic-button" form="main-login-form">Sign In</button>
                 </div>
             </div>
         </div>

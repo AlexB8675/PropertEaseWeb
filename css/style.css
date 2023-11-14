@@ -19,7 +19,7 @@
     -webkit-transform: translateZ(0);
 }
 
-body, div {
+body, div, form {
     position: relative;
     display: grid;
     overflow: hidden;
@@ -30,6 +30,7 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
+    background: black;
 }
 
 input, button {
@@ -41,13 +42,26 @@ input, button {
     margin: 0;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    border: none;
+    -webkit-background-clip: text;
+}
+
 .shimmer-effect {
     --gradient: linear-gradient(120deg, #ffffff 25%, #ffffffdd 50%, #ffffff 75%) right / 500% 100% no-repeat;
 
     color: white;
+    animation: shimmer 500ms forwards;
     mask: var(--gradient);
     -webkit-mask: var(--gradient);
-    animation: shimmer 500ms forwards;
 }
 
 @keyframes shimmer {
@@ -59,14 +73,13 @@ input, button {
 
 .generic-triangle {
     position: absolute;
-    bottom: 162px;
-    right: -36px;
     width: inherit;
     height: 36pt;
     background: #181818;
     border: 1px solid #181818;
-    clip-path: polygon(90% 20%, 0% 100%, 100% 100%);
-    transform: translateZ(0) scale(1.5);
+    bottom: 155px;
+    clip-path: polygon(100% 0%, -10% 100%, 100% 100%);
+    transform: translateZ(0) scale(1.05);
 }
 
 .generic-button {
@@ -86,10 +99,12 @@ input, button {
         width: 100%;
         height: 100%;
         background-color: #202020;
-        grid-template-rows: 64px 8px auto;
+        grid-template-rows: max-content min-content auto;
+        transition: filter 250ms ease-in-out;
 
         .header {
-            padding: 8px 16px;
+            height: max-content;
+            padding: 10pt;
             background-color: #363636;
             justify-content: space-between;
             align-items: center;
@@ -110,6 +125,7 @@ input, button {
         }
 
         .header-separator {
+            height: 6pt;
             background: linear-gradient(to bottom, #363636 0%, #303030 100%);
         }
 
@@ -118,17 +134,17 @@ input, button {
             overflow-y: auto;
 
             .main-body {
-                grid-template-rows: max-content 8px auto 8px max-content;
+                grid-template-rows: max-content min-content auto min-content max-content;
                 grid-template-columns: 1fr;
                 min-height: 100%;
                 height: max-content;
 
                 .search-bar-container {
-                    grid-template-rows: max-content max-content 56px;
+                    grid-template-rows: max-content max-content auto;
                     width: min(480pt, 100%);
+                    padding: 24pt;
                     justify-self: center;
                     align-self: center;
-                    padding: 32px;
 
                     .title {
                         text-align: center;
@@ -136,12 +152,12 @@ input, button {
                     }
 
                     .select-search-type {
-                        justify-content: center;
-                        align-items: center;
                         grid-template-columns: repeat(2, 1fr);
                         grid-template-rows: repeat(2, 1fr);
                         column-gap: 16px;
                         row-gap: 0;
+                        justify-content: center;
+                        align-items: center;
 
                         .cell {
                             justify-content: center;
@@ -183,6 +199,7 @@ input, button {
                     }
 
                     .search-bar {
+                        height: 40pt;
                         padding: 8px 0 0 0;
                         grid-template-columns: 1fr;
 
@@ -194,8 +211,8 @@ input, button {
 
                             .text {
                                 position: absolute;
-                                height: 36pt;
                                 width: inherit;
+                                height: inherit;
                                 left: 24px;
                                 right: 64px;
                                 white-space: nowrap;
@@ -207,6 +224,7 @@ input, button {
                 }
 
                 .sb-container-separator {
+                    height: 6pt;
                     background: linear-gradient(to bottom, #303030 0%, #242424 100%);
                 }
 
@@ -230,7 +248,6 @@ input, button {
                         grid-template-columns: repeat(auto-fill, var(--grid-max-width));
                         column-gap: var(--grid-column-gap);
                         row-gap: 32px;
-                        align-items: center;
                         justify-content: center;
                         justify-self: center;
                         padding: 32px var(--grid-padding);
@@ -307,6 +324,7 @@ input, button {
                 }
 
                 .card-container-separator {
+                    height: 6pt;
                     background: linear-gradient(to bottom, #242424 0%, #181818 100%);
                 }
 
@@ -333,15 +351,16 @@ input, button {
         grid-template-columns: 1fr;
 
         .main {
-            background: #16161600;
-            border-radius: 8px;
-            padding: 32pt 16pt;
-            width: min(600pt, 100%);
-            transition: background 250ms ease-in;
+            --grid-horizontal-margin: 32pt;
             grid-template-rows: repeat(3, max-content);
             grid-template-columns: 1fr;
+            background: #242424;
+            width: min(600pt, calc(100% - var(--grid-horizontal-margin) * 2));
+            border-radius: 8px;
+            padding: 32pt 16pt;
             align-items: center;
             justify-content: center;
+            transition: opacity 250ms ease-in-out;
 
             .title {
                 text-align: center;
@@ -352,9 +371,9 @@ input, button {
             .container {
                 grid-template-rows: 1fr 1fr;
                 grid-template-columns: 1fr;
-                grid-row-gap: 24pt;
+                grid-row-gap: 16pt;
                 align-items: center;
-                padding: 32pt 48pt 64pt 48pt;
+                padding: 32pt 48pt 48pt 48pt;
 
                 .wrapper {
                     background-color: #181818;
@@ -366,7 +385,17 @@ input, button {
                         margin: 0 24px;
                         white-space: nowrap;
                         text-align: left;
-                        font-size: 20pt;
+                    }
+
+                    & > input {
+                        font-size: 20pt !important;
+
+                        &:-webkit-autofill,
+                        &:-webkit-autofill:hover,
+                        &:-webkit-autofill:focus {
+                            caret-color: white;
+                            -webkit-text-fill-color: white;
+                        }
                     }
                 }
             }
@@ -378,7 +407,6 @@ input, button {
                 align-items: center;
 
                 #login-button {
-                    border: 4px solid #323232;
                     background: #404040;
                     justify-self: start;
                 }
