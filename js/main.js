@@ -1,4 +1,7 @@
-const endpoint = 'http://api.propertease.alex8675.dev:8443';
+function makeEndpointWith(uri) {
+    const endpoint = 'http://93.41.228.90:8080';
+    return `${endpoint}${uri}`;
+}
 
 function makePriceAsCurrency(price) {
     return price.toLocaleString('en-US', {
@@ -8,20 +11,22 @@ function makePriceAsCurrency(price) {
     });
 }
 
-function makeLoginRequest(info) {
+function makeLoginRequest(info, callbacks) {
     if (info.username === '' || info.password === '') {
         return;
     }
-    $.ajax({
-        url: `${endpoint}/login/signin`,
+    return $.ajax({
+        url: makeEndpointWith(`/api/login/${info.type}`),
         method: 'post',
         data: {
             username: info.username,
             password: info.password,
-        }
-    }).done((data) => {
-        console.log(data);
-    });
+        },
+    }).done(callbacks.done ?? ((data) => {
+        return data;
+    })).fail(callbacks.error ?? ((error) => {
+        return error;
+    }));
 }
 
 $(() => {
@@ -94,7 +99,14 @@ $(() => {
         makeLoginRequest({
             username: username,
             password: password,
-            type: 'login',
+            type: 'signin',
+        }, {
+            done: (data) => {
+                console.log(data);
+            },
+            error: (error) => {
+                console.error(error);
+            }
         });
     });
     $('#register-button').on('click', () => {
@@ -103,12 +115,19 @@ $(() => {
         makeLoginRequest({
             username: username,
             password: password,
-            type: 'register',
+            type: 'signup',
+        }, {
+            done: (data) => {
+                console.log(data);
+            },
+            error: (error) => {
+                console.error(error);
+            }
         });
     });
 
     $.ajax({
-        url: `${endpoint}/api/data/houses`,
+        url: makeEndpointWith('/api/data/houses'),
         method: 'get',
         dataType: 'json',
     }).done((data) => {
