@@ -1,4 +1,4 @@
-const endpoint = 'http://93.41.228.90:8080';
+const endpoint = 'http://api.propertease.alex8675.dev:8443';
 
 function makePriceAsCurrency(price) {
     return price.toLocaleString('en-US', {
@@ -53,6 +53,7 @@ $(() => {
             }
         });
     $('#user-login-button').on('click', () => {
+        let visibilityTimeout = -1;
         $('.main-container').css({ 'filter': 'blur(4px)' });
         $('.login')
             .css({
@@ -60,10 +61,11 @@ $(() => {
                 'background': '#181818c0',
             })
             .on('mousedown', function (event) {
+                const container = $(this);
                 if (event.target !== this) {
                     return;
                 }
-                $(this)
+                container
                     .css({
                         'background': '#16161600',
                     })
@@ -72,8 +74,10 @@ $(() => {
                         'opacity': 0,
                     });
                 $('.main-container').css({ 'filter': 'blur(0px)' });
-                setTimeout(() => {
-                    $(this).css({ 'visibility': 'hidden' });
+                clearTimeout(visibilityTimeout);
+                visibilityTimeout = setTimeout(() => {
+                    container.css({ 'visibility': 'hidden' });
+                    visibilityTimeout = -1;
                 }, 250);
             })
             .children('.main')
@@ -139,14 +143,12 @@ $(() => {
             let mouseOverTimeout = -1;
             card
                 .on('mouseover', () => {
-                    if (mouseOverTimeout !== -1) {
-                        clearTimeout(mouseOverTimeout);
-                    }
                     const parent = cardImage.parent();
                     cardImage
                         .css({ 'transform': 'translateZ(0) scale(1)' })
                         .addClass('shimmer-effect');
                     parent.css({ 'background': 'aliceblue' });
+                    clearTimeout(mouseOverTimeout);
                     mouseOverTimeout = setTimeout(() => {
                         parent.css({ 'background': '' });
                         mouseOverTimeout = -1;

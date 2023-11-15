@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 registerApiEndpoint(app, database, {
-    endpoint: '/api/data/houses',
+    endpoint: '/data/houses',
     query: 'select * from House',
     parameters: _ => [],
     callback: (result, rows) => {
@@ -44,7 +44,7 @@ registerApiEndpoint(app, database, {
     }
 });
 registerApiEndpoint(app, database, {
-    endpoint: '/api/data/houses/id/:houseId',
+    endpoint: '/data/houses/id/:houseId',
     query: 'select * from House where id = ?',
     parameters: (request) => [request.params.houseId],
     callback: (result, rows) => {
@@ -52,7 +52,7 @@ registerApiEndpoint(app, database, {
     }
 });
 registerApiEndpoint(app, database, {
-    endpoint: '/api/data/houses/city/:city',
+    endpoint: '/data/houses/city/:city',
     query: `select * from House where city like '%?%'`,
     parameters: (request) => [request.params.city],
     callback: (result, rows) => {
@@ -72,15 +72,15 @@ app.post('/login/signin', (request, result) => {
         console.log(`sent: "${circularJson.stringify(rows)}"\n\n`);
         if (rows.length > 0) {
             result.send({
-                success: true,
                 user: rows[0],
             });
         } else {
-            result.send({
-                success: false,
+            result.status(401).send({
                 user: null,
             });
         }
     });
 });
-app.listen(8080);
+app.listen(8443, () => {
+    console.log('listening on port 8443.');
+});
