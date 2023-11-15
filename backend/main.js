@@ -60,7 +60,6 @@ registerApiEndpoint(app, database, {
     }
 });
 
-// sign_in
 app.post('/login/signin', (request, result) => {
     const username = request.body.username;
     const password = makeSha512Hash(request.body.password);

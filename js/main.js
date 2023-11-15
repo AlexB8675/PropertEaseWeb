@@ -1,3 +1,5 @@
+const endpoint = 'http://93.41.228.90:8080';
+
 function makePriceAsCurrency(price) {
     return price.toLocaleString('en-US', {
         style: 'currency',
@@ -10,9 +12,8 @@ function makeLoginRequest(info) {
     if (info.username === '' || info.password === '') {
         return;
     }
-    // make post request
     $.ajax({
-        url: 'http://93.41.228.90:8080/login/signin',
+        url: `${endpoint}/login/signin`,
         method: 'post',
         data: {
             username: info.username,
@@ -103,7 +104,8 @@ $(() => {
     });
 
     $.ajax({
-        url: 'http://93.41.228.90:8080/api/data/houses',
+        url: `${endpoint}/api/data/houses`,
+        method: 'get',
         dataType: 'json',
     }).done((data) => {
         const mainCardContainer = $('.card-container > .wrapper');
