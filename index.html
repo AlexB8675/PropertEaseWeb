@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -6,70 +6,50 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="black">
         <link rel="stylesheet" href="./css/scrollbar.css">
-        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="./css/index.css">
         <link rel="manifest" href="./manifest.json">
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-        <script src="./js/main.js"></script>
+        <script src="js/index.js"></script>
         <title>PropertEaseWeb</title>
     </head>
-    <body class="main">
-        <div class="main-container">
-            <div class="header">
-                <div class="title">PropertEase</div>
-                <div id="user-login-button" class="user fa fa-user"></div>
-            </div>
-            <div class="header-separator"></div>
-            <div class="scroller">
-                <div class="main-body">
-                    <div class="search-bar-container">
-                        <div class="title">
-                            Welcome to <strong>PropertEase</strong>
-                        </div>
-                        <div class="select-search-type">
-                            <div class="cell">
-                                <div id="select-search-type-vendita">Sale</div>
-                            </div>
-                            <div class="cell">
-                                <div id="select-search-type-affitto">Rent</div>
-                            </div>
-                            <div class="arrow-container" id="select-search-type-arrow-container">
-                                <div class="arrow"></div>
-                            </div>
-                        </div>
-                        <div class="search-bar">
-                            <div class="wrapper">
-                                <input id="search-bar-main" class="text">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sb-container-separator"></div>
-                    <div class="card-container">
-                        <div class="wrapper"></div>
-                    </div>
-                    <div class="card-container-separator"></div>
-                    <div class="footer">footer pazzesco</div>
-                </div>
+    <body>
+        <div class="blur"></div>
+        <div id="login">
+            <label>Login</label>
+            <form id="login-form">
+                <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
+                <input id="login-username-input" placeholder="Username" type="text" required>
+                <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
+                <input id="login-password-input" placeholder="Password" type="password" required>
+            </form>
+            <div class="submit-buttons">
+                <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
+                <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
             </div>
         </div>
-        <div class="login">
-            <div class="main">
-                <div class="title">Login</div>
-                <form id="main-login-form">
-                    <div class="container">
-                        <div class="wrapper">
-                            <input id="login-username-input" class="text" placeholder="Username" type="text" required>
-                        </div>
-                        <div class="wrapper">
-                            <input id="login-password-input" class="text" placeholder="Password" type="password" required>
-                        </div>
-                    </div>
-                </form>
-                <div class="button-wrapper">
-                    <button type="submit" id="register-button" class="generic-button" form="main-login-form">Sign Up</button>
-                    <button type="submit" id="login-button" class="generic-button" form="main-login-form">Sign In</button>
+        <div id="header">
+            <label>PropertEase</label>
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div id="scroller">
+            <div id="search-area">
+                <span>Welcome to <b>PropertEase</b></span>
+                <div id="selector-container">
+                    <button id="selector-sale">Sale</button>
+                    <button id="selector-rent">Rent</button>
+                    <div id="selector"></div>
+                </div>
+                <div id="search-bar">
+                    <input id="search-field" type="text" placeholder="Anything in mind?">
+                    <label for="search-field"><i class="fa-solid fa-magnifying-glass"></i></label>
                 </div>
             </div>
+            <div id="card-container">
+                <div></div>
+            </div>
+            <div id="footer">footer pazzesco</div>
         </div>
     </body>
 </html>

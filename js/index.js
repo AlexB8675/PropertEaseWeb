@@ -41,15 +41,105 @@ $(() => {
             });
     }
 
+    const selectorSale = $('#selector-sale');
+    const selectorRent = $('#selector-rent');
+    const selector = $('#selector');
+    selector.css({ 'width': selectorSale.width() });
+    selectorSale
+        .on('click', () => {
+            selector
+                .css({
+                    'transform': 'translateX(0)',
+                });
+            setTimeout(() => {
+                selector.css({ 'width': selectorSale.width() })
+            }, 250);
+        });
+    selectorRent
+        .on('click', () => {
+            const offsetSale = selectorSale.offset();
+            const offsetRent = selectorRent.offset();
+            selector
+                .css({
+                    'transform': `translateX(${Math.abs(offsetSale.left - offsetRent.left)}px)`,
+                });
+            setTimeout(() => {
+                selector.css({ 'width': selectorRent.width() })
+            }, 250);
+        });
+    const loginContainer = $('#login');
+    const blurContainer = $('.blur');
+    $('#header > i').on('click', () => {
+        loginContainer
+            .css({
+                'opacity': 1,
+                'visibility': 'visible',
+            });
+        blurContainer
+            .css({
+                'opacity': 1,
+                'pointer-events': 'all',
+            })
+            .on('mousedown', function (event) {
+                const container = $(this);
+                if (event.target !== this) {
+                    return;
+                }
+                loginContainer.css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                });
+                blurContainer.css({
+                    'opacity': '0',
+                    'pointer-events': 'none',
+                });
+            });
+    });
+    $('#login-form').on('submit', (event) => {
+        event.preventDefault();
+    });
+    $('#login-button').on('click', () => {
+        const username = $('#login-username-input').val();
+        const password = $('#login-password-input').val();
+        makeLoginRequest({
+            username: username,
+            password: password,
+            type: 'signin',
+        }, {
+            done: (data) => {
+                console.log(data);
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    });
+    $('#register-button').on('click', () => {
+        const username = $('#login-username-input').val();
+        const password = $('#login-password-input').val();
+        makeLoginRequest({
+            username: username,
+            password: password,
+            type: 'signup',
+        }, {
+            done: (data) => {
+                console.log(data);
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    });
+
     $.ajax({
         url: makeEndpointWith('/api/data/houses'),
         method: 'get',
         dataType: 'json',
     }).done((data) => {
-        const mainCardContainer = $('#cards');
+        const mainCardContainer = $('#card-container > div');
         const cardTemplate = (address, city, cap, contract, price, image, type) => `
             <div class="card">
-                <div class="img-container">
+                <div class="image">
                     <img draggable="false" src="${image}" alt="placeholder.svg">
                 </div>
                 <div class="generic-triangle"></div>
@@ -79,18 +169,18 @@ $(() => {
                 .on('mouseover', () => {
                     const parent = cardImage.parent();
                     cardImage
-                        .css({'transform': 'translateZ(0) scale(1.05)'})
+                        .css({ 'transform': 'translateZ(0) scale(1.05)' })
                         .addClass('shimmer-effect');
-                    parent.css({'background': 'aliceblue'});
+                    parent.css({ 'background': 'aliceblue' });
                     clearTimeout(mouseOverTimeout);
                     mouseOverTimeout = setTimeout(() => {
-                        parent.css({'background': ''});
+                        parent.css({ 'background': '' });
                         mouseOverTimeout = -1;
                     }, 500);
                 })
                 .on('mouseleave', () => {
                     cardImage
-                        .css({'transform': 'translateZ(1px) scale(1.10)'})
+                        .css({ 'transform': 'translateZ(1px) scale(1.10)' })
                         .removeClass('shimmer-effect');
                 })
                 .on('mousemove', (event) => {
@@ -117,43 +207,9 @@ $(() => {
                 });
             mainCardContainer.append(card);
         }
-
-        if (mainCardContainer.length === 0) {
-            $('#cards').children('label').removeClass('hidden');
-        } else {
-            $('#cards').children('label').addClass('hidden');
-        }
     });
-
-    $('.blur').on('click', function (){
-        hideLogin();
-    })
 });
 
-function shift_slider(direction) {
-    if (direction === 'l') {
-        $('#selector').css('transform', 'translate(80px)');
-    } else {
-        $('#selector').css('transform', 'translate(2px)');
-    }
-}
-
-function showLogin() {
-    const login = $('#login');
-    const blur = $('#blur');
-    login.css('opacity', 1);
-    login.css('pointer-events', 'all');
-    blur.css('opacity', 1);
-    blur.css('pointer-events', 'all');
-}
-
-function hideLogin() {
-    setTimeout(function() {
-        const login = $('#login');
-        const blur = $('#blur');
-        login.css('opacity', 0);
-        login.css('pointer-events', 'none');
-        blur.css('opacity', 0);
-        blur.css('pointer-events', 'none');
-    }, 1);
-}
+$(window).on('load', () => {
+    $('#selector').css({ 'width': $('#selector-sale').width() });
+});
