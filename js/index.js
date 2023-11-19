@@ -41,56 +41,61 @@ $(() => {
             });
     }
 
-    $('#select-search-type-vendita')
+    const selectorSale = $('#selector-sale');
+    const selectorRent = $('#selector-rent');
+    const selector = $('#selector');
+    selector.css({ 'width': selectorSale.width() });
+    selectorSale
         .on('click', () => {
-            $('#select-search-type-arrow-container')
-                .css('transform', 'translate(-26px)');
+            selector
+                .css({
+                    'transform': 'translateX(0)',
+                });
+            setTimeout(() => {
+                selector.css({ 'width': selectorSale.width() })
+            }, 250);
         });
-    $('#select-search-type-affitto')
+    selectorRent
         .on('click', () => {
-            $('#select-search-type-arrow-container')
-                .css('transform', 'translate(30px)');
+            const offsetSale = selectorSale.offset();
+            const offsetRent = selectorRent.offset();
+            selector
+                .css({
+                    'transform': `translateX(${Math.abs(offsetSale.left - offsetRent.left)}px)`,
+                });
+            setTimeout(() => {
+                selector.css({ 'width': selectorRent.width() })
+            }, 250);
         });
-    $('#search-bar-main')
-        .on('keydown', (event) => {
-            if (event.code === 'Enter') {
-                event.preventDefault();
-            }
-        });
-    $('#user-login-button').on('click', () => {
-        let visibilityTimeout = -1;
-        $('.main-container').css({ 'filter': 'blur(4px)' });
-        $('.login')
+    const loginContainer = $('#login');
+    const blurContainer = $('.blur');
+    $('#header > i').on('click', () => {
+        loginContainer
             .css({
+                'opacity': 1,
                 'visibility': 'visible',
-                'background': '#181818c0',
+            });
+        blurContainer
+            .css({
+                'opacity': 1,
+                'pointer-events': 'all',
             })
             .on('mousedown', function (event) {
                 const container = $(this);
                 if (event.target !== this) {
                     return;
                 }
-                container
-                    .css({
-                        'background': '#16161600',
-                    })
-                    .children('.main')
-                    .css({
-                        'opacity': 0,
-                    });
-                $('.main-container').css({ 'filter': 'blur(0px)' });
-                clearTimeout(visibilityTimeout);
-                visibilityTimeout = setTimeout(() => {
-                    container.css({ 'visibility': 'hidden' });
-                    visibilityTimeout = -1;
-                }, 250);
-            })
-            .children('.main')
-            .css({
-                'opacity': 1,
+                loginContainer.css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                });
+                blurContainer.css({
+                    'opacity': '0',
+                    'pointer-events': 'none',
+                });
             });
     });
-    $('#main-login-form').on('submit', (event) => {
+    $('#login-form').on('submit', (event) => {
         event.preventDefault();
     });
     $('#login-button').on('click', () => {
@@ -131,17 +136,17 @@ $(() => {
         method: 'get',
         dataType: 'json',
     }).done((data) => {
-        const mainCardContainer = $('.card-container > .wrapper');
+        const mainCardContainer = $('#card-container > div');
         const cardTemplate = (address, city, cap, contract, price, image, type) => `
             <div class="card">
-                <div>
-                    <img draggable="false" src="${image}" alt>
+                <div class="image">
+                    <img draggable="false" src="${image}" alt="placeholder.svg">
                 </div>
                 <div class="generic-triangle"></div>
                 <div class="content">
-                    <div class="text">${type + " for " + ((contract) ? "Sale" : "Rent")}</div>
-                    <div class="text address">${city + " " + cap + ", " + address}</div>
-                    <div class="text price">${makePriceAsCurrency(price)}</div>
+                    <label class="contract">${type + " for " + ((contract) ? "Sale" : "Rent")}</label>
+                    <label class="address">${city + " " + cap + ", " + address}</label>
+                    <label class="price">${makePriceAsCurrency(price)}</label>
                 </div>
             </div>
         `.trim();
@@ -164,7 +169,7 @@ $(() => {
                 .on('mouseover', () => {
                     const parent = cardImage.parent();
                     cardImage
-                        .css({ 'transform': 'translateZ(0) scale(1)' })
+                        .css({ 'transform': 'translateZ(0) scale(1.05)' })
                         .addClass('shimmer-effect');
                     parent.css({ 'background': 'aliceblue' });
                     clearTimeout(mouseOverTimeout);
@@ -175,7 +180,7 @@ $(() => {
                 })
                 .on('mouseleave', () => {
                     cardImage
-                        .css({ 'transform': 'translateZ(1px) scale(1.05)' })
+                        .css({ 'transform': 'translateZ(1px) scale(1.10)' })
                         .removeClass('shimmer-effect');
                 })
                 .on('mousemove', (event) => {
@@ -203,4 +208,8 @@ $(() => {
             mainCardContainer.append(card);
         }
     });
+});
+
+$(window).on('load', () => {
+    $('#selector').css({ 'width': $('#selector-sale').width() });
 });
