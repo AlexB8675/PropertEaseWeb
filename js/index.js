@@ -41,6 +41,12 @@ $(() => {
             });
     }
 
+    $('#card-container').on('mousemove', function(e) {
+        let x = e.pageX - this.offsetLeft;
+        let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
+        $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
+    });
+
     const selectorSale = $('#selector-sale');
     const selectorRent = $('#selector-rent');
     const selector = $('#selector');
@@ -141,7 +147,7 @@ $(() => {
         method: 'get',
         dataType: 'json',
     }).done((data) => {
-        const mainCardContainer = $('#card-container > div');
+        const mainCardContainer = $('#cards');
         const cardTemplate = (address, city, cap, contract, price, image, type) => `
             <div class="card">
                 <div class="image">

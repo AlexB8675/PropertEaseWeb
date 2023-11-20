@@ -30,6 +30,7 @@
     align-items: center;
     grid-column-gap: 10pt;
     margin: 0 0 16pt 0;
+    position: relative;
 
     & > button {
         cursor: pointer;
@@ -74,13 +75,14 @@
 }
 
 #card-container {
-    background-color: #242424;
+    background: #242424;
     box-shadow: 0 2px 4px 4px #242424;
     align-items: center;
     justify-items: center;
     justify-content: center;
     display: grid;
     grid-template-columns: 1fr;
+    position: relative;
 
     & > div {
         --grid-column-gap: 40pt;
