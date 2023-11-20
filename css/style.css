@@ -1,12 +1,69 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #808080;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #727272;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    border: none;
+    -webkit-background-clip: text;
+}
+
 .hidden {
     display: none !important;
 }
 
+.shimmer-effect {
+    --gradient: linear-gradient(120deg, #ffffff 25%, #ffffffdd 50%, #ffffff 75%) right / 500% 100% no-repeat;
+
+    color: white;
+    animation: shimmer 500ms forwards;
+    mask: var(--gradient);
+    -webkit-mask: var(--gradient);
+}
+
+.blur {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: #181818a0;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 250ms ease-in-out;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    100% {
+        mask-position: left;
+        -webkit-mask-position: left;
+    }
+}
+
 * {
-    position: relative;
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
@@ -29,18 +86,6 @@ body {
     display: grid;
     grid-template-rows: min-content auto;
     overflow: hidden;
-}
-
-.blur {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(5px);
-    background-color: #181818a0;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 250ms ease-in-out;
-    z-index: 1;
 }
 
 #login {
