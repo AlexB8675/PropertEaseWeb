@@ -44,7 +44,7 @@ $(() => {
     const selectorSale = $('#selector-sale');
     const selectorRent = $('#selector-rent');
     const selector = $('#selector');
-    selector.css({ 'width': selectorSale.width() });
+    selector.html(selectorSale.html());
     selectorSale
         .on('click', () => {
             selector
@@ -52,7 +52,7 @@ $(() => {
                     'transform': 'translateX(0)',
                 });
             setTimeout(() => {
-                selector.css({ 'width': selectorSale.width() })
+                selector.html(selectorSale.html());
             }, 250);
         });
     selectorRent
@@ -64,7 +64,7 @@ $(() => {
                     'transform': `translateX(${Math.abs(offsetSale.left - offsetRent.left)}px)`,
                 });
             setTimeout(() => {
-                selector.css({ 'width': selectorRent.width() })
+                selector.html(selectorRent.html());
             }, 250);
         });
     const loginContainer = $('#login');
@@ -81,7 +81,6 @@ $(() => {
                 'pointer-events': 'all',
             })
             .on('mousedown', function (event) {
-                const container = $(this);
                 if (event.target !== this) {
                     return;
                 }
@@ -208,8 +207,4 @@ $(() => {
             mainCardContainer.append(card);
         }
     });
-});
-
-$(window).on('load', () => {
-    $('#selector').css({ 'width': $('#selector-sale').width() });
 });
