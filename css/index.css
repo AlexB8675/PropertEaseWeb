@@ -38,12 +38,11 @@
     }
 
     #selector {
-        height: 1px;
+        position: absolute;
         font-size: 16pt;
         border-bottom: 2px solid aliceblue;
         user-select: none;
         pointer-events: none;
-        grid-column: 1 / 3;
         color: transparent;
         transition: all 250ms ease-in-out;
     }
