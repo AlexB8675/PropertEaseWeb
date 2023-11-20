@@ -2,7 +2,7 @@
     box-shadow: 0 2px 4px 4px #303030;
     overflow: hidden auto;
     display: grid;
-    grid-template-rows: min-content auto min-content;
+    grid-template-rows: min-content minmax(max-content, 100%) min-content;
 }
 
 #search-area {
@@ -29,7 +29,7 @@
     justify-content: center;
     align-items: center;
     grid-column-gap: 10pt;
-    margin: 0 0 15pt 0;
+    margin: 0 0 16pt 0;
 
     & > button {
         cursor: pointer;
@@ -76,25 +76,22 @@
 #card-container {
     background-color: #242424;
     box-shadow: 0 2px 4px 4px #242424;
-    height: max-content;
-    min-height: 100%;
-    display: grid;
     align-items: center;
+    justify-items: center;
     justify-content: center;
+    display: grid;
     grid-template-columns: 1fr;
 
     & > div {
         --grid-column-gap: 40pt;
         --grid-padding: 32pt;
-        --grid-max-width: 300pt;
+        --grid-max-width: 310pt;
         --grid-max-column: 3;
         --grid-total-width: calc(var(--grid-max-width) * var(--grid-max-column));
         --grid-total-padding: calc(var(--grid-padding) * 2);
         --grid-total-column-gap: calc(var(--grid-column-gap) * (var(--grid-max-column) - 1));
         width: min(var(--grid-total-width) + var(--grid-total-column-gap), calc(100% - var(--grid-total-padding)));
         padding: 20pt var(--grid-padding);
-        justify-content: center;
-        justify-self: center;
         display: grid;
         grid-template-columns: repeat(auto-fill, var(--grid-max-width));
         grid-column-gap: var(--grid-column-gap);
@@ -104,7 +101,7 @@
             overflow: hidden;
             background-color: #181818;
             border-radius: 8px;
-            width: 300pt;
+            width: 310pt;
             filter: drop-shadow(0px 0px 15px #000000);
             perspective: 600px;
             display: grid;
@@ -127,8 +124,8 @@
                     width: inherit;
                     aspect-ratio: 1;
                     object-fit: cover;
-                    transition: transform 250ms ease-in-out;
                     transform: translateZ(0) scale(1.10);
+                    transition: transform 250ms ease-in-out;
                 }
             }
 
@@ -138,15 +135,15 @@
                 height: 25pt;
                 background: #181818;
                 border: 1px solid #181818;
-                bottom: 158px;
+                bottom: 159px;
                 clip-path: polygon(100% 0%, -10% 100%, 100% 100%);
                 transform: translateZ(0) scale(1.05);
             }
 
             .content {
+                padding: 20pt;
                 display: grid;
                 grid-template-rows: repeat(3, min-content);
-                padding: 20pt;
 
                 .contract {
                     font-weight: bold;
@@ -160,13 +157,13 @@
                 }
 
                 .price {
+                    width: max-content;
+                    background: #b4ffbb;
+                    color: #181818;
                     padding: 5pt 10pt;
                     border: 2pt solid darkgreen;
-                    background-color: #b4ffbb;
-                    color: #181818;
                     border-radius: 10pt;
-                    width: max-content;
-                    margin-top: 6pt;
+                    margin: 6pt 0 0 0;
                     font-size: 18pt;
                 }
             }

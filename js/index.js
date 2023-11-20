@@ -111,6 +111,9 @@ $(() => {
             error: (error) => {
                 console.error(error);
             }
+        }).then(() => {
+            $('#login-username-input').val('');
+            $('#login-password-input').val('');
         });
     });
     $('#register-button').on('click', () => {
@@ -127,6 +130,9 @@ $(() => {
             error: (error) => {
                 console.error(error);
             }
+        }).then(() => {
+            $('#login-username-input').val('');
+            $('#login-password-input').val('');
         });
     });
 
@@ -179,7 +185,7 @@ $(() => {
                 })
                 .on('mouseleave', () => {
                     cardImage
-                        .css({ 'transform': 'translateZ(1px) scale(1.10)' })
+                        .css({ 'transform': 'translateZ(0) scale(1.10)' })
                         .removeClass('shimmer-effect');
                 })
                 .on('mousemove', (event) => {
@@ -196,13 +202,13 @@ $(() => {
                     card.css('transform', transformString);
                 })
                 .on('mouseout', () => {
-                    card.css('transform', 'perspective(600px) translateZ(1px) scale(1) rotateX(0) rotateY(0)');
+                    card.css('transform', 'perspective(600px) translateZ(0) scale(1) rotateX(0) rotateY(0)');
                 })
                 .on('mousedown', () => {
-                    card.css('transform', 'perspective(600px) translateZ(1px) scale(0.98) rotateX(0) rotateY(0)');
+                    card.css('transform', 'perspective(600px) translateZ(0) scale(0.98) rotateX(0) rotateY(0)');
                 })
                 .on('mouseup', () => {
-                    card.css('transform', 'perspective(600px) translateZ(1px) scale(1.02) rotateX(0) rotateY(0)');
+                    card.css('transform', 'perspective(600px) translateZ(0) scale(1.02) rotateX(0) rotateY(0)');
                 });
             mainCardContainer.append(card);
         }
