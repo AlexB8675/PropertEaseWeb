@@ -81,7 +81,6 @@ $(() => {
                 'pointer-events': 'all',
             })
             .on('mousedown', function (event) {
-                const container = $(this);
                 if (event.target !== this) {
                     return;
                 }
