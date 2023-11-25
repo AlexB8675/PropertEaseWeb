@@ -10,6 +10,8 @@
     <link rel="manifest" href="./manifest.json">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
+    <script src="js/houses.js"></script>
     <title>PropertEaseWeb</title>
 </head>
     <body>
@@ -32,7 +34,23 @@
             <i class="fa-solid fa-user"></i>
         </div>
         <div id="scroller">
-            <!-- TODO: main container for the houses -->
+            <div id="house-displayer">
+                <div id="slider">
+                    <div id="slider-images">
+                        <img data-value='0' class="selected-img" src="https://picsum.photos/800/601"/>
+                        <img data-value='1' src="https://picsum.photos/800/602"/>
+                        <img data-value='2' src="https://picsum.photos/800/603"/>
+                    </div>
+                    <div id="slider-nav">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div id="highlights">
+                    <img src="https://picsum.photos/800/604">
+                    <img src="https://picsum.photos/800/605">
+                </div>
+            </div>
             <div id="footer">footer pazzesco</div>
         </div>
     </body>

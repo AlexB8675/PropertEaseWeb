@@ -1,3 +1,7 @@
+#scroller{
+    grid-template-rows: min-content minmax(max-content, 100%) min-content;
+}
+
 #search-area {
     background: #303030;
     justify-content: center;

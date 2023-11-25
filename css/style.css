@@ -192,7 +192,8 @@ body {
     box-shadow: 0 2px 4px 4px #303030;
     overflow: hidden auto;
     display: grid;
-    grid-template-rows: min-content minmax(max-content, 100%) min-content;
+    /*grid-template-rows: any previous div, minmax(max-content, 100%), min-content; */
+
 }
 
 #footer {
