@@ -4,6 +4,8 @@ const cors = require('cors');
 const sqlite = require('sqlite3').verbose();
 const crypto = require('crypto');
 const app = express();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 function makeSha512Hash(string) {
     const hash = crypto.createHash('sha512');
@@ -13,15 +15,19 @@ function makeSha512Hash(string) {
 
 function handleRequest(request, result, info) {
     console.log("request received: \"", request ,"\"\n");
-    database.all(info.query, info.parameters(request), (error, rows) => {
-        if (error) {
-            info?.error(request, result, error);
-            console.error(error);
-            return;
-        }
-        console.log("sent: \"", rows ,"\"\n\n");
-        info.callback(result, rows);
-    });
+    if (info.query) {
+        database.all(info.query, info.parameters(request), (error, rows) => {
+            if (error) {
+                info?.error(request, result, error);
+                console.error(error);
+                return;
+            }
+            console.log("sent: \"", rows ,"\"\n\n");
+            info.callback(result, rows);
+        });
+    } else {
+        info.callback(request, result);
+    }
 }
 
 function registerGetApiEndpoint(app, database, info) {
@@ -110,6 +116,11 @@ registerPostApiEndpoint(app, database, {
             });
         }
     }
+});
+
+app.post('/api/data/tool/upload_room_photo', upload.array('files'), (request, result) => {
+    console.log(request.files);
+    result.status(200).send({});
 });
 
 const port = 8080;

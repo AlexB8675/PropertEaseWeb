@@ -6,13 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="black">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/house.css">
     <link rel="manifest" href="./manifest.json">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
     <title>PropertEaseWeb</title>
 </head>
     <body>
-
+        <div class="blur"></div>
+        <div id="login">
+            <label>Login</label>
+            <form id="login-form">
+                <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
+                <input id="login-username-input" placeholder="Username" type="text" required>
+                <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
+                <input id="login-password-input" placeholder="Password" type="password" required>
+            </form>
+            <div class="submit-buttons">
+                <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
+                <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
+            </div>
+        </div>
+        <div id="header">
+            <label>PropertEase</label>
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div id="scroller">
+            <!-- TODO: main container for the houses -->
+            <div id="footer">footer pazzesco</div>
+        </div>
     </body>
 </html>

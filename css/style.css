@@ -38,6 +38,7 @@ select:-webkit-autofill:focus {
 .shimmer-effect {
     --gradient: linear-gradient(120deg, #ffffff 25%, #ffffffdd 50%, #ffffff 75%) right / 500% 100% no-repeat;
 
+    z-index: 1;
     color: white;
     animation: shimmer 500ms forwards;
     mask: var(--gradient);
@@ -185,6 +186,13 @@ body {
         cursor: pointer;
         transition: font-size 250ms ease-in-out;
     }
+}
+
+#scroller {
+    box-shadow: 0 2px 4px 4px #303030;
+    overflow: hidden auto;
+    display: grid;
+    grid-template-rows: min-content minmax(max-content, 100%) min-content;
 }
 
 #footer {
