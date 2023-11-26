@@ -68,7 +68,7 @@ select:-webkit-autofill:focus {
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
-input, button, label {
+input, button, label, textarea {
     resize: none;
     outline: none;
     border: none;
@@ -76,6 +76,8 @@ input, button, label {
     background: transparent;
     padding: 0;
     margin: 0;
+    width: unset;
+    height: unset;
 }
 
 body {

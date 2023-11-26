@@ -3,21 +3,30 @@
     grid-template-rows: minmax(max-content, 100%) min-content;
 }
 
+#houses-ui {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    padding: 25pt;
+    background-color: #242424;;
+    gap: 30pt;
+}
+
 #house-displayer {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    margin: 25pt;
     align-content: center;
     gap: 2px;
     background-color: aliceblue;
     height: fit-content;
     padding: 2px;
-    width: 75%;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 #slider {
     position: relative;
     overflow: hidden;
+    margin-top: 2px; /* dovuto al row-gap di #highlights*/
 
     & > #slider-images {
         position: relative;
@@ -25,16 +34,25 @@
 
         & > img {
             position: absolute;
-            width: 0;
+            width: 100%;
             aspect-ratio: 4/3;
             object-fit: cover;
             height: 100%;
+        }
+
+        & .selected-img {
+            z-index: 2 !important;
+        }
+
+        & .prev-img {
+            z-index: 1;
+        !important;
         }
     }
 
     & > #slider-nav {
         position: absolute;
-        z-index: 1;
+        z-index: 3;
         width: 100%;
         height: 100%;
         top: 0;
@@ -50,29 +68,78 @@
             cursor: pointer;
             color: aliceblue;
             transition: opacity .2s;
-            text-shadow: 0 0 15px rgba(0,0,0,.8), 0 0 10px rgba(0,0,0,.8);
+            text-shadow: 0 0 15px rgba(0, 0, 0, .8), 0 0 10px rgba(0, 0, 0, .8);
 
             &:hover {
                 opacity: 1;
                 transition: opacity .2s;
+                transform: scale(1.1);
             }
         }
     }
 
 }
 
-.selected-img{
-    width: 100% !important;
-}
-
 #highlights {
     display: grid;
     grid-template-columns: 1fr;
+    overflow: hidden;
+    gap: 2px;
 
     & > img {
         width: 100%;
         aspect-ratio: 4/3;
         object-fit: cover;
+        transition: all 1s;
+    }
+}
+
+#contacts {
+    background-color: #181818;
+    padding: 10pt;
+    height: min-content;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 20pt;
+    row-gap: 10pt;
+    filter: drop-shadow(0px 0px 15px #000000);
+
+    & > label {
+        text-align: center;
+        color: aliceblue;
+        font-size: 32pt;
+    }
+
+    & > form {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr) 4fr;
+        row-gap: 5pt;
+
+        & > input, & > textarea {
+            background-color: #121212;
+            color: aliceblue;
+            font-size: 18pt;
+            padding: 8pt;
+            border-radius: 8pt;
+            transition: all .2s;
+
+            &:hover {
+                filter: drop-shadow(0px 0px 4px #000000);
+                transform: translateZ(0) scale(1.001);
+            }
+        }
+
+        & > button {
+            color: aliceblue;
+            background: transparent;
+            border: 4px solid #404040;
+            font-size: 20pt;
+            padding: 6pt;
+            border-radius: 64px;
+            cursor: pointer;
+            margin-top: 8pt;
+        }
     }
 }
 
