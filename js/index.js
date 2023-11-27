@@ -1,6 +1,5 @@
 $(document).ready(function () {
-
-    $('#card-container').on('mousemove', function(e) {
+    $('#card-container').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
         $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
@@ -71,18 +70,18 @@ $(document).ready(function () {
                 .on('mouseover', () => {
                     const parent = cardImage.parent();
                     cardImage
-                        .css({ 'transform': 'translateZ(0) scale(1.05)' })
+                        .css({'transform': 'translateZ(0) scale(1.05)'})
                         .addClass('shimmer-effect');
-                    parent.css({ 'background': 'aliceblue' });
+                    parent.css({'background': 'aliceblue'});
                     clearTimeout(mouseOverTimeout);
                     mouseOverTimeout = setTimeout(() => {
-                        parent.css({ 'background': '' });
+                        parent.css({'background': ''});
                         mouseOverTimeout = -1;
                     }, 500);
                 })
                 .on('mouseleave', () => {
                     cardImage
-                        .css({ 'transform': 'translateZ(0) scale(1.10)' })
+                        .css({'transform': 'translateZ(0) scale(1.10)'})
                         .removeClass('shimmer-effect');
                 })
                 .on('mousemove', (event) => {
