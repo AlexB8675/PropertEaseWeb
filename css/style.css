@@ -68,7 +68,7 @@ select:-webkit-autofill:focus {
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
-input, button, label {
+input, button, label, textarea {
     resize: none;
     outline: none;
     border: none;
@@ -76,6 +76,8 @@ input, button, label {
     background: transparent;
     padding: 0;
     margin: 0;
+    width: unset;
+    height: unset;
 }
 
 body {
@@ -192,7 +194,8 @@ body {
     box-shadow: 0 2px 4px 4px #303030;
     overflow: hidden auto;
     display: grid;
-    grid-template-rows: min-content minmax(max-content, 100%) min-content;
+    /*grid-template-rows: any previous div, minmax(max-content, 100%), min-content; */
+
 }
 
 #footer {
