@@ -1,1 +1,159 @@
-/* TODO: stuff */
+#scroller {
+    background: #242424;
+    grid-template-rows: minmax(max-content, 100%) min-content;
+}
+
+#house-ui {
+    --border-radius: 24px;
+    --grid-gap: 16pt;
+
+    width: clamp(600pt, 100%, 1000pt);
+    padding: 32pt;
+    justify-content: center;
+    justify-self: center;
+    display: grid;
+    grid-gap: var(--grid-gap);
+    grid-template-areas:
+        "a a"
+        "b b";
+    grid-auto-rows: max-content;
+    grid-auto-columns: 1fr;
+
+    #house-image-container {
+        display: grid;
+        grid-auto-rows: 1fr;
+        grid-auto-columns: 1fr;
+        grid-gap: var(--grid-gap);
+        grid-area: a;
+    }
+
+    #house-info-container {
+        height: 400pt;
+        display: grid;
+        grid-auto-rows: 1fr;
+        grid-auto-columns: 1fr;
+        grid-area: b;
+        grid-gap: var(--grid-gap);
+        grid-template-areas:
+            "a a d"
+            "a a d"
+            "a a d"
+            "b b d"
+            "b b d"
+            "b b d"
+            "c c d"
+            "c c d";
+
+        & > div {
+            border-radius: var(--border-radius);
+        }
+
+        #house-main-info {
+            filter: drop-shadow(0px 0px 15px #000000);
+            grid-area: a;
+        }
+
+        #house-more-info {
+            filter: drop-shadow(0px 0px 15px #000000);
+            grid-area: b;
+        }
+
+        #house-energy-info {
+            filter: drop-shadow(0px 0px 15px #000000);
+            grid-area: c;
+        }
+
+        #house-contact-container {
+            filter: drop-shadow(0px 0px 15px #000000);
+            grid-area: d;
+        }
+    }
+}
+
+#house-displayer {
+    --grid-gap: 16pt;
+
+    display: grid;
+    align-content: center;
+    grid-auto-columns: 1fr;
+    grid-template-areas:
+        "a a b"
+        "a a b";
+    grid-column-gap: var(--grid-gap);
+}
+
+#highlights {
+    overflow: hidden;
+    filter: drop-shadow(0px 0px 15px #000000);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: var(--grid-gap);
+    grid-area: b;
+
+    & > img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: fill;
+        transition: all 1s;
+        overflow: hidden;
+        border-radius: 24px;
+    }
+}
+
+#slider {
+    position: relative;
+    overflow: hidden;
+    grid-area: a;
+    filter: drop-shadow(0px 0px 15px #000000);
+
+    & > #slider-images {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 24px;
+
+        & > img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            aspect-ratio: 4 / 3;
+        }
+
+        & .selected-img {
+            z-index: 2 !important;
+        }
+
+        & .prev-img {
+            z-index: 1 !important;
+        }
+    }
+
+    & > #slider-nav {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        z-index: 3;
+        align-content: center;
+        justify-content: space-between;
+        display: grid;
+        grid-template-columns: auto auto;
+
+        & > i {
+            opacity: 0.3;
+            font-size: 40pt;
+            margin: 10pt;
+            cursor: pointer;
+            color: aliceblue;
+            transition: opacity 200ms;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.8);
+
+            &:hover {
+                opacity: 1;
+                transition: opacity 200ms;
+                transform: scale(1.1);
+            }
+        }
+    }
+}

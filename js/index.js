@@ -1,47 +1,5 @@
-function makeEndpointWith(uri) {
-    const endpoint = 'http://93.41.228.90:8080';
-    return `${endpoint}${uri}`;
-}
-
-function makePriceAsCurrency(price) {
-    return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0
-    });
-}
-
-function makeLoginRequest(info, callbacks) {
-    if (info.username === '' || info.password === '') {
-        return;
-    }
-    return $.ajax({
-        url: makeEndpointWith(`/api/login/${info.type}`),
-        method: 'post',
-        data: {
-            username: info.username,
-            password: info.password,
-        },
-    }).done(callbacks.done ?? ((data) => {
-        return data;
-    })).fail(callbacks.error ?? ((error) => {
-        return error;
-    }));
-}
-
-$(() => {
-    'use strict';
-
-    if ('serviceWorker' in navigator) {
-        navigator
-            .serviceWorker
-            .register('./js/sw.js')
-            .then((registration) => {
-                console.log('Service Worker Registered');
-            });
-    }
-
-    $('#card-container').on('mousemove', function(e) {
+$(document).ready(function () {
+    $('#card-container').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
         $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
@@ -73,74 +31,6 @@ $(() => {
                 selector.html(selectorRent.html());
             }, 250);
         });
-    const loginContainer = $('#login');
-    const blurContainer = $('.blur');
-    $('#header > i').on('click', () => {
-        loginContainer
-            .css({
-                'opacity': 1,
-                'visibility': 'visible',
-            });
-        blurContainer
-            .css({
-                'opacity': 1,
-                'pointer-events': 'all',
-            })
-            .on('mousedown', function (event) {
-                if (event.target !== this) {
-                    return;
-                }
-                loginContainer.css({
-                    'opacity': 0,
-                    'visibility': 'hidden',
-                });
-                blurContainer.css({
-                    'opacity': '0',
-                    'pointer-events': 'none',
-                });
-            });
-    });
-    $('#login-form').on('submit', (event) => {
-        event.preventDefault();
-    });
-    $('#login-button').on('click', () => {
-        const username = $('#login-username-input').val();
-        const password = $('#login-password-input').val();
-        makeLoginRequest({
-            username: username,
-            password: password,
-            type: 'signin',
-        }, {
-            done: (data) => {
-                console.log(data);
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        }).then(() => {
-            $('#login-username-input').val('');
-            $('#login-password-input').val('');
-        });
-    });
-    $('#register-button').on('click', () => {
-        const username = $('#login-username-input').val();
-        const password = $('#login-password-input').val();
-        makeLoginRequest({
-            username: username,
-            password: password,
-            type: 'signup',
-        }, {
-            done: (data) => {
-                console.log(data);
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        }).then(() => {
-            $('#login-username-input').val('');
-            $('#login-password-input').val('');
-        });
-    });
 
     $.ajax({
         url: makeEndpointWith('/api/data/houses'),
@@ -180,18 +70,18 @@ $(() => {
                 .on('mouseover', () => {
                     const parent = cardImage.parent();
                     cardImage
-                        .css({ 'transform': 'translateZ(0) scale(1.05)' })
+                        .css({'transform': 'translateZ(0) scale(1.05)'})
                         .addClass('shimmer-effect');
-                    parent.css({ 'background': 'aliceblue' });
+                    parent.css({'background': 'aliceblue'});
                     clearTimeout(mouseOverTimeout);
                     mouseOverTimeout = setTimeout(() => {
-                        parent.css({ 'background': '' });
+                        parent.css({'background': ''});
                         mouseOverTimeout = -1;
                     }, 500);
                 })
                 .on('mouseleave', () => {
                     cardImage
-                        .css({ 'transform': 'translateZ(0) scale(1.10)' })
+                        .css({'transform': 'translateZ(0) scale(1.10)'})
                         .removeClass('shimmer-effect');
                 })
                 .on('mousemove', (event) => {

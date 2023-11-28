@@ -54,7 +54,7 @@ select:-webkit-autofill:focus {
     opacity: 0;
     pointer-events: none;
     transition: all 250ms ease-in-out;
-    z-index: 1;
+    z-index: 4;
 }
 
 @keyframes shimmer {
@@ -65,10 +65,11 @@ select:-webkit-autofill:focus {
 }
 
 * {
+    box-sizing: border-box;
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
-input, button, label {
+input, button, label, textarea {
     resize: none;
     outline: none;
     border: none;
@@ -76,6 +77,8 @@ input, button, label {
     background: transparent;
     padding: 0;
     margin: 0;
+    width: unset;
+    height: unset;
 }
 
 body {
@@ -98,7 +101,7 @@ body {
     background: #242424;
     border-radius: 8px;
     visibility: hidden;
-    z-index: 2;
+    z-index: 5;
     opacity: 0;
     overflow: hidden;
     align-self: center;
@@ -192,7 +195,6 @@ body {
     box-shadow: 0 2px 4px 4px #303030;
     overflow: hidden auto;
     display: grid;
-    grid-template-rows: min-content minmax(max-content, 100%) min-content;
 }
 
 #footer {
