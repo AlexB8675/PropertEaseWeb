@@ -69,6 +69,13 @@ select:-webkit-autofill:focus {
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
+a{
+    text-decoration: none;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
 input, button, label, textarea {
     resize: none;
     outline: none;

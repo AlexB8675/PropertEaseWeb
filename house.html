@@ -56,10 +56,81 @@
                     </div>
                 </div>
                 <div id="house-info-container">
-                    <div id="house-main-info" style="background-color: firebrick"></div>
-                    <div id="house-more-info" style="background-color: cornflowerblue"></div>
-                    <div id="house-energy-info" style="background-color: darkgreen"></div>
-                    <div id="house-contact-container" style="background-color: rebeccapurple"></div>
+                    <div id="house-main" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <label>Caratteristiche</label>
+                        </div>
+                    </div>
+                    <div id="house-plan" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-brands fa-flipboard"></i>
+                            <label>Piantina</label>
+                        </div>
+                    </div>
+                    <div id="house-energy" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <label>Efficienza energetica</label>
+                        </div>
+                        <div id="energy-bar">
+                            <div>A</div>
+                            <div>B</div>
+                            <div>C</div>
+                            <div>D</div>
+                            <div>E</div>
+                            <div>F</div>
+                            <div>G</div>
+                            <div style="background-color: #007b39"></div>
+                            <div style="background-color: #67b550"></div>
+                            <div style="background-color: #92c037"></div>
+                            <div style="background-color: #d1d71d"></div>
+                            <div style="background-color: #e0ac24; filter: none; transform: scale(1.1); z-index: 1">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div style="background-color: #cc5e0b"></div>
+                            <div style="background-color: #c01a1b"></div>
+                        </div>
+                        <div id="energy-info">
+                            <div>
+                                <label>Prestazioni</label>
+                                <label>82,44 kW h/m² anno</label>
+                            </div>
+                            <div>
+                                <label>Impianto</label>
+                                <label>Radiatori</label>
+                            </div>
+                            <div>
+                                <label>Alimentazione</label>
+                                <label>Metano</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="house-contacts" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-regular fa-address-book"></i>
+                            <label>Contatti</label>
+                        </div>
+                        <form id="contact-form">
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-shop"></i>
+                                <a>Agenzia affiliata™</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-envelope"></i>
+                                <a href="mailto:house@mail.it">house@mail.it</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <a href="tel:3790000000">+39 379 0000 000</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <a href="address.googlemaps">Via Brombeis 69</a>
+                            </div>
+                            <a id="call-button" href="tel:081000000"><i class="fa-solid fa-phone"></i>Chiamaci</a>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div id="footer">footer pazzesco</div>
