@@ -87,7 +87,7 @@
         --grid-total-width: calc(var(--grid-max-width) * var(--grid-max-column));
         --grid-total-padding: calc(var(--grid-padding) * 2);
         --grid-total-column-gap: calc(var(--grid-column-gap) * (var(--grid-max-column) - 1));
-        width: min(var(--grid-total-width) + var(--grid-total-column-gap), calc(100% - var(--grid-total-padding)));
+        width: min(var(--grid-total-width) + var(--grid-total-column-gap) + var(--grid-total-padding), calc(100% - var(--grid-total-padding)));
         padding: 20pt var(--grid-padding);
         justify-content: center;
         display: grid;
