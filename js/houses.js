@@ -1,4 +1,10 @@
 $(document).ready(() => {
+    $('#scroller').on('mousemove', function (e) {
+        let x = e.pageX - this.offsetLeft;
+        let y = e.pageY - this.offsetTop;
+        $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
+    });
+
     const sliderNav = $('#slider-nav');
     sliderNav.children('i').on('mousedown', function () {
         sliderNav.css({ 'pointer-events': 'none' });

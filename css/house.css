@@ -7,7 +7,7 @@
     --border-radius: 20px;
     --grid-gap: 16pt;
 
-    width: clamp(800pt, 100%, 1200pt);
+    width: clamp(800pt, 70%, 1200pt);
     padding: 32pt;
     justify-content: center;
     justify-self: center;
@@ -83,7 +83,7 @@
     grid-gap: var(--grid-gap);
     grid-area: b;
 
-    & > img {
+    & > img, & > gmp-map {
         width: 100%;
         aspect-ratio: 4 / 3;
         object-fit: fill;
@@ -156,7 +156,7 @@
     font-size: 20pt;
     user-select: none;
     position: relative;
-
+    height: fit-content;
     margin-bottom: 10pt;
 
     &::after { /*pseudo-element*/
@@ -187,6 +187,7 @@
 
 #house-contacts {
     grid-area: d;
+    height: fit-content;
 
     & > form {
         display: grid;
@@ -246,7 +247,7 @@
         display: grid;
         align-items: center;
         text-align: center;
-        color: aliceblue;
+        color: #727272;
         height: 50px;
 
         & > i {
@@ -279,6 +280,7 @@
             &:first-child {
                 background-color: #242424;
             }
+
             &:last-child {
                 color: darkgray;
                 font-size: 14pt;
@@ -286,6 +288,27 @@
             }
         }
     }
+}
 
+#house-main{
+    & > text{
+        color: aliceblue;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+}
 
+.detail {
+    color: aliceblue;
+    font-size: 15pt;
+
+    & > label:last-child {
+        color: darkgray;
+        font-size: 13pt;
+    }
+}
+
+#house-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 }
