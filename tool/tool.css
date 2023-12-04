@@ -1,0 +1,308 @@
+#scroller{
+    padding: 30pt 0;
+}
+
+body {
+    background-color: #202020;
+}
+
+#room-name {
+    position: absolute;
+    display: none;
+    padding: 10pt;
+    background-color: #202020;
+    color: aliceblue;
+    border-radius: 5pt;
+    border: 3px solid #363636;
+    font-family: Verdana, sans-serif;
+    font-size: 20pt;
+    user-select: none;
+    pointer-events: none;
+    cursor: none;
+    z-index: 10;
+}
+
+#room-name div {
+    font-size: 15pt;
+    color: #808080;
+}
+
+.fancy-button {
+    color: aliceblue;
+    background-color: #202020;
+    border-radius: 10pt;
+    font-size: 20pt;
+    border: 2px solid aliceblue;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 0 10pt 0 0;
+}
+
+.fancy-button:hover {
+    background-color: aliceblue;
+    border: 2px solid #202020;
+    color: #202020;
+    transition: .1s;
+}
+
+button i {
+    padding: 10pt;
+}
+
+#drawing-area {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    row-gap: 10pt;
+    padding: 10pt;
+    width: max-content;
+    background-color: #181818;
+}
+
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(50, 1fr);
+    grid-template-rows: repeat(50, 1fr);
+    gap: 0;
+    width: min-content;
+    height: min-content;
+    margin: 0 10pt;
+    background-color: #202020;
+}
+
+#color-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: min-content;
+    gap: 10pt;
+}
+
+#color-selector > div, #room-labels label {
+    cursor: pointer;
+    width: 25pt;
+    height: 25pt;
+    border-radius: 5pt;
+    display: block;
+}
+
+#right-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: space-between;
+    justify-items: center;
+}
+
+#right-bar button {
+    margin: 0;
+    background-color: #181818;
+    border: none;
+    padding: 0;
+}
+
+#right-bar i {
+    font-size: 25pt;
+    color: #363636;
+    padding: 0;
+}
+
+#right-bar button:hover i, #right-bar label:hover i {
+    color: aliceblue;
+    cursor: pointer;
+}
+
+#tool-title {
+    position: relative;
+    min-width: 42px; /* same as line-height */
+}
+
+#tool-title div {
+    overflow: hidden;
+    line-height: 42px; /* same as min-width */
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    color: #363636;
+    font-family: Verdana, sans-serif;
+    font-size: 18pt;
+    user-select: none;
+    bottom: -55px;
+    left: -1px;
+}
+
+#selected-color {
+    width: 40pt;
+    height: 40pt;
+    border-radius: 5pt;
+    border: 3px solid #181818;
+    background-color: #202020;
+}
+
+.cell {
+    width: 10pt;
+    height: 10pt;
+    border: 1px solid #181818;
+    user-select: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#preview {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(50, 1fr);
+    grid-template-rows: repeat(50, 1fr);
+    gap: 0;
+    width: min-content;
+    height: min-content;
+    margin-left: 10pt;
+    background-color: #181818;
+}
+
+.prev-cell {
+    width: 10pt;
+    height: 10pt;
+    user-select: none;
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: transform .2s;
+}
+
+.hovered-cell {
+    transform: scale(3);
+}
+
+.picture-container{
+    z-index: 2;
+}
+
+.shown-picture{
+    width: 80%;
+    height: 0;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0s;
+}
+
+#room-labels {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    float: left;
+    margin: 10pt 0;
+    padding: 14pt;
+    gap: 10pt;
+    background-color: #181818;
+    grid-column: span 2;
+
+    & > span{
+        color: #808080;
+        font-family: Verdana, sans-serif;
+        font-size: 15pt;
+        user-select: none;
+    }
+}
+
+.room-label {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 15pt;
+    justify-content: left;
+}
+
+.room-label label {
+    cursor: default !important;
+}
+
+.room-label input {
+    background-color: #121212;
+    color: aliceblue;
+    font-size: 18pt;
+}
+
+#window {
+    & > path {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+    }
+}
+
+#upper-right-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+
+    & > div{
+        padding: 12pt;
+        background-color: #121212;
+        border-radius: 15pt;
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        row-gap: 25pt;
+        & > *
+        {
+            background-color: transparent;
+        }
+    }
+}
+
+.loader.visible {
+    opacity: 1;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #121212;
+    width: 100%;
+    height: 100%;
+    transition: opacity .5s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -120px 0 0 -120px; /* Adjusted values */
+    width: 240px;
+    height: 240px;
+}
+
+.loader-ring-light {
+    width: 240px;
+    height: 240px;
+    border-radius: 120px; /* Adjusted value */
+    box-shadow: 0 4px 0 rgb(180, 255, 187) inset;
+    animation: rotate-360 2s linear infinite;
+}
+
+.loader-ring-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 240px;
+    border-radius: 120px; /* Adjusted value */
+    box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.3) inset;
+}
+
+@keyframes rotate-360 {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -185,10 +185,11 @@ body {
     display: grid;
     grid-template-columns: auto auto;
 
-    & > label {
+    & > a {
         color: aliceblue;
         user-select: none;
         font-family: 'Open Sans', Verdana, sans-serif;
+        text-decoration: none !important;
     }
 
     & > i {
