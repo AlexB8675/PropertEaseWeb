@@ -69,6 +69,14 @@ select:-webkit-autofill:focus {
     font-family: 'Nunito', Verdana, sans-serif;
 }
 
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 input, button, label, textarea {
     resize: none;
     outline: none;
@@ -113,7 +121,7 @@ body {
         overflow: hidden;
     }
 
-    & > label  {
+    & > label {
         text-align: center;
         color: aliceblue;
         font-size: 36pt;
@@ -178,10 +186,11 @@ body {
     display: grid;
     grid-template-columns: auto auto;
 
-    & > label {
+    & > a {
         color: aliceblue;
         user-select: none;
         font-family: 'Open Sans', Verdana, sans-serif;
+        text-decoration: none !important;
     }
 
     & > i {
