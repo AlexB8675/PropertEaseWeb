@@ -1,5 +1,5 @@
 function makeEndpointWith(uri) {
-    const endpoint = 'http://151.77.215.58:8080';
+    const endpoint = 'http://localhost:8080';
     return `${endpoint}${uri}`;
 }
 

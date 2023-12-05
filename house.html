@@ -1,221 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="description" content="description">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="black">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="./css/house.css">
-    <link rel="manifest" href="./manifest.json">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-    <script src="js/script.js"></script>
-    <script src="js/houses.js"></script>
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&callback=initMap"></script>
-    <script>
-        function initMap() {
-            const mapOptions = {
-                center: {lat: 40.85669708251953, lng: 14.28452205657959},
-                zoom: 14,
-                disableDefaultUI: true,
-                mapId: '62208738a58b12e9',
-                zoomControl: false,
-                gestureHandling: "cooperative",
-            };
-            const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            const marker = new google.maps.Marker({
-                position: {lat: 40.85669708251953, lng: 14.28452205657959},
-                map: map,
-                title: 'Nome Via della Casa',
-            });
-        }
-    </script>
-    <title>PropertEaseWeb</title>
-</head>
-<body>
-<div class="blur"></div>
-<div id="login">
-    <label>Login</label>
-    <form id="login-form">
-        <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
-        <input id="login-username-input" placeholder="Username" type="text" required>
-        <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
-        <input id="login-password-input" placeholder="Password" type="password" required>
-    </form>
-    <div class="submit-buttons">
-        <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
-        <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
-    </div>
-</div>
-<div id="header">
-    <label>PropertEase</label>
-    <i class="fa-solid fa-user"></i>
-</div>
-<div id="scroller">
-    <div id="house-ui">
-        <div id="house-image-container">
-            <div id="house-displayer">
-                <div id="slider">
-                    <div id="slider-images">
-                        <img data-value='0' class="selected-img" src="https://picsum.photos/1285/755"/>
-                        <img data-value='1' src="https://picsum.photos/1285/751"/>
-                        <img data-value='2' src="https://picsum.photos/1285/750"/>
-                    </div>
-                    <div id="slider-nav">
-                        <i class="fa-solid fa-chevron-left"></i>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                </div>
-                <div id="highlights">
-                    <gmp-map id="map"></gmp-map>
-                    <img src="https://picsum.photos/1285/754">
-                </div>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="description">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="black">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="./css/house.css">
+        <link rel="manifest" href="./manifest.json">
+        <script src="https://code.jquery.com/jquery-3.7.1.js"
+                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
+        <script src="js/script.js"></script>
+        <script src="js/houses.js"></script>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&callback=initMap"></script>
+        <script>
+            function initMap() {
+                const mapOptions = {
+                    center: {lat: 40.85669708251953, lng: 14.28452205657959},
+                    zoom: 14,
+                    disableDefaultUI: true,
+                    mapId: '62208738a58b12e9',
+                    zoomControl: false,
+                    gestureHandling: "cooperative",
+                };
+                const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                const marker = new google.maps.Marker({
+                    position: {lat: 40.85669708251953, lng: 14.28452205657959},
+                    map: map,
+                    title: 'Nome Via della Casa',
+                });
+            }
+        </script>
+        <title>PropertEaseWeb</title>
+    </head>
+    <body>
+        <div class="blur"></div>
+        <div id="login">
+            <label>Login</label>
+            <form id="login-form">
+                <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
+                <input id="login-username-input" placeholder="Username" type="text" required>
+                <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
+                <input id="login-password-input" placeholder="Password" type="password" required>
+            </form>
+            <div class="submit-buttons">
+                <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
+                <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
             </div>
         </div>
-        <div id="house-info-container">
-            <div id="house-main" class="displayer">
-                <div class="section-title">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <label>Key Features</label>
-                </div>
-                <div class="detail">
-                    <label>Address:</label>
-                    <label>Via Nome, Citta, cap</label>
-                </div>
-                <div id="house-details">
-                    <div class="detail">
-                        <label>Floor:</label>
-                        <label>3rd</label>
-                    </div>
-                    <div class="detail">
-                        <label>Elevator:</label>
-                        <label>Yes</label>
-                    </div>
-                    <div class="detail">
-                        <label>Balconies:</label>
-                        <label>2</label>
-                    </div>
-                    <div class="detail">
-                        <label>Terrace:</label>
-                        <label>40sqm</label>
-                    </div>
-                    <div class="detail">
-                        <label>Garden:</label>
-                        <label>90sqm</label>
-                    </div>
-                    <div class="detail">
-                        <label>Accessories:</label>
-                        <label>2</label>
-                    </div>
-                    <div class="detail">
-                        <label>Bedrooms:</label>
-                        <label>5</label>
-                    </div>
-                    <div class="detail">
-                        <label>sqm:</label>
-                        <label>110</label>
-                    </div>
-
-                </div>
-                <div class="section-title">
-                    <label>Description</label>
-                </div>
-                <text>
-                    Discover the charm of Greenslade Road, Barking – an exquisite 1-bedroom flat that epitomizes modern
-                    living. This spacious residence features 1 large reception room, offering a versatile space for
-                    relaxation and entertaining. With a contemporary and stylish design, the flat exudes a welcoming
-                    ambiance throughout. The property is complemented by a private gated parking complex, ensuring
-                    secure and convenient parking for residents. Enjoy the perfect blend of comfort and accessibility in
-                    this well-maintained home, with an EPC Rating of C and Council Tax Band B.
-
-                    Situated in a prime location, this property is not only modern but also conveniently located near a
-                    plethora of amenities. Residents can take advantage of the proximity to Barking Station, providing
-                    swift connections for commuters. Local amenities, including shops and restaurants, are within easy
-                    reach, enhancing the daily living experience. Families will appreciate the presence of reputable
-                    schools, such as Eastbury Community School, creating a conducive environment for education.
-                    Additionally, the property is close to open areas and parks, offering a delightful escape for
-                    outdoor activities.
-
-                    Don't miss the opportunity to make this modern and conveniently located flat your new home. Contact
-                    us now to arrange a viewing at Greenslade Road and experience the comfort and convenience it has to
-                    offer.
-                </text>
-            </div>
-            <div id="house-plan" class="displayer">
-                <div class="section-title">
-                    <i class="fa-brands fa-flipboard"></i>
-                    <label>House Plan</label>
-                </div>
-            </div>
-            <div id="house-energy" class="displayer">
-                <div class="section-title">
-                    <i class="fa-solid fa-lightbulb"></i>
-                    <label>Energy Performance</label>
-                </div>
-                <div id="energy-bar">
-                    <div>A</div>
-                    <div>B</div>
-                    <div>C</div>
-                    <div>D</div>
-                    <div style="color: aliceblue">E</div>
-                    <div>F</div>
-                    <div>G</div>
-                    <div style="background-color: #007b39"></div>
-                    <div style="background-color: #67b550"></div>
-                    <div style="background-color: #92c037"></div>
-                    <div style="background-color: #d1d71d"></div>
-                    <div style="background-color: #e0ac24; filter: none; transform: scale(1.1); z-index: 1">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <div style="background-color: #cc5e0b"></div>
-                    <div style="background-color: #c01a1b"></div>
-                </div>
-                <div id="energy-info">
-                    <div>
-                        <label>Performance</label>
-                        <label>82,44 kW h/m² yearly</label>
-                    </div>
-                    <div>
-                        <label>Energy System</label>
-                        <label>Radiators</label>
-                    </div>
-                    <div>
-                        <label>Fueled by</label>
-                        <label>Methane</label>
-                    </div>
-                </div>
-            </div>
-            <div id="house-contacts" class="displayer">
-                <div class="section-title">
-                    <i class="fa-regular fa-address-book"></i>
-                    <label>Contacts</label>
-                </div>
-                <form id="contact-form">
-                    <div class="contact-entry">
-                        <i class="fa-solid fa-shop"></i>
-                        <a>Marketed by</a>
-                    </div>
-                    <div class="contact-entry">
-                        <i class="fa-solid fa-envelope"></i>
-                        <a href="mailto:house@mail.it">house@mail.it</a>
-                    </div>
-                    <div class="contact-entry">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        <a href="tel:3790000000">+39 379 0000 000</a>
-                    </div>
-                    <div class="contact-entry">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <a href="address.googlemaps">Via Brombeis 69</a>
-                    </div>
-                    <a id="call-button" href="tel:081000000"><i class="fa-solid fa-phone"></i>Call us</a>
-                </form>
-            </div>
+        <div id="header">
+            <a href="index.html">PropertEase</a>
+            <i class="fa-solid fa-user"></i>
         </div>
-    </div>
-    <div id="footer">footer pazzesco</div>
-</div>
-</body>
+        <div id="scroller">
+            <div id="house-ui">
+                <div id="house-displayer">
+                    <div id="slider">
+                        <div id="slider-images">
+                            <img data-value='0' class="selected-img" src="https://picsum.photos/1285/755"/>
+                            <img data-value='1' src="https://picsum.photos/1285/751"/>
+                            <img data-value='2' src="https://picsum.photos/1285/750"/>
+                        </div>
+                        <div id="slider-nav">
+                            <i class="fa-solid fa-chevron-left"></i>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    <div id="highlights">
+                        <gmp-map id="map"></gmp-map>
+                        <img src="https://picsum.photos/1285/754">
+                    </div>
+                </div>
+                <div id="house-info-container">
+                    <div id="house-main" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <label>Key Features</label>
+                        </div>
+                        <div class="detail">
+                            <label>Address:</label>
+                            <label>Via Nome, Citta, cap</label>
+                        </div>
+                        <div id="house-details">
+                            <div class="detail">
+                                <label>Floor:</label>
+                                <label>3rd</label>
+                            </div>
+                            <div class="detail">
+                                <label>Elevator:</label>
+                                <label>Yes</label>
+                            </div>
+                            <div class="detail">
+                                <label>Balconies:</label>
+                                <label>2</label>
+                            </div>
+                            <div class="detail">
+                                <label>Terrace:</label>
+                                <label>40sqm</label>
+                            </div>
+                            <div class="detail">
+                                <label>Garden:</label>
+                                <label>90sqm</label>
+                            </div>
+                            <div class="detail">
+                                <label>Accessories:</label>
+                                <label>2</label>
+                            </div>
+                            <div class="detail">
+                                <label>Bedrooms:</label>
+                                <label>5</label>
+                            </div>
+                            <div class="detail">
+                                <label>sqm:</label>
+                                <label>110</label>
+                            </div>
+
+                        </div>
+                        <div class="section-title">
+                            <label>Description</label>
+                        </div>
+                        <text>
+                            Discover the charm of Greenslade Road, Barking – an exquisite 1-bedroom flat that epitomizes
+                            modern
+                            living. This spacious residence features 1 large reception room, offering a versatile space
+                            for
+                            relaxation and entertaining. With a contemporary and stylish design, the flat exudes a
+                            welcoming
+                            ambiance throughout. The property is complemented by a private gated parking complex,
+                            ensuring
+                            secure and convenient parking for residents. Enjoy the perfect blend of comfort and
+                            accessibility in
+                            this well-maintained home, with an EPC Rating of C and Council Tax Band B.
+
+                            Situated in a prime location, this property is not only modern but also conveniently located
+                            near a
+                            plethora of amenities. Residents can take advantage of the proximity to Barking Station,
+                            providing
+                            swift connections for commuters. Local amenities, including shops and restaurants, are
+                            within easy
+                            reach, enhancing the daily living experience. Families will appreciate the presence of
+                            reputable
+                            schools, such as Eastbury Community School, creating a conducive environment for education.
+                            Additionally, the property is close to open areas and parks, offering a delightful escape
+                            for
+                            outdoor activities.
+
+                            Don't miss the opportunity to make this modern and conveniently located flat your new home.
+                            Contact
+                            us now to arrange a viewing at Greenslade Road and experience the comfort and convenience it
+                            has to
+                            offer.
+                        </text>
+                    </div>
+                    <div id="house-contacts" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-regular fa-address-book"></i>
+                            <label>Contacts</label>
+                        </div>
+                        <form id="contact-form">
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-shop"></i>
+                                <a>Marketed by</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-envelope"></i>
+                                <a href="mailto:house@mail.it">house@mail.it</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <a href="tel:3790000000">+39 379 0000 000</a>
+                            </div>
+                            <div class="contact-entry">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <a href="address.googlemaps">Via Brombeis 69</a>
+                            </div>
+                            <a id="call-button" href="tel:081000000"><i class="fa-solid fa-phone"></i>Call us</a>
+                        </form>
+                    </div>
+                    <div id="house-plan" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-brands fa-flipboard"></i>
+                            <label>House Plan</label>
+                        </div>
+                    </div>
+                    <div id="house-energy" class="displayer">
+                        <div class="section-title">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <label>Energy Performance</label>
+                        </div>
+                        <div id="energy-bar">
+                            <div>A</div>
+                            <div>B</div>
+                            <div>C</div>
+                            <div>D</div>
+                            <div style="color: aliceblue">E</div>
+                            <div>F</div>
+                            <div>G</div>
+                            <div style="background-color: #007b39"></div>
+                            <div style="background-color: #67b550"></div>
+                            <div style="background-color: #92c037"></div>
+                            <div style="background-color: #d1d71d"></div>
+                            <div style="background-color: #e0ac24; filter: none; transform: scale(1.1); z-index: 1">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div style="background-color: #cc5e0b"></div>
+                            <div style="background-color: #c01a1b"></div>
+                        </div>
+                        <div id="energy-info">
+                            <div>
+                                <label>Performance</label>
+                                <label>82,44 kW h/m² yearly</label>
+                            </div>
+                            <div>
+                                <label>Energy System</label>
+                                <label>Radiators</label>
+                            </div>
+                            <div>
+                                <label>Fueled by</label>
+                                <label>Methane</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer">footer pazzesco</div>
+        </div>
+    </body>
 </html>
