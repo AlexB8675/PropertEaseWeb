@@ -352,7 +352,64 @@ $(document).ready(function () {
         }
     });
 
-    $('#submit-plan').on('click', function () {
+    setupHouseSubmitForm();
+
+    function fillBucket(x, y) {
+        const stack = [{ x: x, y: y }];
+        const cells = $(`.cell`);
+        const previewCells = $(`.prev-cell`);
+        const targetColor = $('#selected-color').attr('data-value');
+        const replacementColor = $(cells[x + y * COLS]).attr('data-value');
+        while (stack.length !== 0) {
+            const { x, y } = stack.pop();
+            if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
+                continue;
+            }
+            const cell = $(cells[x + y * COLS]);
+            const previewCell = $(previewCells[x + y * COLS]);
+            const cellColor = cell.attr('data-value');
+            if (cellColor === targetColor || cellColor !== replacementColor) {
+                continue;
+            }
+
+            cell
+                .css('background-color', getColor(targetColor))
+                .attr('data-value', targetColor);
+            previewCell
+                .css('background-color', getColor(targetColor))
+                .attr('data-value', targetColor);
+            stack.push({ x: x - 1, y: y });
+            stack.push({ x: x + 1, y: y });
+            stack.push({ x: x, y: y - 1 });
+            stack.push({ x: x, y: y + 1 });
+        }
+    }
+});
+
+function setupHouseSubmitForm() {
+    $('#submit-house-main-image').on('click', function (event) {
+        event.preventDefault();
+        $('<input type="file" accept="image/*" style="display:none">')
+            .on('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        $('#submit-house-main-image').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover'
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                    submitData.addIndex(-1);
+                    submitData.addFile(file);
+                }
+                $(this).remove();
+            })
+            .click();
+    });
+    $('#submit-house-form').on('submit', function (event) {
+        event.preventDefault();
         if (!check_download()) {
             return;
         }
@@ -393,40 +450,12 @@ $(document).ready(function () {
 
         // reset
         submitData.clear();
+        $(this)
+            .find('input')
+            .val('');
         clear_grid();
     });
-
-    function fillBucket(x, y) {
-        const stack = [{ x: x, y: y }];
-        const cells = $(`.cell`);
-        const previewCells = $(`.prev-cell`);
-        const targetColor = $('#selected-color').attr('data-value');
-        const replacementColor = $(cells[x + y * COLS]).attr('data-value');
-        while (stack.length !== 0) {
-            const { x, y } = stack.pop();
-            if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
-                continue;
-            }
-            const cell = $(cells[x + y * COLS]);
-            const previewCell = $(previewCells[x + y * COLS]);
-            const cellColor = cell.attr('data-value');
-            if (cellColor === targetColor || cellColor !== replacementColor) {
-                continue;
-            }
-
-            cell
-                .css('background-color', getColor(targetColor))
-                .attr('data-value', targetColor);
-            previewCell
-                .css('background-color', getColor(targetColor))
-                .attr('data-value', targetColor);
-            stack.push({ x: x - 1, y: y });
-            stack.push({ x: x + 1, y: y });
-            stack.push({ x: x, y: y - 1 });
-            stack.push({ x: x, y: y + 1 });
-        }
-    }
-});
+}
 
 function getColor(data) {
     const dataIndex = (typeof data === 'object') ? data.value : parseInt(data, 10);
