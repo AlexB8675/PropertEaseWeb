@@ -2,6 +2,45 @@
 const ROWS = 50;
 const COLS = 50;
 
+class SubmitForm {
+    constructor() {
+        this.data = '';
+        this.files = [];
+        this.indices = [];
+    }
+
+    addFile(file) {
+        this.files.push(file);
+    }
+
+    addIndex(index) {
+        this.indices.push(index);
+    }
+
+    addData(data) {
+        this.data += data;
+    }
+
+    asForm() {
+        const form = new FormData();
+        form.append('data', this.data);
+        for (const file of this.files) {
+            form.append('files', file);
+        }
+        for (const [index, value] of this.indices.entries()) {
+            form.append(`indices`, value);
+        }
+        return form;
+    }
+
+    clear() {
+        this.data = '';
+        this.files = [];
+        this.indices = [];
+    }
+}
+const submitData = new SubmitForm();
+
 $(document).ready(function () {
     $(document).on('keydown', function (e) {
         const keyCode = e.keyCode;
@@ -22,7 +61,7 @@ $(document).ready(function () {
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
-            return {row, col};
+            return { row, col };
         }
 
         // Define a function to shift the cells in the specified direction
@@ -110,11 +149,11 @@ $(document).ready(function () {
     let isRightMousePressed = false;
     let mouseDiv = $('#room-name');
     let tools = [
-        {value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false},  // Wall
-        {value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false},  // Door
-        {value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false},   // Window
-        {value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: null, selected: false}, // Fill Bucket
-        {value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false}    // Image Upload
+        { value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false },  // Wall
+        { value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false },  // Door
+        { value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false },   // Window
+        { value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: "fill", selected: false }, // Fill Bucket
+        { value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false }    // Image Upload
     ];
 
     $('.prev-cell').on('mousemove', function (e) {
@@ -192,11 +231,11 @@ $(document).ready(function () {
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
                     .css("background-color", getColor(data));
             } else if (isRightMousePressed) {
-                $(this).css({"background-color": "transparent", "background-image": ""})
+                $(this).css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container')
                     .attr("data-value", 0);
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
-                    .css({"background-color": "transparent", "background-image": ""})
+                    .css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container');
             }
         }
@@ -205,48 +244,46 @@ $(document).ready(function () {
     cell.on('click', function () {
         // Check if the Image Upload tool is selected
         if (tools[4].selected) {
-            let clicked_cell = $(this);
-            let prev_cell = $(`#preview > div:nth-child(${clicked_cell.index() + 2})`);
+            const clickedCell = $(this);
+            const previewCell = $(`#preview > div:nth-child(${clickedCell.index() + 2})`);
 
             // Backup image
-            clicked_cell.css('background-image', `url('camera.svg')`);
+            clickedCell.css('background-image', `url('camera.svg')`);
 
             // Create an input element
-            let input = $('<input type="file" style="display:none">');
+            const input = $('<input type="file" style="display:none">');
             $('body').append(input);
-            input.click();
-
-            input.on('change', function() {
-                let file = this.files[0];
-
+            input.on('change', function () {
+                const file = this.files[0];
                 if (file) {
-                    let reader = new FileReader();
-                    reader.onload = function(e) {
-                        clicked_cell.css('background-image', `url(${e.target.result})`);
-                        prev_cell.addClass('picture-container')
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        clickedCell.css('background-image', `url(${e.target.result})`);
+                        previewCell.addClass('picture-container')
                             .css('background-image', `url(${e.target.result})`)
-                            .on('mousedown', function (){
+                            .on('mousedown', function () {
                                 $(this).toggleClass('shown-picture');
-                                if($(this).hasClass('shown-picture'))
-                                {
-                                    let img = new Image;
-                                    img.src = $(this).css('background-image').replace('url("','').replace('")','');
-                                    let bgImgWidth = img.width;
-                                    let bgImgHeight = img.height;
+                                if ($(this).hasClass('shown-picture')) {
+                                    const img = new Image();
+                                    img.src = $(this).css('background-image').replace('url("', '').replace('")', '');
+                                    const bgImgWidth = img.width;
+                                    const bgImgHeight = img.height;
                                     $(this).css('padding-top', `${bgImgHeight / bgImgWidth * 80}%`);
-                                }
-                                else
-                                {
+                                } else {
                                     $(this).css('padding-top', ``);
                                 }
                             });
                     };
                     reader.readAsDataURL(file);
+
+                    submitData.addFile(file);
+                    submitData.addIndex(clickedCell.index());
                 }
 
                 // Remove the input element from the DOM
                 input.remove();
             });
+            input.click();
         }
 
         // Check if the Fill Bucket tool is selected
@@ -315,14 +352,16 @@ $(document).ready(function () {
         }
     });
 
+    setupHouseSubmitForm();
+
     function fillBucket(x, y) {
-        const stack = [{x: x, y: y}];
+        const stack = [{ x: x, y: y }];
         const cells = $(`.cell`);
         const previewCells = $(`.prev-cell`);
         const targetColor = $('#selected-color').attr('data-value');
         const replacementColor = $(cells[x + y * COLS]).attr('data-value');
         while (stack.length !== 0) {
-            const {x, y} = stack.pop();
+            const { x, y } = stack.pop();
             if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
                 continue;
             }
@@ -339,13 +378,84 @@ $(document).ready(function () {
             previewCell
                 .css('background-color', getColor(targetColor))
                 .attr('data-value', targetColor);
-            stack.push({x: x - 1, y: y});
-            stack.push({x: x + 1, y: y});
-            stack.push({x: x, y: y - 1});
-            stack.push({x: x, y: y + 1});
+            stack.push({ x: x - 1, y: y });
+            stack.push({ x: x + 1, y: y });
+            stack.push({ x: x, y: y - 1 });
+            stack.push({ x: x, y: y + 1 });
         }
     }
 });
+
+function setupHouseSubmitForm() {
+    $('#submit-house-main-image').on('click', function (event) {
+        event.preventDefault();
+        $('<input type="file" accept="image/*" style="display:none">')
+            .on('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        $('#submit-house-main-image').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover'
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                    submitData.addIndex(-1);
+                    submitData.addFile(file);
+                }
+                $(this).remove();
+            })
+            .click();
+    });
+    $('#submit-house-form').on('submit', function (event) {
+        event.preventDefault();
+        if (!check_download()) {
+            return;
+        }
+
+        let result = '';
+        $('#grid-container > div[data-value]').each(function (index) {
+            const value = $(this).attr('data-value');
+            if (index > 0 && index % COLS === 0) {
+                result += '\n' + value + ',';
+            } else {
+                result += value + ',';
+            }
+        });
+        result += '\n';
+        $('#room-labels label[data-value]').each(function () {
+            const value = $(this).attr('data-value');
+            const roomLabelText = $(this)
+                .closest('.room-label')
+                .find('input[type="text"]')
+                .val()
+                .trim();
+            result += value + ',' + roomLabelText + ';';
+        });
+        submitData.addData(result);
+        $.ajax({
+            url: makeEndpointWith('/api/data/tool/upload'),
+            type: 'POST',
+            data: submitData.asForm(),
+            processData: false,
+            contentType: false,
+            done: function (response) {
+                console.log('Response:', response);
+            },
+            error: function (error) {
+                console.error('Error Uploading Plan:', error);
+            }
+        });
+
+        // reset
+        submitData.clear();
+        $(this)
+            .find('input')
+            .val('');
+        clear_grid();
+    });
+}
 
 function getColor(data) {
     const dataIndex = (typeof data === 'object') ? data.value : parseInt(data, 10);
@@ -409,7 +519,7 @@ function download_plan() {
 
 
     // Download the result as a text file
-    let blob = new Blob([resultString], {type: 'text/plain'});
+    let blob = new Blob([resultString], { type: 'text/plain' });
     let a = document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = 'data-values.hplan';
@@ -487,7 +597,7 @@ function generate_rooms() {
     let uniqueColorsAndData = [...new Set($('.cell').map(function () {
         let color = $(this).css('background-color');
         let data = $(this).attr('data-value');
-        return (check_isRoom(color)) ? {color, data} : null;
+        return (check_isRoom(color)) ? { color, data } : null;
     }).get())];
 
     // Remove containers with background colors not present in unique colors

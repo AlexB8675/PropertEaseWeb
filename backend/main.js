@@ -118,8 +118,7 @@ registerPostApiEndpoint(app, database, {
     }
 });
 
-app.post('/api/data/tool/upload_room_photo', upload.array('files'), (request, result) => {
-    console.log(request.files);
+app.post('/api/data/tool/upload', upload.array('files'), (request, result) => {
     result.status(200).send({});
 });
 

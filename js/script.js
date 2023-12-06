@@ -1,5 +1,95 @@
+class Storage {
+    static set(x, key, value) {
+        x.setItem(key, value);
+    }
+
+    static get(x, key) {
+        return x.getItem(key);
+    }
+
+    static has(x, key) {
+        return x.getItem(key) !== null;
+    }
+
+    static remove(x, key) {
+        x.removeItem(key);
+    }
+
+    static clear(x) {
+        x.clear();
+    }
+
+    static asJsonString(x) {
+        return JSON.stringify(x);
+    }
+
+    static asJson(x) {
+        return JSON.parse(this.asJsonString(x));
+    }
+}
+
+class SessionStorage extends Storage {
+    static set(key, value) {
+        super.set(window.sessionStorage, key, value);
+    }
+
+    static get(key) {
+        return super.get(window.sessionStorage, key);
+    }
+
+    static has(key) {
+        return super.has(window.sessionStorage, key);
+    }
+
+    static remove(key) {
+        super.remove(window.sessionStorage, key);
+    }
+
+    static clear() {
+        super.clear(window.sessionStorage);
+    }
+
+    static asJsonString(x) {
+        return super.asJsonString(window.sessionStorage, x);
+    }
+
+    static asJson(x) {
+        return super.asJson(window.sessionStorage, x);
+    }
+}
+
+class LocalStorage extends Storage {
+    static set(key, value) {
+        super.set(window.localStorage, key, value);
+    }
+
+    static get(key) {
+        return super.get(window.localStorage, key);
+    }
+
+    static has(key) {
+        return super.has(window.localStorage, key);
+    }
+
+    static remove(key) {
+        super.remove(window.localStorage, key);
+    }
+
+    static clear() {
+        super.clear(window.localStorage);
+    }
+
+    static asJsonString(x) {
+        return super.asJsonString(window.localStorage, x);
+    }
+
+    static asJson(x) {
+        return super.asJson(window.localStorage, x);
+    }
+}
+
 function makeEndpointWith(uri) {
-    const endpoint = 'http://151.77.215.58:8080';
+    const endpoint = 'http://localhost:8080';
     return `${endpoint}${uri}`;
 }
 
