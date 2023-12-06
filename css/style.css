@@ -77,7 +77,7 @@ a {
     }
 }
 
-input, button, label, textarea {
+input, button, label, textarea, select, select:hover, option, option:hover {
     resize: none;
     outline: none;
     border: none;
@@ -87,6 +87,17 @@ input, button, label, textarea {
     margin: 0;
     width: unset;
     height: unset;
+    display: block;
+}
+
+select {
+    color: aliceblue;
+    background-color: #202020;
+    appearance: none;
+
+    &:hover{
+        background-color: #202020;
+    }
 }
 
 body {
@@ -213,4 +224,58 @@ body {
     color: aliceblue;
     font-size: 20pt;
     padding: 10pt;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 100%;
+    & > input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #202020;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+
+    &:before {
+        position: absolute;
+        content: "";
+        height: 30px;
+        aspect-ratio: 1 / 1;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateY(-50%) translateX(22px);
 }

@@ -258,17 +258,16 @@ button i {
     color: white;
     font-size: 16pt;
     display: grid;
-    grid-template-columns: max-content auto;
-    grid-template-rows: 1fr max-content;
+    grid-template-columns: auto auto;
     grid-gap: 24pt;
     grid-column: 1 / 3;
 }
 
-#submit-house-main-image {
-    min-width: 360pt;
+#house-main-image-label {
+    width: 360pt;
+    display: block;
     aspect-ratio: 1 / 1;
     background-color: #181818;
-    grid-row: 1 / 3;
 }
 
 #submit-house-info {
@@ -277,21 +276,23 @@ button i {
     justify-content: space-between;
     padding: 8pt;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: max-content;
+    grid-template-columns: 1fr;
     grid-row-gap: 8pt;
 
     .entry {
         align-items: center;
         display: grid;
-        grid-template-rows: auto 1fr;
+        grid-template-columns: 1fr 2fr;
         grid-row-gap: 4pt;
         padding: 0 8pt;
 
         & > label {
             color: aliceblue;
-            font-size: 20pt;
-            padding: 0 18pt;
+            font-size: 16pt;
+            padding: 6pt;
+            border-top-left-radius: 64px;
+            border-bottom-left-radius: 64px;
+            background-color: #242424;
 
             & > i {
                 color: aliceblue;
@@ -303,10 +304,28 @@ button i {
             font-size: 16pt;
             color: aliceblue;
             background: #202020;
-            padding: 6pt 18pt;
-            border-radius: 64px;
+            padding: 6pt;
+            border-top-right-radius: 64px;
+            border-bottom-right-radius: 64px;
+        }
+
+        & > select{
+            font-size: 16pt;
+            padding: 6pt;
+            border-top-right-radius: 64px;
+            border-bottom-right-radius: 64px;
+
+            & > option{
+                background-color: #242424;
+            }
         }
     }
+}
+
+#house-general-info{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 8pt;
 }
 
 #submit-plan {
@@ -319,7 +338,6 @@ button i {
     cursor: pointer;
     transition: all 250ms ease-in-out;
     align-self: end;
-    grid-column: 2;
 
     &:hover {
         background-color: #404040;
@@ -373,5 +391,28 @@ button i {
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+.section-title {
+    position: relative;
+    font-size: 20pt;
+    user-select: none;
+    height: fit-content;
+    margin-bottom: 10pt;
+    color: #727272;
+
+    &::after {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        content: "";
+        background: linear-gradient(90deg, #727272, transparent);
+    }
+
+    & > i {
+        margin-right: 2pt;
     }
 }
