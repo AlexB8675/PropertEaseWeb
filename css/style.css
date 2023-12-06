@@ -95,13 +95,14 @@ body {
     margin: 0;
     padding: 0;
     background: black;
+    overflow: hidden;
     display: grid;
     grid-template-rows: min-content auto;
-    overflow: hidden;
 }
 
 #login {
     --vertical-padding: 32pt;
+
     position: absolute;
     min-width: 540pt;
     width: min(540pt, calc(100% - var(--vertical-padding) * 2));
