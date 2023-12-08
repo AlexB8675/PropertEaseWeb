@@ -123,14 +123,6 @@ registerGetApiEndpoint(app, database, {
         result.send(rows);
     }
 });
-registerGetApiEndpoint(app, database, {
-    endpoint: '/api/data/houses/city/:city',
-    query: `select * from House where city like '%?%'`,
-    parameters: (request) => [request.params.city],
-    callback: (result, rows) => {
-        result.send(rows);
-    }
-});
 
 registerPostApiEndpoint(app, database, {
     endpoint: '/api/login/signin',

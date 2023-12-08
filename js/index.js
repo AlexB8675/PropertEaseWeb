@@ -52,14 +52,6 @@ $(document).ready(function () {
             </a>
         `.trim();
 
-        const imagesFromJson = (json) => {
-            const images = new Map();
-            for (const each of json) {
-                const [key, value] = Object.entries(each).flat();
-                images.set(key, value);
-            }
-            return images;
-        }
         for (const house of data) {
             const images = imagesFromJson(JSON.parse(house.images));
             const card = $(
