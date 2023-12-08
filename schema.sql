@@ -4,7 +4,8 @@ create table if not exists House (
     address     varchar(255) not null,
     city        varchar(255) not null,
     cap         varchar(255) not null,
-    -- 0: Vendita, 1: Affitto
+    description text         not null,
+    -- 0: Sale, 1: Rent
     contract    integer      not null,
     price       integer      not null,
     floor       integer      not null,
@@ -14,7 +15,8 @@ create table if not exists House (
     garden      integer      not null,
     accessories integer      not null,
     bedrooms    integer      not null,
-    image       varchar(255) not null,
+    plan        text         not null,
+    images      text         not null,
     e_type      varchar(255) not null,
 
     check (contract in (0, 1)),
@@ -40,6 +42,7 @@ insert into Type values ('Studio Apartment');
 insert into Type values ('Two-Room Apartment');
 insert into Type values ('Three-Room Apartment');
 insert into Type values ('Four-Room Apartment');
+insert into Type values ('Multi-Room Apartment');
 insert into Type values ('Loft');
 insert into Type values ('Independent House');
 

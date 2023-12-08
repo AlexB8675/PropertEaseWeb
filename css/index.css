@@ -96,6 +96,7 @@
         grid-row-gap: 20pt;
 
         .card {
+            text-decoration: none;
             overflow: hidden;
             background-color: #181818;
             border-radius: 8px;
@@ -104,7 +105,7 @@
             perspective: 600px;
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: repeat(2, min-content);
+            grid-template-rows: auto repeat(2, min-content);
             transition: box-shadow 250ms, transform 250ms;
 
             &:hover {

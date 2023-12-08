@@ -6,6 +6,53 @@ const crypto = require('crypto');
 const app = express();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const fs = require('fs');
+
+function getNextHouseId(database, callback) {
+    database.get('select max(id) as id from House', (error, row) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        if (row.id === null) {
+            callback(1);
+            return;
+        }
+        callback(row.id + 1);
+    });
+}
+
+function parseHousePlan(plan) {
+    const rows = 50;
+    const columns = 50;
+    let output = {
+        plan: [],
+        rooms: [],
+        images: []
+    };
+    for (let i = 0; i < rows; i++) {
+        const values = plan[i].split(',');
+        values.pop();
+        for (let j = 0; j < columns; j++) {
+            output.plan[i * columns + j] = values[j];
+        }
+    }
+
+    // parse rooms
+    const rooms = plan[rows].split(';');
+    rooms.pop();
+    for (const room of rooms) {
+        const values = room.split(',');
+        output.rooms.push(parseInt(values[0], 10));
+    }
+
+    // parse images
+    const images = plan[rows + 1].split(';')[0].split(',');
+    for (const image of images) {
+        output.images.push(parseInt(image, 10));
+    }
+    return output;
+}
 
 function makeSha512Hash(string) {
     const hash = crypto.createHash('sha512');
@@ -14,7 +61,7 @@ function makeSha512Hash(string) {
 }
 
 function handleRequest(request, result, info) {
-    console.log("request received: \"", request ,"\"\n");
+    console.log("request received: \"", request ,"\",");
     if (info.query) {
         database.all(info.query, info.parameters(request), (error, rows) => {
             if (error) {
@@ -22,7 +69,7 @@ function handleRequest(request, result, info) {
                 console.error(error);
                 return;
             }
-            console.log("sent: \"", rows ,"\"\n\n");
+            console.log("sent: \"", rows ,"\",,");
             info.callback(result, rows);
         });
     } else {
@@ -55,6 +102,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses',
     query: 'select * from House',
+    parameters: _ => [],
+    callback: (result, rows) => {
+        result.send(rows);
+    }
+});
+registerGetApiEndpoint(app, database, {
+    endpoint: '/api/data/types',
+    query: 'select * from Type',
     parameters: _ => [],
     callback: (result, rows) => {
         result.send(rows);
@@ -119,7 +174,70 @@ registerPostApiEndpoint(app, database, {
 });
 
 app.post('/api/data/tool/upload', upload.array('files'), (request, result) => {
-    result.status(200).send({});
+    const files = request.files;
+    const plan = decodeURI(request.body.plan);
+    const parsedPlan = parseHousePlan(plan.split('\n'));
+    const info = JSON.parse(decodeURI(request.body.info));
+    getNextHouseId(database, (id) => {
+        const baseUploadsPath = `uploads`;
+        const baseImagePath = `images/${id}`;
+        fs.mkdir(`../${baseImagePath}`, (_) => {
+            const imageIds = new Map();
+            for (const [index, image] of files.entries()) {
+                const previous = `${baseUploadsPath}/${image.filename}`;
+                const current = `${baseImagePath}/${image.originalname}`;
+                fs.renameSync(previous, `../${current}`);
+                imageIds.set(parsedPlan.images[index], current);
+            }
+
+            const parameters = [
+                info['address'],
+                info['city'],
+                info['zip'],
+                info['description'],
+                info['contract'],
+                info['price'],
+                info['floor'],
+                // !! means convert to boolean
+                !!info['elevator'],
+                info['balconies'],
+                info['terrace'],
+                info['garden'],
+                info['accessories'],
+                info['bedrooms'],
+                plan,
+                JSON.stringify(Array.from(imageIds.entries()).map(([k, v]) => { return { [k]: v }; })),
+                info['house']
+            ];
+            const fields = `
+                address,
+                city,
+                cap,
+                description,
+                contract,
+                price,
+                floor,
+                elevator,
+                balconies,
+                terrace,
+                garden,
+                accessories,
+                bedrooms,
+                plan,
+                images,
+                e_type
+            `;
+            database.run(`insert into House (${fields}) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, parameters, (error) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                result.send({
+                    id: id,
+                });
+            });
+        });
+    });
 });
 
 const port = 8080;

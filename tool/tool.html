@@ -126,20 +126,30 @@
                                 <i class="fa-solid fa-clipboard-list"></i>
                                 <label>Key Features</label>
                             </div>
+
+                            <!-- City -->
+                            <div class="entry">
+                                <label for="house-form-city">City</label>
+                                <input id="house-form-city" type="text" required>
+                            </div>
+
                             <!-- Address -->
                             <div class="entry">
                                 <label for="house-form-address">Address</label>
                                 <input id="house-form-address" type="text" required>
                             </div>
 
-                            <!-- House Type (Dropdown) -->
+                            <!-- Zip Code -->
+                            <div class="entry">
+                                <label for="house-form-zip">Zip Code</label>
+                                <input id="house-form-zip" type="text" required>
+                            </div>
+
+                            <!-- House Type -->
                             <div class="entry">
                                 <label for="house-form-house">Type</label>
                                 <select id="house-form-house" required>
                                     <option value="0" disabled selected>Select a type</option>
-                                    <option value="apartment">Apartment</option>
-                                    <option value="house">House</option>
-                                    <option value="condo">Condo</option>
                                 </select>
                             </div>
 
@@ -161,7 +171,7 @@
                                 <input id="house-form-floor" type="number" required>
                             </div>
 
-                            <!-- Elevator (Dropdown) -->
+                            <!-- Elevator -->
                             <div class="entry">
                                 <label for="house-form-elevator">Elevator</label>
                                 <select id="house-form-elevator" required>
@@ -193,7 +203,9 @@
                                 <i class="fa-solid fa-align-justify"></i>
                                 <label>Description</label>
                             </div>
-                            <textarea id="house-form-description" required></textarea>
+                            <label style="display: grid">
+                                <textarea id="house-form-description" required></textarea>
+                            </label>
                         </div>
                         <div>
                             <div class="section-title">
@@ -221,7 +233,7 @@
                                 <input id="house-form-energy-performance" type="number" placeholder="kWh/m&#178; yearly" required>
                             </div>
 
-                            <!-- Energy System (Dropdown) -->
+                            <!-- Energy System -->
                             <div class="entry">
                                 <label for="house-form-energy-system">System</label>
                                 <select id="house-form-energy-system" required>
@@ -232,7 +244,7 @@
                                 </select>
                             </div>
 
-                            <!-- Fuel Type (Dropdown) -->
+                            <!-- Fuel Type -->
                             <div class="entry">
                                 <label for="house-form-fuel">Fuel</label>
                                 <select id="house-form-fuel" required>
@@ -254,13 +266,13 @@
                                 <input id="house-form-price" placeholder="&euro;" type="number" required>
                             </div>
 
-                            <!-- Contract Type (radio buttons) -->
+                            <!-- Contract Type -->
                             <div class="entry">
                                 <label for="house-form-contract">Contract</label>
                                 <select id="house-form-contract" required>
-                                    <option value="0" selected disabled>Select Contract Type</option>
-                                    <option value="sale">Sale</option>
-                                    <option value="rent">Rent</option>
+                                    <option value="-1" selected disabled>Select Contract Type</option>
+                                    <option value="0">Sale</option>
+                                    <option value="1">Rent</option>
                                 </select>
                             </div>
                         </div>

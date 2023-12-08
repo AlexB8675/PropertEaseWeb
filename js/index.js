@@ -38,8 +38,8 @@ $(document).ready(function () {
         dataType: 'json',
     }).done((data) => {
         const mainCardContainer = $('#cards');
-        const cardTemplate = (address, city, cap, contract, price, image, type) => `
-            <div class="card">
+        const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
+            <a class="card" href="house.html?id=${id}">
                 <div class="image">
                     <img draggable="false" src="${image}" alt="placeholder.svg">
                 </div>
@@ -49,18 +49,28 @@ $(document).ready(function () {
                     <label class="address">${city + " " + cap + ", " + address}</label>
                     <label class="price">${makePriceAsCurrency(price)}</label>
                 </div>
-            </div>
+            </a>
         `.trim();
 
+        const imagesFromJson = (json) => {
+            const images = new Map();
+            for (const each of json) {
+                const [key, value] = Object.entries(each).flat();
+                images.set(key, value);
+            }
+            return images;
+        }
         for (const house of data) {
+            const images = imagesFromJson(JSON.parse(house.images));
             const card = $(
                 cardTemplate(
+                    house.id,
                     house.address,
                     house.city,
                     house.cap,
                     house.contract,
                     house.price,
-                    house.image,
+                    images.get("0"),
                     house.e_type
                 )
             );

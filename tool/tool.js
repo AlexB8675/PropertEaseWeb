@@ -200,7 +200,7 @@ $(document).ready(function () {
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
                     .css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container');
-                submitImageInfos.delete($(this).index());
+                submitImageInfos.delete($(this).index() + 1);
             }
         }
     });
@@ -239,7 +239,7 @@ $(document).ready(function () {
                             });
                     };
                     reader.readAsDataURL(file);
-                    submitImageInfos.set(clickedCell.index(), file);
+                    submitImageInfos.set(clickedCell.index() + 1, file);
                 }
 
                 // Remove the input element from the DOM
@@ -349,6 +349,15 @@ $(document).ready(function () {
 });
 
 function setupHouseSubmitForm() {
+    $.ajax({
+        url: makeEndpointWith('/api/data/types'),
+        method: 'get',
+        dataType: 'json'
+    }).done((response) => {
+        for (const each of response) {
+            $('#house-form-house').append(`<option value="${each.name}">${each.name}</option>`);
+        }
+    });
     $('#submit-house-main-image').on('click', function (event) {
         event.preventDefault();
         $('<input type="file" accept="image/*" style="display: none">')
@@ -362,7 +371,7 @@ function setupHouseSubmitForm() {
                         });
                     };
                     reader.readAsDataURL(file);
-                    submitImageInfos.set(-1, file);
+                    submitImageInfos.set(0, file);
                 }
                 $(this).remove();
             })
@@ -393,40 +402,70 @@ function setupHouseSubmitForm() {
                 .trim();
             result += value + ',' + roomLabelText + ';';
         });
-        const labelInfo = $('#submit-house-info label');
-        for (let i = 0; i < labelInfo.length; i++) {
-            const label = $(labelInfo[i]).text();
-            const input = $(inputInfo[i]).val();
-            result += label + ',' + input + ';';
+        result += '\n';
+
+        const formEntries = $('#submit-house-info').find('.entry');
+        const labelInfo = formEntries.find('label');
+        const inputInfo = formEntries.find('input, select');
+        if (labelInfo.length !== inputInfo.length) {
+            console.error('entry label and input length mismatch');
+            return;
         }
+
+        let houseInfo = {};
+        const maybeParseInt = (value) => {
+            if (value.attr('type') === 'number') {
+                return parseInt(value.val(), 10);
+            }
+            if (value.is('select')) {
+                const option = value.children('option:selected');
+                const data = parseInt(option.attr('value').trim(), 10);
+                if (isNaN(data)) {
+                    return option.val().trim();
+                }
+                return data;
+            }
+            return value.val().trim();
+        }
+        for (let i = 0; i < labelInfo.length; i++) {
+            const label = $(labelInfo[i])
+                .attr('for')
+                .replace('house-form-', '')
+                .replace('-', '_');
+            houseInfo[label] = maybeParseInt($(inputInfo[i]));
+        }
+        houseInfo['description'] = $('#house-form-description').val().trim();
 
         const submitData = new FormData();
-        submitData.append('data', result);
+        submitData.append('info', encodeURI(JSON.stringify(houseInfo)));
         for (const [index, file] of submitImageInfos.entries()) {
-            submitData.append('indices', index);
+            result += index + ',';
             submitData.append('files', file);
         }
+        result = result.substring(0, result.length - 1) + ';\n';
+        submitData.append('plan', encodeURI(result));
 
+        const form = $(this);
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'POST',
-            data: submitData.asForm(),
+            data: submitData,
             processData: false,
-            contentType: false,
-            done: function (response) {
-                console.log('Response:', response);
-            },
-            error: function (error) {
-                console.error('Error Uploading Plan:', error);
-            }
+            contentType: false
+        }).done(_ => {
+            submitImageInfos.clear();
+            form
+                .find('input, select, textarea')
+                .val(String());
+            form
+                .find('button')
+                .css({
+                    'background-image': '',
+                });
+            clear_grid();
+        }).fail((error) => {
+            console.error(error);
         });
-
-        // reset
-        submitData.clear();
-        $(this)
-            .find('input')
-            .val('');
-        clear_grid();
     });
 }
 
@@ -455,7 +494,6 @@ function check_download() {
 }
 
 function download_plan() {
-
     if (!check_download()) {
         return;
     }
@@ -529,7 +567,7 @@ function upload_plan(file) {
             const rows = content.split('\n');
 
             // Loop through each row
-            for (let i = 0; i < rows.length - 1; i++) {
+            for (let i = 0; i < ROWS; i++) {
                 // Split the row into values
                 const values = rows[i].split(',');
                 values.pop()
@@ -545,7 +583,7 @@ function upload_plan(file) {
             generate_rooms();
 
             // Get the last row of values
-            const lastRowValues = rows[rows.length - 1].split(';');
+            const lastRowValues = rows[ROWS].split(';');
 
             // Loop through each room-label
             $('#room-labels .room-label input[type="text"]').each(function (index) {
