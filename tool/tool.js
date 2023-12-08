@@ -2,44 +2,7 @@
 const ROWS = 50;
 const COLS = 50;
 
-class SubmitForm {
-    constructor() {
-        this.data = '';
-        this.files = [];
-        this.indices = [];
-    }
-
-    addFile(file) {
-        this.files.push(file);
-    }
-
-    addIndex(index) {
-        this.indices.push(index);
-    }
-
-    addData(data) {
-        this.data += data;
-    }
-
-    asForm() {
-        const form = new FormData();
-        form.append('data', this.data);
-        for (const file of this.files) {
-            form.append('files', file);
-        }
-        for (const [index, value] of this.indices.entries()) {
-            form.append(`indices`, value);
-        }
-        return form;
-    }
-
-    clear() {
-        this.data = '';
-        this.files = [];
-        this.indices = [];
-    }
-}
-const submitData = new SubmitForm();
+const submitImageInfos = new Map();
 
 $(document).ready(function () {
     $(document).on('keydown', function (e) {
@@ -237,6 +200,7 @@ $(document).ready(function () {
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
                     .css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container');
+                submitImageInfos.delete($(this).index());
             }
         }
     });
@@ -275,9 +239,7 @@ $(document).ready(function () {
                             });
                     };
                     reader.readAsDataURL(file);
-
-                    submitData.addFile(file);
-                    submitData.addIndex(clickedCell.index());
+                    submitImageInfos.set(clickedCell.index(), file);
                 }
 
                 // Remove the input element from the DOM
@@ -389,7 +351,7 @@ $(document).ready(function () {
 function setupHouseSubmitForm() {
     $('#submit-house-main-image').on('click', function (event) {
         event.preventDefault();
-        $('<input type="file" accept="image/*" style="display:none">')
+        $('<input type="file" accept="image/*" style="display: none">')
             .on('change', function () {
                 const file = this.files[0];
                 if (file) {
@@ -397,12 +359,10 @@ function setupHouseSubmitForm() {
                     reader.onload = function (event) {
                         $('#submit-house-main-image').css({
                             'background-image': `url(${event.target.result})`,
-                            'background-size': 'cover'
                         });
                     };
                     reader.readAsDataURL(file);
-                    submitData.addIndex(-1);
-                    submitData.addFile(file);
+                    submitImageInfos.set(-1, file);
                 }
                 $(this).remove();
             })
@@ -433,7 +393,20 @@ function setupHouseSubmitForm() {
                 .trim();
             result += value + ',' + roomLabelText + ';';
         });
-        submitData.addData(result);
+        const labelInfo = $('#submit-house-info label');
+        for (let i = 0; i < labelInfo.length; i++) {
+            const label = $(labelInfo[i]).text();
+            const input = $(inputInfo[i]).val();
+            result += label + ',' + input + ';';
+        }
+
+        const submitData = new FormData();
+        submitData.append('data', result);
+        for (const [index, file] of submitImageInfos.entries()) {
+            submitData.append('indices', index);
+            submitData.append('files', file);
+        }
+
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'POST',

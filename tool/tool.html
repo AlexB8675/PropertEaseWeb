@@ -120,26 +120,155 @@
                     <!-- js generated code -->
                 </div>
                 <form id="submit-house-form">
-                    <button id="submit-house-main-image"></button>
                     <div id="submit-house-info">
-                        <div class="entry">
-                            <label for="house-form-id">ID</label>
-                            <input id="house-form-id" type="text" disabled>
+                        <div id="house-general-info">
+                            <div class="section-title info-section-title">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                                <label>Key Features</label>
+                            </div>
+                            <!-- Address -->
+                            <div class="entry">
+                                <label for="house-form-address">Address</label>
+                                <input id="house-form-address" type="text" required>
+                            </div>
+
+                            <!-- House Type (Dropdown) -->
+                            <div class="entry">
+                                <label for="house-form-house">Type</label>
+                                <select id="house-form-house" required>
+                                    <option value="0" disabled selected>Select a type</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="house">House</option>
+                                    <option value="condo">Condo</option>
+                                </select>
+                            </div>
+
+                            <!-- Accessories -->
+                            <div class="entry">
+                                <label for="house-form-accessories">Accessories</label>
+                                <input id="house-form-accessories" type="number" required>
+                            </div>
+
+                            <!-- Bedrooms -->
+                            <div class="entry">
+                                <label for="house-form-bedrooms">Bedrooms</label>
+                                <input id="house-form-bedrooms" type="number" required>
+                            </div>
+
+                            <!-- Floor -->
+                            <div class="entry">
+                                <label for="house-form-floor">Floor</label>
+                                <input id="house-form-floor" type="number" required>
+                            </div>
+
+                            <!-- Elevator (Dropdown) -->
+                            <div class="entry">
+                                <label for="house-form-elevator">Elevator</label>
+                                <select id="house-form-elevator" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+
+                            <!-- Balcony -->
+                            <div class="entry">
+                                <label for="house-form-balconies">Balconies</label>
+                                <input id="house-form-balconies" type="number" required>
+                            </div>
+
+                            <!-- Terrace -->
+                            <div class="entry">
+                                <label for="house-form-terrace">Terrace</label>
+                                <input id="house-form-terrace" type="number" required>
+                            </div>
+
+                            <!-- Garden -->
+                            <div class="entry">
+                                <label for="house-form-garden">Garden</label>
+                                <input id="house-form-garden" type="number" placeholder="Square Meters" required>
+                            </div>
                         </div>
-                        <div class="entry">
-                            <label for="house-form-name">Name</label>
-                            <input id="house-form-name" type="text" required>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-align-justify"></i>
+                                <label>Description</label>
+                            </div>
+                            <textarea id="house-form-description" required></textarea>
                         </div>
-                        <div class="entry">
-                            <label for="house-form-address">Address</label>
-                            <input id="house-form-address" type="text" required>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+                                <label>Energy</label>
+                            </div>
+                            <!-- Energy Class -->
+                            <div class="entry">
+                                <label for="house-form-energy-class">Energy Class</label>
+                                <select id="house-form-energy-class" required>
+                                    <option value="0" selected disabled>Select Energy Class</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                </select>
+                            </div>
+
+                            <!-- Energy Performance -->
+                            <div class="entry">
+                                <label for="house-form-energy-performance">Performance</label>
+                                <input id="house-form-energy-performance" type="number" placeholder="kWh/m&#178; yearly" required>
+                            </div>
+
+                            <!-- Energy System (Dropdown) -->
+                            <div class="entry">
+                                <label for="house-form-energy-system">System</label>
+                                <select id="house-form-energy-system" required>
+                                    <option value="0" selected disabled>Select Energy System</option>
+                                    <option value="solar">Solar</option>
+                                    <option value="wind">Wind</option>
+                                    <option value="geothermal">Geothermal</option>
+                                </select>
+                            </div>
+
+                            <!-- Fuel Type (Dropdown) -->
+                            <div class="entry">
+                                <label for="house-form-fuel">Fuel</label>
+                                <select id="house-form-fuel" required>
+                                    <option value="0" selected disabled>Select Fuel Type</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="gas">Gas</option>
+                                    <option value="oil">Oil</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="entry">
-                            <label for="house-form-type">Type</label>
-                            <input id="house-form-type" type="text" required>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                                <label>Pricing & Contracts</label>
+                            </div>
+                            <!-- Price -->
+                            <div class="entry">
+                                <label for="house-form-price">Price</label>
+                                <input id="house-form-price" placeholder="&euro;" type="number" required>
+                            </div>
+
+                            <!-- Contract Type (radio buttons) -->
+                            <div class="entry">
+                                <label for="house-form-contract">Contract</label>
+                                <select id="house-form-contract" required>
+                                    <option value="0" selected disabled>Select Contract Type</option>
+                                    <option value="sale">Sale</option>
+                                    <option value="rent">Rent</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <button id="submit-plan">Submit Plan</button>
+                    <div id="submit-house-right">
+                        <button type="button" id="submit-house-main-image"></button>
+                        <button id="submit-plan-button">Submit Plan</button>
+                    </div>
                 </form>
             </div>
         </div>

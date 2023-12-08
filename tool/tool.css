@@ -190,6 +190,66 @@ button i {
     transition: all 0s;
 }
 
+.room-label {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 15pt;
+    justify-content: left;
+}
+
+.room-label label {
+    cursor: default !important;
+}
+
+.room-label input {
+    background-color: #121212;
+    color: aliceblue;
+    font-size: 18pt;
+}
+
+.entry {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 0 8pt;
+    margin-bottom: 8pt;
+
+    & > label, & > select {
+        color: aliceblue;
+        font-size: 16pt;
+
+        & > i {
+            color: aliceblue;
+            margin-right: 10pt;
+        }
+    }
+
+    & > label {
+        background: #242424;
+        border-radius: 64px 0 0 64px;
+        padding: 6pt 18pt;
+        align-content: center;
+        display: inline-grid;
+    }
+
+    & > label[class="switch"] {
+        background: #202020;
+        border-radius: 0 64px 64px 0;
+    }
+
+    & > select {
+        border-radius: 0 64px 64px 0;
+        padding: 6pt 18pt 6pt 6pt;
+    }
+
+    & > input {
+        font-size: 16pt;
+        color: aliceblue;
+        padding: 6pt 18pt 6pt 6pt;
+        background: #202020;
+        border-radius: 0 64px 64px 0;
+    }
+}
+
 #room-labels {
     display: grid;
     grid-template-columns: repeat(4, auto);
@@ -206,23 +266,6 @@ button i {
         font-size: 15pt;
         user-select: none;
     }
-}
-
-.room-label {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 15pt;
-    justify-content: left;
-}
-
-.room-label label {
-    cursor: default !important;
-}
-
-.room-label input {
-    background-color: #121212;
-    color: aliceblue;
-    font-size: 18pt;
 }
 
 #window {
@@ -257,73 +300,70 @@ button i {
 #submit-house-form {
     color: white;
     font-size: 16pt;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: max-content auto;
-    grid-template-rows: 1fr max-content;
+    grid-template-columns: 1fr auto;
     grid-gap: 24pt;
     grid-column: 1 / 3;
 }
 
-#submit-house-main-image {
-    min-width: 360pt;
-    aspect-ratio: 1 / 1;
-    background-color: #181818;
-    grid-row: 1 / 3;
+#submit-house-right {
+    justify-content: space-between;
+    display: grid;
+
+    #submit-house-main-image {
+        width: 360pt;
+        aspect-ratio: 1 / 1;
+        background-color: #181818;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    #submit-plan-button {
+        height: max-content;
+        color: aliceblue;
+        padding: 6pt 24pt;
+        font-size: 16pt;
+        border-radius: 48px;
+        border: 4px solid #404040;
+        cursor: pointer;
+        align-self: end;
+        transition: all 250ms ease-in-out;
+
+        &:hover {
+            background-color: #404040;
+        }
+    }
 }
 
 #submit-house-info {
     background: #181818;
-    border-radius: 32px;
     justify-content: space-between;
-    padding: 8pt;
+    padding: 8pt 16pt;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: max-content;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto);
     grid-row-gap: 8pt;
 
-    .entry {
-        align-items: center;
+    .info-section-title {
+        grid-column: 1 / 3;
+    }
+
+    #house-general-info {
         display: grid;
-        grid-template-rows: auto 1fr;
-        grid-row-gap: 4pt;
-        padding: 0 8pt;
-
-        & > label {
-            color: aliceblue;
-            font-size: 20pt;
-            padding: 0 18pt;
-
-            & > i {
-                color: aliceblue;
-                margin-right: 10pt;
-            }
-        }
-
-        & > input {
-            font-size: 16pt;
-            color: aliceblue;
-            background: #202020;
-            padding: 6pt 18pt;
-            border-radius: 64px;
-        }
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-#submit-plan {
-    width: max-content;
-    color: aliceblue;
-    padding: 6pt 24pt;
-    font-size: 16pt;
-    border-radius: 48px;
+#house-form-description {
+    width: 100%;
+    height: 160pt;
     border: 4px solid #404040;
-    cursor: pointer;
-    transition: all 250ms ease-in-out;
-    align-self: end;
-    grid-column: 2;
-
-    &:hover {
-        background-color: #404040;
-    }
+    border-radius: 16px;
+    padding: 8pt;
+    color: white;
+    font-size: 16pt;
 }
 
 .loader.visible {

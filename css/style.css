@@ -35,6 +35,17 @@ select:-webkit-autofill:focus {
     display: none !important;
 }
 
+.switch {
+    position: relative;
+    display: inline-block;
+
+    & > input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
 .shimmer-effect {
     --gradient: linear-gradient(120deg, #ffffff 25%, #ffffffdd 50%, #ffffff 75%) right / 500% 100% no-repeat;
 
@@ -77,7 +88,7 @@ a {
     }
 }
 
-input, button, label, textarea {
+input, button, label, select, textarea {
     resize: none;
     outline: none;
     border: none;
@@ -87,6 +98,15 @@ input, button, label, textarea {
     margin: 0;
     width: unset;
     height: unset;
+}
+
+select {
+    color: aliceblue;
+    background-color: #202020;
+
+    &:hover {
+        background-color: #202020;
+    }
 }
 
 body {
@@ -213,4 +233,27 @@ body {
     color: aliceblue;
     font-size: 20pt;
     padding: 10pt;
+}
+
+.section-title {
+    position: relative;
+    font-size: 20pt;
+    user-select: none;
+    height: fit-content;
+    margin-bottom: 10pt;
+    color: #727272;
+
+    &::after {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        content: "";
+        background: linear-gradient(90deg, #727272, transparent);
+    }
+
+    & > i {
+        margin-right: 2pt;
+    }
 }
