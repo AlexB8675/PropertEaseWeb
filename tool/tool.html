@@ -1,257 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-    <script src="../js/script.js"></script>
-    <script src="tool.js"></script>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="tool.css">
-    <title>PlanTool</title>
-</head>
-<body>
-<div class="blur"></div>
-<div id="login">
-    <label>Login</label>
-    <form id="login-form">
-        <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
-        <input id="login-username-input" placeholder="Username" type="text" required>
-        <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
-        <input id="login-password-input" placeholder="Password" type="password" required>
-    </form>
-    <div class="submit-buttons">
-        <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
-        <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
-    </div>
-</div>
-<div id="header">
-    <a href="../index.html">PropertEase</a>
-    <i class="fa-solid fa-user"></i>
-</div>
-<div id="scroller">
-    <div id="room-name">
-        <!-- js generated code -->
-    </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; width: min-content; margin: auto">
-        <div id="drawing-area">
-            <div class="loader">
-                <div class="loader-ring">
-                    <div class="loader-ring-light"></div>
-                    <div class="loader-ring-track"></div>
-                </div>
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://code.jquery.com/jquery-3.7.1.js"
+                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
+        <script src="../js/script.js"></script>
+        <script src="./common.js"></script>
+        <script src="./tool.js"></script>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="tool.css">
+        <title>PlanTool</title>
+    </head>
+    <body>
+        <div class="blur"></div>
+        <div id="login">
+            <label>Login</label>
+            <form id="login-form">
+                <label for="login-username-input"><i class="fa-solid fa-user"></i></label>
+                <input id="login-username-input" placeholder="Username" type="text" required>
+                <label for="login-password-input"><i class="fa-solid fa-key"></i></label>
+                <input id="login-password-input" placeholder="Password" type="password" required>
+            </form>
+            <div class="submit-buttons">
+                <button type="submit" id="register-button" class="generic-button" form="login-form">Sign Up</button>
+                <button type="submit" id="login-button" class="generic-button" form="login-form">Sign In</button>
             </div>
-            <div id="color-selector">
-                <div data-value="1" style="background-color: darkred"></div>
-                <div data-value="2" style="background-color: red"></div>
-                <div data-value="3" style="background-color: crimson"></div>
-                <div data-value="4" style="background-color: mediumvioletred"></div>
-                <div data-value="5" style="background-color: lightcoral"></div>
-                <div data-value="6" style="background-color: violet"></div>
-                <div data-value="7" style="background-color: darkorchid"></div>
-                <div data-value="8" style="background-color: indigo"></div>
-                <div data-value="9" style="background-color: darkslateblue"></div>
-                <div data-value="10" style="background-color: tomato"></div>
-                <div data-value="11" style="background-color: darkorange"></div>
-                <div data-value="12" style="background-color: orange"></div>
-                <div data-value="13" style="background-color: gold"></div>
-                <div data-value="14" style="background-color: yellow"></div>
-                <div data-value="15" style="background-color: chartreuse"></div>
-                <div data-value="16" style="background-color: lime"></div>
-                <div data-value="17" style="background-color: springgreen"></div>
-                <div data-value="18" style="background-color: mediumspringgreen"></div>
-                <div data-value="19" style="background-color: teal"></div>
-                <div data-value="20" style="background-color: darkolivegreen"></div>
-                <div data-value="21" style="background-color: darkgreen"></div>
-                <div data-value="22" style="background-color: green"></div>
-                <div data-value="23" style="background-color: blue"></div>
-                <div data-value="24" style="background-color: royalblue"></div>
-                <div data-value="25" style="background-color: steelblue"></div>
-                <div data-value="26" style="background-color: mediumaquamarine"></div>
-                <div data-value="27" style="background-color: darkkhaki"></div>
-                <div data-value="28" style="background-color: peru"></div>
-                <div data-value="29" style="background-color: chocolate"></div>
-                <div data-value="30" style="background-color: saddlebrown"></div>
-                <div data-value="32" style="background-color: black; display: none"></div> <!-- Wall -->
-                <div data-value="33" style="background-color: aliceblue; display: none"></div> <!-- Window -->
-                <div data-value="34" style="background-color: darkgray; display: none"></div> <!-- DoorL -->
-                <div data-value="35" style="background-color: dimgray; display: none"></div> <!-- DoorR -->
-            </div>
-            <div id="grid-container" oncontextmenu="return false;">
+        </div>
+        <div id="header">
+            <a href="../index.html">PropertEase</a>
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div id="scroller">
+            <div id="room-name">
                 <!-- js generated code -->
             </div>
-            <div id="right-bar">
-                <div id="upper-right-bar">
-                    <div id="selected-color"
-                         data-value="0"
-                         style="padding: 0; border: none; margin-bottom: 10pt; border-radius: 5pt"></div>
-                    <div style="margin-bottom: 5pt;">
-                        <button onclick="download_plan()"><i class="fa-solid fa-download"></i></button>
-                        <label for="upload_button"><i class="fa-solid fa-upload"></i></label>
-                        <input id="upload_button" type="file" accept=".hplan" style="display: none">
-                        <button onclick="generate_rooms()"><i class="fa-solid fa-cube"></i></button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; width: min-content; margin: auto">
+                <div id="drawing-area">
+                    <div class="loader">
+                        <div class="loader-ring">
+                            <div class="loader-ring-light"></div>
+                            <div class="loader-ring-track"></div>
+                        </div>
                     </div>
-                    <div id="tool-window">
-                        <button data-value="33"><i class="fa-solid fa-border-all"></i></button>
-                        <button data-value="35"><i class="fa-solid fa-door-closed"></i></button>
-                        <button data-value="32"><i class="fa-solid fa-trowel-bricks"></i></button>
-                        <button id="fill_bucket"><i class="fa-solid fa-fill-drip"></i></button>
-                        <button id="image_upload"><i class="fa-solid fa-camera"></i></button>
+                    <div id="color-selector">
+                        <div data-value="1" style="background-color: darkred"></div>
+                        <div data-value="2" style="background-color: red"></div>
+                        <div data-value="3" style="background-color: crimson"></div>
+                        <div data-value="4" style="background-color: mediumvioletred"></div>
+                        <div data-value="5" style="background-color: lightcoral"></div>
+                        <div data-value="6" style="background-color: violet"></div>
+                        <div data-value="7" style="background-color: darkorchid"></div>
+                        <div data-value="8" style="background-color: indigo"></div>
+                        <div data-value="9" style="background-color: darkslateblue"></div>
+                        <div data-value="10" style="background-color: tomato"></div>
+                        <div data-value="11" style="background-color: darkorange"></div>
+                        <div data-value="12" style="background-color: orange"></div>
+                        <div data-value="13" style="background-color: gold"></div>
+                        <div data-value="14" style="background-color: yellow"></div>
+                        <div data-value="15" style="background-color: chartreuse"></div>
+                        <div data-value="16" style="background-color: lime"></div>
+                        <div data-value="17" style="background-color: springgreen"></div>
+                        <div data-value="18" style="background-color: mediumspringgreen"></div>
+                        <div data-value="19" style="background-color: teal"></div>
+                        <div data-value="20" style="background-color: darkolivegreen"></div>
+                        <div data-value="21" style="background-color: darkgreen"></div>
+                        <div data-value="22" style="background-color: green"></div>
+                        <div data-value="23" style="background-color: blue"></div>
+                        <div data-value="24" style="background-color: royalblue"></div>
+                        <div data-value="25" style="background-color: steelblue"></div>
+                        <div data-value="26" style="background-color: mediumaquamarine"></div>
+                        <div data-value="27" style="background-color: darkkhaki"></div>
+                        <div data-value="28" style="background-color: peru"></div>
+                        <div data-value="29" style="background-color: chocolate"></div>
+                        <div data-value="30" style="background-color: saddlebrown"></div>
+                        <div data-value="31" style="background-color: black; display: none"></div> <!-- Wall -->
+                        <div data-value="32" style="background-color: aliceblue; display: none"></div> <!-- Window -->
+                        <div data-value="33" style="background-color: darkgray; display: none"></div> <!-- DoorL -->
+                        <div data-value="34" style="background-color: dimgray; display: none"></div> <!-- DoorR -->
+                    </div>
+                    <div id="grid-container" oncontextmenu="return false;">
+                        <!-- js generated code -->
+                    </div>
+                    <div id="right-bar">
+                        <div id="upper-right-bar">
+                            <div id="selected-color"
+                                 data-value="0"
+                                 style="padding: 0; border: none; margin-bottom: 10pt; border-radius: 5pt"></div>
+                            <div style="margin-bottom: 5pt;">
+                                <button onclick="download_plan()"><i class="fa-solid fa-download"></i></button>
+                                <label for="upload_button"><i class="fa-solid fa-upload"></i></label>
+                                <input id="upload_button" type="file" accept=".hplan" style="display: none">
+                                <button onclick="generate_rooms()"><i class="fa-solid fa-cube"></i></button>
+                            </div>
+                            <div id="tool-window">
+                                <button data-value="32"><i class="fa-solid fa-border-all"></i></button>
+                                <button data-value="34"><i class="fa-solid fa-door-closed"></i></button>
+                                <button data-value="31"><i class="fa-solid fa-trowel-bricks"></i></button>
+                                <button id="fill_bucket"><i class="fa-solid fa-fill-drip"></i></button>
+                                <button id="image_upload"><i class="fa-solid fa-camera"></i></button>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr; justify-items: center; row-gap: 25pt;">
+                            <button onclick="clear_grid()" style="margin-bottom: 10pt"><i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr; justify-items: center; row-gap: 25pt;">
-                    <button onclick="clear_grid()" style="margin-bottom: 10pt"><i class="fa-solid fa-trash"></i>
-                    </button>
+                <div id="preview">
+                    <div class="loader">
+                        <div class="loader-ring">
+                            <div class="loader-ring-light"></div>
+                            <div class="loader-ring-track"></div>
+                        </div>
+                    </div>
+                    <!-- js generated code -->
                 </div>
+                <div id="room-labels">
+                    <span>Press the "<i class="fa-solid fa-cube"></i>" button to generate room labels</span>
+                    <!-- js generated code -->
+                </div>
+                <form id="submit-house-form">
+                    <div id="submit-house-info">
+                        <div id="house-general-info">
+                            <div class="section-title info-section-title">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                                <label>Key Features</label>
+                            </div>
+
+                            <!-- City -->
+                            <div class="entry">
+                                <label for="house-form-city">City</label>
+                                <input id="house-form-city" type="text" required>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="entry">
+                                <label for="house-form-address">Address</label>
+                                <input id="house-form-address" type="text" required>
+                            </div>
+
+                            <!-- Zip Code -->
+                            <div class="entry">
+                                <label for="house-form-zip">Zip Code</label>
+                                <input id="house-form-zip" type="text" required>
+                            </div>
+
+                            <!-- House Type -->
+                            <div class="entry">
+                                <label for="house-form-house">Type</label>
+                                <select id="house-form-house" required>
+                                    <option value="0" disabled selected>Select a type</option>
+                                </select>
+                            </div>
+
+                            <!-- Accessories -->
+                            <div class="entry">
+                                <label for="house-form-accessories">Accessories</label>
+                                <input id="house-form-accessories" type="number" required>
+                            </div>
+
+                            <!-- Bedrooms -->
+                            <div class="entry">
+                                <label for="house-form-bedrooms">Bedrooms</label>
+                                <input id="house-form-bedrooms" type="number" required>
+                            </div>
+
+                            <!-- Floor -->
+                            <div class="entry">
+                                <label for="house-form-floor">Floor</label>
+                                <input id="house-form-floor" type="number" required>
+                            </div>
+
+                            <!-- Elevator -->
+                            <div class="entry">
+                                <label for="house-form-elevator">Elevator</label>
+                                <select id="house-form-elevator" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+
+                            <!-- Balcony -->
+                            <div class="entry">
+                                <label for="house-form-balconies">Balconies</label>
+                                <input id="house-form-balconies" type="number" required>
+                            </div>
+
+                            <!-- Terrace -->
+                            <div class="entry">
+                                <label for="house-form-terrace">Terrace</label>
+                                <input id="house-form-terrace" type="number" required>
+                            </div>
+
+                            <!-- Garden -->
+                            <div class="entry">
+                                <label for="house-form-garden">Garden</label>
+                                <input id="house-form-garden" type="number" placeholder="Square Meters" required>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-align-justify"></i>
+                                <label>Description</label>
+                            </div>
+                            <label style="display: grid">
+                                <textarea id="house-form-description" required></textarea>
+                            </label>
+                        </div>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+                                <label>Energy</label>
+                            </div>
+                            <!-- Energy Class -->
+                            <div class="entry">
+                                <label for="house-form-energy-class">Energy Class</label>
+                                <select id="house-form-energy-class" required>
+                                    <option value="0" selected disabled>Select Energy Class</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                </select>
+                            </div>
+
+                            <!-- Energy Performance -->
+                            <div class="entry">
+                                <label for="house-form-energy-performance">Performance</label>
+                                <input id="house-form-energy-performance" type="number" placeholder="kWh/m&#178; yearly" required>
+                            </div>
+
+                            <!-- Energy System -->
+                            <div class="entry">
+                                <label for="house-form-energy-system">System</label>
+                                <select id="house-form-energy-system" required>
+                                    <option value="0" selected disabled>Select Energy System</option>
+                                    <option value="solar">Solar</option>
+                                    <option value="wind">Wind</option>
+                                    <option value="geothermal">Geothermal</option>
+                                </select>
+                            </div>
+
+                            <!-- Fuel Type -->
+                            <div class="entry">
+                                <label for="house-form-fuel">Fuel</label>
+                                <select id="house-form-fuel" required>
+                                    <option value="0" selected disabled>Select Fuel Type</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="gas">Gas</option>
+                                    <option value="oil">Oil</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="section-title">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                                <label>Pricing & Contracts</label>
+                            </div>
+                            <!-- Price -->
+                            <div class="entry">
+                                <label for="house-form-price">Price</label>
+                                <input id="house-form-price" placeholder="&euro;" type="number" required>
+                            </div>
+
+                            <!-- Contract Type -->
+                            <div class="entry">
+                                <label for="house-form-contract">Contract</label>
+                                <select id="house-form-contract" required>
+                                    <option value="-1" selected disabled>Select Contract Type</option>
+                                    <option value="0">Sale</option>
+                                    <option value="1">Rent</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="submit-house-right">
+                        <button type="button" id="submit-house-main-image"></button>
+                        <button id="submit-plan-button">Submit Plan</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div id="preview">
-            <div class="loader">
-                <div class="loader-ring">
-                    <div class="loader-ring-light"></div>
-                    <div class="loader-ring-track"></div>
-                </div>
-            </div>
-            <!-- js generated code -->
-        </div>
-        <div id="room-labels">
-            <span>Press the "<i class="fa-solid fa-cube"></i>" button to generate room labels</span>
-            <!-- js generated code -->
-        </div>
-        <form id="submit-house-form">
-            <div id="submit-house-info">
-                <div id="house-general-info">
-                    <div class="section-title">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        <label>Key Features</label>
-                    </div>
-                    <!-- Address -->
-                    <div class="entry">
-                        <label for="house-form-address">Address</label>
-                        <input id="house-form-address" type="text" required>
-                    </div>
-
-                    <!-- House Type (dropdown) -->
-                    <div class="entry">
-                        <label for="house-form-house">Type</label>
-                        <select id="house-form-house" required>
-                            <option value="0" disabled selected>Select a type</option>
-                            <option value="apartment">Apartment</option>
-                            <option value="house">House</option>
-                            <option value="condo">Condo</option>
-                            <!-- Add more options as needed -->
-                        </select>
-                    </div>
-
-                    <!-- Accessories -->
-                    <div class="entry">
-                        <label for="house-form-accessories">Accessories</label>
-                        <input id="house-form-accessories" type="text" required>
-                    </div>
-
-                    <!-- Bedrooms -->
-                    <div class="entry">
-                        <label for="house-form-bedrooms">Bedrooms</label>
-                        <input id="house-form-bedrooms" type="text" required>
-                    </div>
-
-                    <!-- Floor -->
-                    <div class="entry">
-                        <label for="house-form-floor">Floor</label>
-                        <input id="house-form-floor" type="number" required>
-                    </div>
-
-                    <!-- Elevator (Radio) -->
-                    <div class="entry">
-                        <label>Elevator</label>
-                        <label class="switch" style="border-radius: 0 64px 64px 0;">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <!-- Balcony -->
-                    <div class="entry">
-                        <label for="house-form-balconies">Balconies</label>
-                        <input id="house-form-balconies" type="number" required>
-                    </div>
-
-                    <!-- Terrace -->
-                    <div class="entry">
-                        <label for="house-form-terrace">Terrace</label>
-                        <input id="house-form-terrace" type="number" required>
-                    </div>
-
-                    <!-- Garden -->
-                    <div class="entry">
-                        <label for="house-form-garden">Garden</label>
-                        <input id="house-form-garden" type="text" required>
-                    </div>
-                </div>
-                <!-- Description (textarea) -->
-                <div>
-                    <label for="house-form-description">Description</label>
-                    <textarea id="house-form-description" required></textarea>
-                </div>
-                <div>
-                    <div class="section-title">
-                        <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
-                        <label>Energy</label>
-                    </div>
-                    <!-- Energy Performance (input type range from 1 to 7) -->
-                    <div class="entry">
-                        <label for="house-form-energy-performance">Performance</label>
-                        <input id="house-form-energy-performance" type="range" min="1" max="7" required>
-                    </div>
-
-                    <!-- Energy System (dropdown) -->
-                    <div class="entry">
-                        <label for="house-form-energy-system">System</label>
-                        <select id="house-form-energy-system" required>
-                            <option value="solar">Solar</option>
-                            <option value="wind">Wind</option>
-                            <option value="geothermal">Geothermal</option>
-                            <!-- Add more options as needed -->
-                        </select>
-                    </div>
-
-                    <!-- Fuel Type (dropdown) -->
-                    <div class="entry">
-                        <label for="house-form-fuel">Fuel</label>
-                        <select id="house-form-fuel" required>
-                            <option value="electric">Electric</option>
-                            <option value="gas">Gas</option>
-                            <option value="oil">Oil</option>
-                            <!-- Add more options as needed -->
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <div class="section-title">
-                        <i class="fa-solid fa-sack-dollar"></i>
-                        <label>Pricing & Contracts</label>
-                    </div>
-                    <!-- Price -->
-                    <div class="entry">
-                        <label for="house-form-price">Price</label>
-                        <input id="house-form-price" type="text" required>
-                    </div>
-
-                    <!-- Contract Type (radio buttons) -->
-                    <div class="entry">
-                        <label>Contract</label>
-                        <input id="house-form-contract" type="range" min="1" max="2" required>
-                    </div>
-                </div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr; justify-items: center; align-content: space-between;">
-                <label id="house-main-image-label" for="submit-house-main-image"></label>
-                <input type="file" id="submit-house-main-image" hidden>
-                <button id="submit-plan">Submit Plan</button>
-            </div>
-        </form>
-    </div>
-</div>
-</body>
+    </body>
 </html>

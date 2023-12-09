@@ -119,6 +119,19 @@ function makeLoginRequest(info, callbacks) {
     }));
 }
 
+function imagesFromJson(json) {
+    const images = new Map();
+    for (const each of json) {
+        const [key, value] = Object.entries(each).flat();
+        images.set(key, value);
+    }
+    return images;
+}
+
+function getUrlParameters() {
+    return new URLSearchParams(window.location.search);
+}
+
 $(document).ready(function () {
     'use strict';
 

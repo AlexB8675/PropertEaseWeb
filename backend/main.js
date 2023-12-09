@@ -6,6 +6,22 @@ const crypto = require('crypto');
 const app = express();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const fs = require('fs');
+const { parseHousePlan } = require('../tool/common.js');
+
+function getNextHouseId(database, callback) {
+    database.get('select max(id) as id from House', (error, row) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        if (row.id === null) {
+            callback(1);
+            return;
+        }
+        callback(row.id + 1);
+    });
+}
 
 function makeSha512Hash(string) {
     const hash = crypto.createHash('sha512');
@@ -14,7 +30,7 @@ function makeSha512Hash(string) {
 }
 
 function handleRequest(request, result, info) {
-    console.log("request received: \"", request ,"\"\n");
+    console.log("request received: \"", request ,"\",");
     if (info.query) {
         database.all(info.query, info.parameters(request), (error, rows) => {
             if (error) {
@@ -22,7 +38,7 @@ function handleRequest(request, result, info) {
                 console.error(error);
                 return;
             }
-            console.log("sent: \"", rows ,"\"\n\n");
+            console.log("sent: \"", rows ,"\",,");
             info.callback(result, rows);
         });
     } else {
@@ -61,19 +77,23 @@ registerGetApiEndpoint(app, database, {
     }
 });
 registerGetApiEndpoint(app, database, {
-    endpoint: '/api/data/houses/id/:houseId',
-    query: 'select * from House where id = ?',
-    parameters: (request) => [request.params.houseId],
+    endpoint: '/api/data/types',
+    query: 'select * from Type',
+    parameters: _ => [],
     callback: (result, rows) => {
         result.send(rows);
     }
 });
 registerGetApiEndpoint(app, database, {
-    endpoint: '/api/data/houses/city/:city',
-    query: `select * from House where city like '%?%'`,
-    parameters: (request) => [request.params.city],
+    endpoint: '/api/data/houses/id/:houseId',
+    query: 'select * from House where id = ?',
+    parameters: (request) => [request.params.houseId],
     callback: (result, rows) => {
-        result.send(rows);
+        if (rows.length > 0) {
+            result.send(rows);
+        } else {
+            result.status(404).send({});
+        }
     }
 });
 
@@ -119,7 +139,76 @@ registerPostApiEndpoint(app, database, {
 });
 
 app.post('/api/data/tool/upload', upload.array('files'), (request, result) => {
-    result.status(200).send({});
+    const files = request.files;
+    const plan = decodeURI(request.body.plan);
+    const parsedPlan = parseHousePlan(plan.split('\n'));
+    const info = JSON.parse(decodeURI(request.body.info));
+    getNextHouseId(database, (id) => {
+        const baseUploadsPath = `uploads`;
+        const baseImagePath = `images/${id}`;
+        fs.mkdir(`../${baseImagePath}`, (_) => {
+            const imageIds = new Map();
+            for (const [index, image] of files.entries()) {
+                const previous = `${baseUploadsPath}/${image.filename}`;
+                const current = `${baseImagePath}/${image.originalname}`;
+                fs.renameSync(previous, `../${current}`);
+                imageIds.set(parsedPlan.images[index], current);
+            }
+
+            const parameters = [
+                info['address'],
+                info['city'],
+                info['zip'],
+                info['description'],
+                info['contract'],
+                info['price'],
+                info['floor'],
+                // !! means convert to boolean
+                !!info['elevator'],
+                info['balconies'],
+                info['terrace'],
+                info['garden'],
+                info['accessories'],
+                info['bedrooms'],
+                info['energy_class'],
+                info['energy_performance'],
+                info['energy_system'],
+                info['fuel'],
+                plan,
+                JSON.stringify(Array.from(imageIds.entries()).map(([k, v]) => { return { [k]: v }; })),
+                info['house']
+            ];
+            const fields = `
+                address,
+                city,
+                cap,
+                description,
+                contract,
+                price,
+                floor,
+                elevator,
+                balconies,
+                terrace,
+                garden,
+                accessories,
+                bedrooms,
+                energy_class,
+                energy_perf,
+                energy_system,
+                energy_fuel,
+                plan,
+                images,
+                e_type
+            `;
+            database.run(`insert into House (${fields}) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, parameters, (error) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                result.send({});
+            });
+        });
+    });
 });
 
 const port = 8080;

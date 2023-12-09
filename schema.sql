@@ -1,14 +1,27 @@
 drop table if exists House;
 create table if not exists House (
-    id          integer      primary key autoincrement,
-    address     varchar(255) not null,
-    city        varchar(255) not null,
-    cap         varchar(255) not null,
-    -- 0: Vendita, 1: Affitto
-    contract    integer      not null,
-    price       integer      not null,
-    image       varchar(255) not null,
-    e_type      varchar(255) not null,
+    id              integer      primary key autoincrement,
+    address         varchar(255) not null,
+    city            varchar(255) not null,
+    cap             varchar(255) not null,
+    description     text         not null,
+    -- 0: Sale, 1: Rent
+    contract        integer      not null,
+    price           integer      not null,
+    floor           integer      not null,
+    elevator        boolean      not null,
+    balconies       integer      not null,
+    terrace         integer      not null,
+    garden          integer      not null,
+    accessories     integer      not null,
+    bedrooms        integer      not null,
+    energy_class    varchar(1)   not null,
+    energy_perf     varchar(255) not null,
+    energy_system   varchar(255) not null,
+    energy_fuel     varchar(255) not null,
+    plan            text         not null,
+    images          text         not null,
+    e_type          varchar(255) not null,
 
     check (contract in (0, 1)),
     foreign key (e_type)
@@ -29,31 +42,11 @@ create table if not exists User (
     permissions integer      not null
 );
 
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Roma 1', 'Roma', '00100', 0, 5000, 'images/Houses/Frontal/1_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Roma 2', 'Roma', '00100', 0, 86000, 'images/Houses/Frontal/2_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Roma 3', 'Roma', '00100', 0, 351000, 'images/Houses/Frontal/3_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Roma 4', 'Roma', '00100', 0, 51000, 'images/Houses/Frontal/4_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Roma 5', 'Roma', '00100', 0, 23000, 'images/Houses/Frontal/5_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Milano 1', 'Milano', '20100', 1, 752000, 'images/Houses/Frontal/6_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Milano 2', 'Milano', '20100', 1, 234000, 'images/Houses/Frontal/7_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Milano 3', 'Milano', '20100', 1, 75000, 'images/Houses/Frontal/8_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Milano 4', 'Milano', '20100', 1, 64000, 'images/Houses/Frontal/9_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Milano 5', 'Milano', '20100', 1, 11000, 'images/Houses/Frontal/10_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Torino 1', 'Torino', '10100', 0, 1, 'images/Houses/Frontal/11_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Torino 2', 'Torino', '10100', 0, 86345, 'images/Houses/Frontal/12_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Torino 3', 'Torino', '10100', 0, 86421, 'images/Houses/Frontal/13_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Torino 4', 'Torino', '10100', 0, 13248, 'images/Houses/Frontal/14_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Torino 5', 'Torino', '10100', 1, 74935, 'images/Houses/Frontal/15_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Napoli 1', 'Napoli', '80100', 1, 52157, 'images/Houses/Frontal/16_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Napoli 2', 'Napoli', '80100', 1, 355667, 'images/Houses/Frontal/17_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Napoli 3', 'Napoli', '80100', 1, 462772, 'images/Houses/Frontal/18_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Napoli 4', 'Napoli', '80100', 1, 12155, 'images/Houses/Frontal/19_frontal.jpg', 'Four-Room Apartment');
-insert into House (address, city, cap, contract, price, image, e_type) values ('Street Napoli 5', 'Napoli', '80100', 1, 16473, 'images/Houses/Frontal/20_frontal.jpg', 'Four-Room Apartment');
-
 insert into Type values ('Studio Apartment');
 insert into Type values ('Two-Room Apartment');
 insert into Type values ('Three-Room Apartment');
 insert into Type values ('Four-Room Apartment');
+insert into Type values ('Multi-Room Apartment');
 insert into Type values ('Loft');
 insert into Type values ('Independent House');
 

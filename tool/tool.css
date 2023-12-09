@@ -190,6 +190,23 @@ button i {
     transition: all 0s;
 }
 
+.room-label {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 15pt;
+    justify-content: left;
+}
+
+.room-label label {
+    cursor: default !important;
+}
+
+.room-label input {
+    background-color: #121212;
+    color: aliceblue;
+    font-size: 18pt;
+}
+
 #room-labels {
     display: grid;
     grid-template-columns: repeat(4, auto);
@@ -206,23 +223,6 @@ button i {
         font-size: 15pt;
         user-select: none;
     }
-}
-
-.room-label {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 15pt;
-    justify-content: left;
-}
-
-.room-label label {
-    cursor: default !important;
-}
-
-.room-label input {
-    background-color: #121212;
-    color: aliceblue;
-    font-size: 18pt;
 }
 
 #window {
@@ -257,42 +257,65 @@ button i {
 #submit-house-form {
     color: white;
     font-size: 16pt;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr auto;
     grid-gap: 24pt;
     grid-column: 1 / 3;
 }
 
-#house-main-image-label {
-    width: 360pt;
-    display: block;
-    aspect-ratio: 1 / 1;
-    background-color: #181818;
+#submit-house-right {
+    justify-content: space-between;
+    display: grid;
+
+    #submit-house-main-image {
+        width: 360pt;
+        aspect-ratio: 1 / 1;
+        background-color: #181818;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    #submit-plan-button {
+        height: max-content;
+        color: aliceblue;
+        padding: 6pt 24pt;
+        font-size: 16pt;
+        border-radius: 48px;
+        border: 4px solid #404040;
+        cursor: pointer;
+        align-self: end;
+        transition: all 250ms ease-in-out;
+
+        &:hover {
+            background-color: #404040;
+        }
+    }
 }
 
 #submit-house-info {
     background: #181818;
-    border-radius: 32px;
     justify-content: space-between;
-    padding: 8pt;
+    padding: 8pt 16pt;
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto);
     grid-row-gap: 8pt;
 
+    .info-section-title {
+        grid-column: 1 / 3;
+    }
+
     .entry {
-        align-items: center;
         display: grid;
         grid-template-columns: 1fr 2fr;
-        grid-row-gap: 4pt;
         padding: 0 8pt;
+        margin-bottom: 8pt;
 
-        & > label {
+        & > label, & > select {
             color: aliceblue;
             font-size: 16pt;
-            padding: 6pt;
-            border-top-left-radius: 64px;
-            border-bottom-left-radius: 64px;
-            background-color: #242424;
 
             & > i {
                 color: aliceblue;
@@ -300,48 +323,41 @@ button i {
             }
         }
 
+        & > label {
+            background: #242424;
+            border-radius: 64px 0 0 64px;
+            padding: 6pt 6pt 6pt 18pt;
+            align-content: center;
+        }
+
+        & > select {
+            border-right: 6pt solid transparent;
+            border-radius: 0 64px 64px 0;
+            padding: 6pt 18pt 6pt 6pt;
+        }
+
         & > input {
             font-size: 16pt;
             color: aliceblue;
+            padding: 6pt 18pt 6pt 6pt;
             background: #202020;
-            padding: 6pt;
-            border-top-right-radius: 64px;
-            border-bottom-right-radius: 64px;
+            border-radius: 0 64px 64px 0;
         }
+    }
 
-        & > select{
-            font-size: 16pt;
-            padding: 6pt;
-            border-top-right-radius: 64px;
-            border-bottom-right-radius: 64px;
-
-            & > option{
-                background-color: #242424;
-            }
-        }
+    #house-general-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-#house-general-info{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-row-gap: 8pt;
-}
-
-#submit-plan {
-    width: max-content;
-    color: aliceblue;
-    padding: 6pt 24pt;
-    font-size: 16pt;
-    border-radius: 48px;
+#house-form-description {
+    height: 160pt;
     border: 4px solid #404040;
-    cursor: pointer;
-    transition: all 250ms ease-in-out;
-    align-self: end;
-
-    &:hover {
-        background-color: #404040;
-    }
+    border-radius: 16px;
+    padding: 8pt;
+    color: white;
+    font-size: 16pt;
 }
 
 .loader.visible {
@@ -391,28 +407,5 @@ button i {
     }
     to {
         transform: rotate(360deg);
-    }
-}
-
-.section-title {
-    position: relative;
-    font-size: 20pt;
-    user-select: none;
-    height: fit-content;
-    margin-bottom: 10pt;
-    color: #727272;
-
-    &::after {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 2px;
-        content: "";
-        background: linear-gradient(90deg, #727272, transparent);
-    }
-
-    & > i {
-        margin-right: 2pt;
     }
 }

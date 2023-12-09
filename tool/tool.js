@@ -2,45 +2,7 @@
 const ROWS = 50;
 const COLS = 50;
 
-class SubmitForm {
-    constructor() {
-        this.data = '';
-        this.files = [];
-        this.indices = [];
-    }
-
-    addFile(file) {
-        this.files.push(file);
-    }
-
-    addIndex(index) {
-        this.indices.push(index);
-    }
-
-    addData(data) {
-        this.data += data;
-    }
-
-    asForm() {
-        const form = new FormData();
-        form.append('data', this.data);
-        for (const file of this.files) {
-            form.append('files', file);
-        }
-        for (const [index, value] of this.indices.entries()) {
-            form.append(`indices`, value);
-        }
-        return form;
-    }
-
-    clear() {
-        this.data = '';
-        this.files = [];
-        this.indices = [];
-    }
-}
-
-const submitData = new SubmitForm();
+const submitImageInfos = new Map();
 
 $(document).ready(function () {
     $(document).on('keydown', function (e) {
@@ -62,7 +24,7 @@ $(document).ready(function () {
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
-            return {row, col};
+            return { row, col };
         }
 
         // Define a function to shift the cells in the specified direction
@@ -150,11 +112,11 @@ $(document).ready(function () {
     let isRightMousePressed = false;
     let mouseDiv = $('#room-name');
     let tools = [
-        {value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false},  // Wall
-        {value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false},  // Door
-        {value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false},   // Window
-        {value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: "fill", selected: false}, // Fill Bucket
-        {value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false}    // Image Upload
+        { value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false },  // Wall
+        { value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false },  // Door
+        { value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false },   // Window
+        { value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: "fill", selected: false }, // Fill Bucket
+        { value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false }    // Image Upload
     ];
 
     $('.prev-cell').on('mousemove', function (e) {
@@ -232,12 +194,13 @@ $(document).ready(function () {
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
                     .css("background-color", getColor(data));
             } else if (isRightMousePressed) {
-                $(this).css({"background-color": "transparent", "background-image": ""})
+                $(this).css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container')
                     .attr("data-value", 0);
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
-                    .css({"background-color": "transparent", "background-image": ""})
+                    .css({ "background-color": "transparent", "background-image": "" })
                     .removeClass('picture-container');
+                submitImageInfos.delete($(this).index() + 1);
             }
         }
     });
@@ -276,9 +239,7 @@ $(document).ready(function () {
                             });
                     };
                     reader.readAsDataURL(file);
-
-                    submitData.addFile(file);
-                    submitData.addIndex(clickedCell.index());
+                    submitImageInfos.set(clickedCell.index() + 1, file);
                 }
 
                 // Remove the input element from the DOM
@@ -356,13 +317,13 @@ $(document).ready(function () {
     setupHouseSubmitForm();
 
     function fillBucket(x, y) {
-        const stack = [{x: x, y: y}];
+        const stack = [{ x: x, y: y }];
         const cells = $(`.cell`);
         const previewCells = $(`.prev-cell`);
         const targetColor = $('#selected-color').attr('data-value');
         const replacementColor = $(cells[x + y * COLS]).attr('data-value');
         while (stack.length !== 0) {
-            const {x, y} = stack.pop();
+            const { x, y } = stack.pop();
             if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
                 continue;
             }
@@ -379,31 +340,43 @@ $(document).ready(function () {
             previewCell
                 .css('background-color', getColor(targetColor))
                 .attr('data-value', targetColor);
-            stack.push({x: x - 1, y: y});
-            stack.push({x: x + 1, y: y});
-            stack.push({x: x, y: y - 1});
-            stack.push({x: x, y: y + 1});
+            stack.push({ x: x - 1, y: y });
+            stack.push({ x: x + 1, y: y });
+            stack.push({ x: x, y: y - 1 });
+            stack.push({ x: x, y: y + 1 });
         }
     }
 });
 
 function setupHouseSubmitForm() {
-    $('#submit-house-main-image').on('change', function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                $('#house-main-image-label').css({
-                    'background-image': `url(${event.target.result})`,
-                    'background-size': 'cover'
-                });
-            };
-            reader.readAsDataURL(file);
-            submitData.addIndex(-1);
-            submitData.addFile(file);
+    $.ajax({
+        url: makeEndpointWith('/api/data/types'),
+        method: 'get',
+        dataType: 'json'
+    }).done((response) => {
+        for (const each of response) {
+            $('#house-form-house').append(`<option value="${each.name}">${each.name}</option>`);
         }
     });
-
+    $('#submit-house-main-image').on('click', function (event) {
+        event.preventDefault();
+        $('<input type="file" accept="image/*" style="display: none">')
+            .on('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        $('#submit-house-main-image').css({
+                            'background-image': `url(${event.target.result})`,
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                    submitImageInfos.set(0, file);
+                }
+                $(this).remove();
+            })
+            .click();
+    });
     $('#submit-house-form').on('submit', function (event) {
         event.preventDefault();
         if (!check_download()) {
@@ -429,27 +402,70 @@ function setupHouseSubmitForm() {
                 .trim();
             result += value + ',' + roomLabelText + ';';
         });
-        submitData.addData(result);
+        result += '\n';
+
+        const formEntries = $('#submit-house-info').find('.entry');
+        const labelInfo = formEntries.find('label');
+        const inputInfo = formEntries.find('input, select');
+        if (labelInfo.length !== inputInfo.length) {
+            console.error('entry label and input length mismatch');
+            return;
+        }
+
+        let houseInfo = {};
+        const maybeParseInt = (value) => {
+            if (value.attr('type') === 'number') {
+                return parseInt(value.val(), 10);
+            }
+            if (value.is('select')) {
+                const option = value.children('option:selected');
+                const data = parseInt(option.attr('value').trim(), 10);
+                if (isNaN(data)) {
+                    return option.text().trim();
+                }
+                return data;
+            }
+            return value.val().trim();
+        }
+        for (let i = 0; i < labelInfo.length; i++) {
+            const label = $(labelInfo[i])
+                .attr('for')
+                .replace('house-form-', '')
+                .replace('-', '_');
+            houseInfo[label] = maybeParseInt($(inputInfo[i]));
+        }
+        houseInfo['description'] = $('#house-form-description').val().trim();
+
+        const submitData = new FormData();
+        submitData.append('info', encodeURI(JSON.stringify(houseInfo)));
+        for (const [index, file] of submitImageInfos.entries()) {
+            result += index + ',';
+            submitData.append('files', file);
+        }
+        result = result.substring(0, result.length - 1) + ';\n';
+        submitData.append('plan', encodeURI(result));
+
+        const form = $(this);
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'POST',
-            data: submitData.asForm(),
+            data: submitData,
             processData: false,
-            contentType: false,
-            done: function (response) {
-                console.log('Response:', response);
-            },
-            error: function (error) {
-                console.error('Error Uploading Plan:', error);
-            }
+            contentType: false
+        }).done(_ => {
+            submitImageInfos.clear();
+            form
+                .find('input, select, textarea')
+                .val(String());
+            form
+                .find('button')
+                .css({
+                    'background-image': '',
+                });
+            clear_grid();
+        }).fail((error) => {
+            console.error(error);
         });
-
-        // reset
-        submitData.clear();
-        $(this)
-            .find('input')
-            .val('');
-        clear_grid();
     });
 }
 
@@ -478,7 +494,6 @@ function check_download() {
 }
 
 function download_plan() {
-
     if (!check_download()) {
         return;
     }
@@ -515,7 +530,7 @@ function download_plan() {
 
 
     // Download the result as a text file
-    let blob = new Blob([resultString], {type: 'text/plain'});
+    let blob = new Blob([resultString], { type: 'text/plain' });
     let a = document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = 'data-values.hplan';
@@ -552,7 +567,7 @@ function upload_plan(file) {
             const rows = content.split('\n');
 
             // Loop through each row
-            for (let i = 0; i < rows.length - 1; i++) {
+            for (let i = 0; i < ROWS; i++) {
                 // Split the row into values
                 const values = rows[i].split(',');
                 values.pop()
@@ -568,7 +583,7 @@ function upload_plan(file) {
             generate_rooms();
 
             // Get the last row of values
-            const lastRowValues = rows[rows.length - 1].split(';');
+            const lastRowValues = rows[ROWS].split(';');
 
             // Loop through each room-label
             $('#room-labels .room-label input[type="text"]').each(function (index) {
@@ -593,7 +608,7 @@ function generate_rooms() {
     let uniqueColorsAndData = [...new Set($('.cell').map(function () {
         let color = $(this).css('background-color');
         let data = $(this).attr('data-value');
-        return (check_isRoom(color)) ? {color, data} : null;
+        return (check_isRoom(color)) ? { color, data } : null;
     }).get())];
 
     // Remove containers with background colors not present in unique colors
