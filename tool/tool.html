@@ -6,7 +6,8 @@
                 integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
         <script src="../js/script.js"></script>
-        <script src="tool.js"></script>
+        <script src="./common.js"></script>
+        <script src="./tool.js"></script>
         <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="tool.css">
         <title>PlanTool</title>
@@ -73,10 +74,10 @@
                         <div data-value="28" style="background-color: peru"></div>
                         <div data-value="29" style="background-color: chocolate"></div>
                         <div data-value="30" style="background-color: saddlebrown"></div>
-                        <div data-value="32" style="background-color: black; display: none"></div> <!-- Wall -->
-                        <div data-value="33" style="background-color: aliceblue; display: none"></div> <!-- Window -->
-                        <div data-value="34" style="background-color: darkgray; display: none"></div> <!-- DoorL -->
-                        <div data-value="35" style="background-color: dimgray; display: none"></div> <!-- DoorR -->
+                        <div data-value="31" style="background-color: black; display: none"></div> <!-- Wall -->
+                        <div data-value="32" style="background-color: aliceblue; display: none"></div> <!-- Window -->
+                        <div data-value="33" style="background-color: darkgray; display: none"></div> <!-- DoorL -->
+                        <div data-value="34" style="background-color: dimgray; display: none"></div> <!-- DoorR -->
                     </div>
                     <div id="grid-container" oncontextmenu="return false;">
                         <!-- js generated code -->
@@ -93,9 +94,9 @@
                                 <button onclick="generate_rooms()"><i class="fa-solid fa-cube"></i></button>
                             </div>
                             <div id="tool-window">
-                                <button data-value="33"><i class="fa-solid fa-border-all"></i></button>
-                                <button data-value="35"><i class="fa-solid fa-door-closed"></i></button>
-                                <button data-value="32"><i class="fa-solid fa-trowel-bricks"></i></button>
+                                <button data-value="32"><i class="fa-solid fa-border-all"></i></button>
+                                <button data-value="34"><i class="fa-solid fa-door-closed"></i></button>
+                                <button data-value="31"><i class="fa-solid fa-trowel-bricks"></i></button>
                                 <button id="fill_bucket"><i class="fa-solid fa-fill-drip"></i></button>
                                 <button id="image_upload"><i class="fa-solid fa-camera"></i></button>
                             </div>

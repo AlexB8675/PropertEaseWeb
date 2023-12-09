@@ -11,6 +11,7 @@
         <script src="https://code.jquery.com/jquery-3.7.1.js"
                 integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
+        <script src="tool/common.js"></script>
         <script src="js/script.js"></script>
         <script src="js/houses.js"></script>
         <script async defer
@@ -149,6 +150,7 @@
                             <i class="fa-brands fa-flipboard"></i>
                             <label>House Plan</label>
                         </div>
+                        <div id="house-plan-container"></div>
                     </div>
                     <div id="house-energy" class="displayer">
                         <div class="section-title">
@@ -174,15 +176,15 @@
                         <div id="energy-info">
                             <div>
                                 <label>Performance</label>
-                                <label></label>
+                                <label id="house-energy-performance"></label>
                             </div>
                             <div>
                                 <label>Energy System</label>
-                                <label></label>
+                                <label id="house-energy-system"></label>
                             </div>
                             <div>
                                 <label>Fueled by</label>
-                                <label></label>
+                                <label id="house-energy-fuel"></label>
                             </div>
                         </div>
                     </div>

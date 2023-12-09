@@ -175,8 +175,14 @@
 
         #house-plan {
             filter: drop-shadow(0px 0px 15px #000000);
-            aspect-ratio: 1 / 1;
             grid-column: 1 / 4;
+
+            #house-plan-container {
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
+                display: grid;
+                grid-template-columns: repeat(50, 1fr);
+            }
         }
 
         #house-energy {

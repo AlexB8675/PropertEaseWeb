@@ -421,7 +421,7 @@ function setupHouseSubmitForm() {
                 const option = value.children('option:selected');
                 const data = parseInt(option.attr('value').trim(), 10);
                 if (isNaN(data)) {
-                    return option.val().trim();
+                    return option.text().trim();
                 }
                 return data;
             }

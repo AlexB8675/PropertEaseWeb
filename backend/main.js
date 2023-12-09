@@ -7,6 +7,7 @@ const app = express();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const { parseHousePlan } = require('../tool/common.js');
 
 function getNextHouseId(database, callback) {
     database.get('select max(id) as id from House', (error, row) => {
@@ -20,38 +21,6 @@ function getNextHouseId(database, callback) {
         }
         callback(row.id + 1);
     });
-}
-
-function parseHousePlan(plan) {
-    const rows = 50;
-    const columns = 50;
-    let output = {
-        plan: [],
-        rooms: [],
-        images: []
-    };
-    for (let i = 0; i < rows; i++) {
-        const values = plan[i].split(',');
-        values.pop();
-        for (let j = 0; j < columns; j++) {
-            output.plan[i * columns + j] = values[j];
-        }
-    }
-
-    // parse rooms
-    const rooms = plan[rows].split(';');
-    rooms.pop();
-    for (const room of rooms) {
-        const values = room.split(',');
-        output.rooms.push(parseInt(values[0], 10));
-    }
-
-    // parse images
-    const images = plan[rows + 1].split(';')[0].split(',');
-    for (const image of images) {
-        output.images.push(parseInt(image, 10));
-    }
-    return output;
 }
 
 function makeSha512Hash(string) {
@@ -120,7 +89,11 @@ registerGetApiEndpoint(app, database, {
     query: 'select * from House where id = ?',
     parameters: (request) => [request.params.houseId],
     callback: (result, rows) => {
-        result.send(rows);
+        if (rows.length > 0) {
+            result.send(rows);
+        } else {
+            result.status(404).send({});
+        }
     }
 });
 
@@ -197,6 +170,10 @@ app.post('/api/data/tool/upload', upload.array('files'), (request, result) => {
                 info['garden'],
                 info['accessories'],
                 info['bedrooms'],
+                info['energy_class'],
+                info['energy_performance'],
+                info['energy_system'],
+                info['fuel'],
                 plan,
                 JSON.stringify(Array.from(imageIds.entries()).map(([k, v]) => { return { [k]: v }; })),
                 info['house']
@@ -215,18 +192,20 @@ app.post('/api/data/tool/upload', upload.array('files'), (request, result) => {
                 garden,
                 accessories,
                 bedrooms,
+                energy_class,
+                energy_perf,
+                energy_system,
+                energy_fuel,
                 plan,
                 images,
                 e_type
             `;
-            database.run(`insert into House (${fields}) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, parameters, (error) => {
+            database.run(`insert into House (${fields}) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, parameters, (error) => {
                 if (error) {
                     console.error(error);
                     return;
                 }
-                result.send({
-                    id: id,
-                });
+                result.send({});
             });
         });
     });
