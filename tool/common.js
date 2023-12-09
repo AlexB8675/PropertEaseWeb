@@ -67,3 +67,8 @@ const HOUSE_PLAN_CELL_COLORS = [
     'darkgray',
     'dimgray',
 ];
+
+module.exports = {
+    parseHousePlan,
+    HOUSE_PLAN_CELL_COLORS,
+};
