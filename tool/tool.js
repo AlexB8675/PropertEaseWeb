@@ -164,7 +164,9 @@ $(document).ready(function () {
                 break;
             case 2:
                 event.preventDefault();
-                $("#selected-color").css('background-color', $(this).css('background-color'));
+                $("#selected-color")
+                    .css('background-color', $(this).css('background-color'))
+                    .attr('data-value', $(this).attr('data-value'));
                 data = $(this).data();
                 break;
             case 3:
