@@ -15,36 +15,34 @@ $(document).ready(function () {
         // Calculate the total number of cells
         const totalCells = ROWS * COLS;
 
-        // Define a function to get the index of a cell based on row and column
-        function getIndex(row, col) {
-            return row * COLS + col;
-        }
-
         // Define a function to get the row and column based on the index
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
-            return { row, col };
+            return {row, col};
         }
 
-        // Define a function to shift the cells in the specified direction
+        function getCellProperties(cellArray) {
+            return cellArray.map(function () {
+                return {
+                    dataValue: $(this).attr('data-value'),
+                    backgroundColor: $(this).css('background-color'),
+                    backgroundImage: $(this).css('background-image')
+                };
+            }).get();
+        }
+
+        function arePropertiesEqual(properties1, properties2) {
+            return (
+                properties1.dataValue === properties2.dataValue &&
+                properties1.backgroundColor === properties2.backgroundColor &&
+                properties1.backgroundImage === properties2.backgroundImage
+            );
+        }
+
         function shiftCells(direction) {
-            // Create a copy of the current data-values
-            const dataValues = cells.map(function () {
-                return $(this).attr('data-value');
-            }).get();
-
-            const backgroundColors = cells.map(function () {
-                return $(this).css('background-color');
-            }).get();
-
-            const prevDataValues = prevcells.map(function () {
-                return $(this).attr('data-value');
-            }).get();
-
-            const prevBackgroundColors = prevcells.map(function () {
-                return $(this).css('background-color');
-            }).get();
+            // Create arrays of cell properties for the cells
+            const cellProperties = getCellProperties(cells);
 
             // Shift the cells based on the direction
             for (let i = 0; i < totalCells; i++) {
@@ -55,39 +53,51 @@ $(document).ready(function () {
 
                 switch (direction) {
                     case 'up':
-                        newRow = (currentCell.row + 1) % ROWS;
+                        newRow = (newRow + 1) % ROWS;
                         break;
                     case 'down':
-                        newRow = (currentCell.row - 1 + ROWS) % ROWS;
+                        newRow = (newRow - 1 + ROWS) % ROWS;
                         break;
                     case 'left':
-                        newCol = (currentCell.col + 1) % COLS;
+                        newCol = (newCol + 1) % COLS;
                         break;
                     case 'right':
-                        newCol = (currentCell.col - 1 + COLS) % COLS;
+                        newCol = (newCol - 1 + COLS) % COLS;
                         break;
                 }
 
-                const newIndex = getIndex(newRow, newCol);
-                $(cells[i]).attr('data-value', dataValues[newIndex]);
-                $(cells[i]).css('background-color', backgroundColors[newIndex]);
-                $(prevcells[i]).attr('data-value', prevDataValues[newIndex]);
-                $(prevcells[i]).css('background-color', prevBackgroundColors[newIndex]);
+                const newIndex = newRow * COLS + newCol;
+                const targetCells = $(cells[i]).add(prevcells[i]);
+                const targetProperties = cellProperties[newIndex];
+
+                // Check if the current properties are different from the target properties
+                if (!arePropertiesEqual(cellProperties[i], targetProperties)) {
+                    targetCells.attr('data-value', targetProperties.dataValue)
+                        .css({
+                            'background-color': targetProperties.backgroundColor,
+                            'background-image': targetProperties.backgroundImage
+                        });
+                }
             }
         }
+
 
         // Check the arrow key pressed and call the shiftCells function
         switch (keyCode) {
             case 37: // Left arrow key
+                e.preventDefault();
                 shiftCells('left');
                 break;
             case 38: // Up arrow key
+                e.preventDefault();
                 shiftCells('up');
                 break;
             case 39: // Right arrow key
+                e.preventDefault();
                 shiftCells('right');
                 break;
             case 40: // Down arrow key
+                e.preventDefault();
                 shiftCells('down');
                 break;
         }
@@ -112,11 +122,11 @@ $(document).ready(function () {
     let isRightMousePressed = false;
     let mouseDiv = $('#room-name');
     let tools = [
-        { value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false },  // Wall
-        { value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false },  // Door
-        { value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false },   // Window
-        { value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: "fill", selected: false }, // Fill Bucket
-        { value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false }    // Image Upload
+        {value: "33", icon: "fa-border-all", color: 'aliceblue', specialBehavior: null, selected: false},  // Wall
+        {value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false},  // Door
+        {value: "32", icon: "fa-trowel-bricks", color: 'black', specialBehavior: null, selected: false},   // Window
+        {value: "fill_bucket", icon: "fa-fill-drip", color: '#363636', specialBehavior: "fill", selected: false}, // Fill Bucket
+        {value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false}    // Image Upload
     ];
 
     $('.prev-cell').on('mousemove', function (e) {
@@ -196,11 +206,11 @@ $(document).ready(function () {
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
                     .css("background-color", getColor(data));
             } else if (isRightMousePressed) {
-                $(this).css({ "background-color": "transparent", "background-image": "" })
+                $(this).css({"background-color": "transparent", "background-image": ""})
                     .removeClass('picture-container')
                     .attr("data-value", 0);
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
-                    .css({ "background-color": "transparent", "background-image": "" })
+                    .css({"background-color": "transparent", "background-image": ""})
                     .removeClass('picture-container');
                 submitImageInfos.delete($(this).index() + 1);
             }
@@ -319,13 +329,13 @@ $(document).ready(function () {
     setupHouseSubmitForm();
 
     function fillBucket(x, y) {
-        const stack = [{ x: x, y: y }];
+        const stack = [{x: x, y: y}];
         const cells = $(`.cell`);
         const previewCells = $(`.prev-cell`);
         const targetColor = $('#selected-color').attr('data-value');
         const replacementColor = $(cells[x + y * COLS]).attr('data-value');
         while (stack.length !== 0) {
-            const { x, y } = stack.pop();
+            const {x, y} = stack.pop();
             if (x < 0 || x >= COLS || y < 0 || y >= ROWS) {
                 continue;
             }
@@ -342,10 +352,10 @@ $(document).ready(function () {
             previewCell
                 .css('background-color', getColor(targetColor))
                 .attr('data-value', targetColor);
-            stack.push({ x: x - 1, y: y });
-            stack.push({ x: x + 1, y: y });
-            stack.push({ x: x, y: y - 1 });
-            stack.push({ x: x, y: y + 1 });
+            stack.push({x: x - 1, y: y});
+            stack.push({x: x + 1, y: y});
+            stack.push({x: x, y: y - 1});
+            stack.push({x: x, y: y + 1});
         }
     }
 });
@@ -532,7 +542,7 @@ function download_plan() {
 
 
     // Download the result as a text file
-    let blob = new Blob([resultString], { type: 'text/plain' });
+    let blob = new Blob([resultString], {type: 'text/plain'});
     let a = document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = 'data-values.hplan';
@@ -610,7 +620,7 @@ function generate_rooms() {
     let uniqueColorsAndData = [...new Set($('.cell').map(function () {
         let color = $(this).css('background-color');
         let data = $(this).attr('data-value');
-        return (check_isRoom(color)) ? { color, data } : null;
+        return (check_isRoom(color)) ? {color, data} : null;
     }).get())];
 
     // Remove containers with background colors not present in unique colors
