@@ -200,9 +200,11 @@ $(document).ready(function () {
                     .removeClass('picture-container')
                     .attr("data-value", 0);
                 $(`#preview > div:nth-child(${$(this).index() + 2})`)
-                    .css({ "background-color": "transparent", "background-image": "" })
+                    .css({ 'background-color': 'transparent', 'background-image': '' })
                     .removeClass('picture-container');
-                submitImageInfos.delete($(this).index() + 1);
+                $('body')
+                    .children(`image[data-id="${$(this).index() + 1}"]`)
+                    .remove();
             }
         }
     });
@@ -211,42 +213,8 @@ $(document).ready(function () {
         // Check if the Image Upload tool is selected
         if (tools[4].selected) {
             const clickedCell = $(this);
-            const previewCell = $(`#preview > div:nth-child(${clickedCell.index() + 2})`);
-
-            // Backup image
             clickedCell.css('background-image', `url('camera.svg')`);
-
-            // Create an input element
-            const input = $('<input type="file" style="display:none">');
-            $('body').append(input);
-            input.on('change', function () {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        clickedCell.css('background-image', `url(${e.target.result})`);
-                        previewCell.addClass('picture-container')
-                            .css('background-image', `url(${e.target.result})`)
-                            .on('mousedown', function () {
-                                $(this).toggleClass('shown-picture');
-                                if ($(this).hasClass('shown-picture')) {
-                                    const img = new Image();
-                                    img.src = $(this).css('background-image').replace('url("', '').replace('")', '');
-                                    const bgImgWidth = img.width;
-                                    const bgImgHeight = img.height;
-                                    $(this).css('padding-top', `${bgImgHeight / bgImgWidth * 80}%`);
-                                } else {
-                                    $(this).css('padding-top', ``);
-                                }
-                            });
-                    };
-                    reader.readAsDataURL(file);
-                    submitImageInfos.set(clickedCell.index() + 1, file);
-                }
-
-                // Remove the input element from the DOM
-                input.remove();
-            });
+            const input = makeImageInput(clickedCell);
             input.click();
         }
 
@@ -362,7 +330,7 @@ function setupHouseSubmitForm() {
     });
     $('#submit-house-main-image').on('click', function (event) {
         event.preventDefault();
-        $('<input type="file" accept="image/*" style="display: none">')
+        const input = $('<input class="main-input-image" type="file" accept="image/*" style="display: none">')
             .on('change', function () {
                 const file = this.files[0];
                 if (file) {
@@ -373,39 +341,24 @@ function setupHouseSubmitForm() {
                         });
                     };
                     reader.readAsDataURL(file);
-                    submitImageInfos.set(0, file);
                 }
-                $(this).remove();
-            })
-            .click();
+                input.attr('data-id', 0);
+            });
+        input.click();
+        const body = $('body');
+        const previous = body.children('input[data-id="0"]');
+        if (previous.length > 0) {
+            previous.remove();
+        }
+        body.append(input);
     });
-    $('#submit-house-form').on('submit', function (event) {
+    $('#submit-house-form').on('submit', async function (event) {
         event.preventDefault();
         if (!check_download()) {
             return;
         }
 
-        let result = '';
-        $('#grid-container > div[data-value]').each(function (index) {
-            const value = $(this).attr('data-value');
-            if (index > 0 && index % COLS === 0) {
-                result += '\n' + value + ',';
-            } else {
-                result += value + ',';
-            }
-        });
-        result += '\n';
-        $('#room-labels label[data-value]').each(function () {
-            const value = $(this).attr('data-value');
-            const roomLabelText = $(this)
-                .closest('.room-label')
-                .find('input[type="text"]')
-                .val()
-                .trim();
-            result += value + ',' + roomLabelText + ';';
-        });
-        result += '\n';
-
+        const [result, images] = await makeHousePlanData();
         const formEntries = $('#submit-house-info').find('.entry');
         const labelInfo = formEntries.find('label');
         const inputInfo = formEntries.find('input, select');
@@ -440,12 +393,10 @@ function setupHouseSubmitForm() {
 
         const submitData = new FormData();
         submitData.append('info', encodeURI(JSON.stringify(houseInfo)));
-        for (const [index, file] of submitImageInfos.entries()) {
-            result += index + ',';
+        for (const [index, file] of images.entries()) {
             submitData.append('files', file);
         }
-        result = result.substring(0, result.length - 1) + ';\n';
-        submitData.append('plan', encodeURI(result));
+        submitData.append('plan', result);
 
         const form = $(this);
         $.ajax({
@@ -468,6 +419,93 @@ function setupHouseSubmitForm() {
         }).fail((error) => {
             console.error(error);
         });
+    });
+}
+
+function makeImageInput(cell) {
+    const body = $('body');
+    const previewCell = $(`#preview > div:nth-child(${cell.index() + 2})`);
+    const previousInput = body.find(`input[data-id="${cell.index() + 1}"]`);
+    if (previousInput.length > 0) {
+        previousInput.remove();
+    }
+
+    // Backup image
+    cell.css('background-image', `url('camera.svg')`);
+    // Create an input element
+    const input = $('<input class="main-input-image" type="file" style="display: none">');
+    body.append(input);
+    input.on('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                cell.css('background-image', `url(${e.target.result})`);
+                previewCell.addClass('picture-container')
+                    .css('background-image', `url(${e.target.result})`)
+                    .on('mousedown', function () {
+                        $(this).toggleClass('shown-picture');
+                        if ($(this).hasClass('shown-picture')) {
+                            const img = new Image();
+                            img.src = $(this).css('background-image').replace('url("', '').replace('")', '');
+                            const bgImgWidth = img.width;
+                            const bgImgHeight = img.height;
+                            $(this).css('padding-top', `${bgImgHeight / bgImgWidth * 80}%`);
+                        } else {
+                            $(this).css('padding-top', '');
+                        }
+                    });
+            };
+            reader.readAsDataURL(file);
+            input.attr('data-id', cell.index() + 1);
+        }
+    });
+    return input;
+}
+
+async function makeHousePlanData() {
+    let result = '';
+    $('#grid-container > div[data-value]').each(function (index) {
+        const value = $(this).attr('data-value');
+        if (index > 0 && index % COLS === 0) {
+            result += `\n${value},`;
+        } else {
+            result += `${value},`;
+        }
+    });
+    result += '\n';
+    $('#room-labels label[data-value]').each(function () {
+        const value = $(this).attr('data-value');
+        const roomLabelText = $(this)
+            .closest('.room-label')
+            .find('input[type="text"]')
+            .val()
+            .trim();
+        result += `${value},${roomLabelText};`;
+    });
+    result += '\n';
+    const images = new Map();
+    $('body')
+        .find('input.main-input-image')
+        .map(function () {
+            const imageId = $(this).attr('data-id');
+            const file = this.files[0];
+            images.set(parseInt(imageId, 10), file);
+        });
+    for (const [index, file] of images.entries()) {
+        result += `${index},,${file.name},,${await readFileSync(file)};;`;
+    }
+    result += '\n';
+    return [encodeURI(result), images];
+}
+
+async function readFileSync(file) {
+    return await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            return resolve(event.target.result);
+        };
+        reader.readAsDataURL(file);
     });
 }
 
@@ -495,48 +533,16 @@ function check_download() {
     return true;
 }
 
-function download_plan() {
+async function download_plan() {
     if (!check_download()) {
         return;
     }
-
-    // Initialize the result string
-    let resultString = '';
-
-    // Loop through each div
-    $('#grid-container > div[data-value]').each(function (index) {
-        // Get the data-value attribute value
-        let dataValue = $(this).attr('data-value');
-
-        // Add the value, a comma, and a newline to the result string
-        if (index > 0 && index % COLS === 0) {
-            resultString += '\n' + dataValue + ',';
-        } else {
-            resultString += dataValue + ',';
-        }
-    });
-
-    resultString += "\n";
-
-    // Loop through each room-label
-    $('#room-labels label[data-value]').each(function () {
-        // Get the data-value attribute value
-        let dataValue = $(this).attr('data-value');
-
-        // Get the text content of the room-label
-        let roomLabelText = $(this).closest('.room-label').find('input[type="text"]').val().trim();
-
-        // Add the value, a comma, the room-label text, a semicolon, and a newline to the result string
-        resultString += dataValue + ',' + roomLabelText + ';';
-    });
-
-
-    // Download the result as a text file
-    let blob = new Blob([resultString], { type: 'text/plain' });
-    let a = document.createElement('a');
-    a.href = window.URL.createObjectURL(blob);
-    a.download = 'data-values.hplan';
-    a.click();
+    const [result, images] = await makeHousePlanData();
+    const blob = new Blob([result], { type: 'text/plain' });
+    const element = document.createElement('a');
+    element.href = window.URL.createObjectURL(blob);
+    element.download = 'data-values.hplan';
+    element.click();
 }
 
 function clear_grid() {
@@ -548,6 +554,9 @@ function clear_grid() {
 
     prevcells.css('background-color', 'transparent');
     prevcells.css('background-image', '');
+    $('body')
+        .find('input.main-input-image')
+        .remove();
     generate_rooms();
     $('#room-labels').children('span').show();
 }
@@ -563,7 +572,7 @@ function upload_plan(file) {
         // Define the callback function for when the file is loaded
         reader.onload = function (e) {
             // Get the content of the file
-            const content = e.target.result;
+            const content = decodeURI(String(e.target.result));
 
             // Split the content into rows
             const rows = content.split('\n');
@@ -593,6 +602,63 @@ function upload_plan(file) {
                 $(this).val(lastRowValues[index].split(",")[1]);
             });
 
+            if (rows.length >= ROWS + 2) {
+                const images = rows[ROWS + 1].split(';;');
+                images.pop();
+                for (const image of images) {
+                    const values = image.split(',,');
+                    const cellIndex = parseInt(values[0], 10);
+                    const fileName = values[1];
+                    const fileData = values[2];
+                    fetch(fileData)
+                        .then((value) => {
+                            return value.blob();
+                        })
+                        .then((blob) => {
+                            const file = new File([blob], fileName, {
+                                type: blob.type,
+                                lastModified: Date.now()
+                            });
+                            if (cellIndex > 0) {
+                                const cell = $($('.cell')[cellIndex - 1]);
+                                const input = makeImageInput(cell)[0];
+                                const transfer = new DataTransfer();
+                                transfer.items.add(file);
+                                input.files = transfer.files;
+                                $(input).trigger('change');
+                            } else if (cellIndex === 0) {
+                                const input = $('<input class="main-input-image" type="file" accept="image/*" style="display: none">')
+                                    .on('change', function () {
+                                        const file = this.files[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onload = function (event) {
+                                                $('#submit-house-main-image').css({
+                                                    'background-image': `url(${event.target.result})`,
+                                                });
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                        input.attr('data-id', 0);
+                                    });
+                                input.attr('data-id', 0);
+                                $('#submit-house-main-image').css({
+                                    'background-image': `url(${fileData})`,
+                                });
+                                const body = $('body');
+                                const previous = body.children('input[data-id="0"]');
+                                const inputElement = input[0];
+                                const transfer = new DataTransfer();
+                                transfer.items.add(file);
+                                inputElement.files = transfer.files;
+                                if (previous.length > 0) {
+                                    previous.remove();
+                                }
+                                body.append(input);
+                            }
+                        });
+                }
+            }
             hideLoader(); // Hide the loader after file reading
         };
 

@@ -41,9 +41,9 @@ $(document).ready(function () {
         const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
             <a class="card" href="house.html?id=${id}">
                 <div class="image">
+                    <div class="generic-triangle"></div>
                     <img draggable="false" src="${image}" alt="placeholder.svg">
                 </div>
-                <div class="generic-triangle"></div>
                 <div class="content">
                     <label class="contract">${type + " for " + ((contract) ? "Sale" : "Rent")}</label>
                     <label class="address">${city + " " + cap + ", " + address}</label>
@@ -54,6 +54,9 @@ $(document).ready(function () {
 
         for (const house of data) {
             const images = imagesFromJson(JSON.parse(house.images));
+            const mainImage = images.has("0") ?
+                images.get("0") :
+                "images/placeholder.svg";
             const card = $(
                 cardTemplate(
                     house.id,
@@ -62,7 +65,7 @@ $(document).ready(function () {
                     house.cap,
                     house.contract,
                     house.price,
-                    images.get("0"),
+                    mainImage,
                     house.e_type
                 )
             );
@@ -70,14 +73,11 @@ $(document).ready(function () {
             let mouseOverTimeout = -1;
             card
                 .on('mouseover', () => {
-                    const parent = cardImage.parent();
                     cardImage
                         .css({'transform': 'translateZ(0) scale(1.05)'})
                         .addClass('shimmer-effect');
-                    parent.css({'background': 'aliceblue'});
                     clearTimeout(mouseOverTimeout);
                     mouseOverTimeout = setTimeout(() => {
-                        parent.css({'background': ''});
                         mouseOverTimeout = -1;
                     }, 500);
                 })

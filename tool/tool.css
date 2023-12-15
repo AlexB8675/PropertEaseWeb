@@ -327,7 +327,6 @@ button i {
             background: #242424;
             border-radius: 64px 0 0 64px;
             padding: 6pt 6pt 6pt 18pt;
-            align-content: center;
         }
 
         & > select {

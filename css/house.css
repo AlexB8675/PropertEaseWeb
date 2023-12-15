@@ -18,7 +18,7 @@
     --border-radius: 16px;
     --grid-gap: 16pt;
 
-    width: clamp(800pt, 70%, 1200pt);
+    width: clamp(800pt, 80%, 1200pt);
     padding: 32pt;
     justify-content: center;
     justify-self: center;

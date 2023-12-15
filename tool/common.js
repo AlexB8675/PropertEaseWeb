@@ -23,9 +23,11 @@ function parseHousePlan(plan) {
     }
 
     // parse images
-    const images = plan[rows + 1].split(';')[0].split(',');
+    const images = plan[rows + 1].split(';;');
+    images.pop();
     for (const image of images) {
-        output.images.push(parseInt(image, 10));
+        const values = image.split(',,');
+        output.images.push(parseInt(values[0], 10));
     }
     return output;
 }
