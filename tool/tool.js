@@ -33,79 +33,99 @@ $(document).ready(function () {
         // Calculate the total number of cells
         const totalCells = ROWS * COLS;
 
-        // Define a function to get the index of a cell based on row and column
         function getIndex(row, col) {
             return row * COLS + col;
         }
 
-        // Define a function to get the row and column based on the index
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
             return { row, col };
         }
 
-        // Define a function to shift the cells in the specified direction
+        function getCellProperties(cellArray) {
+            return cellArray.map(function () {
+                return {
+                    dataValue: $(this).attr('data-value'),
+                    backgroundColor: $(this).css('background-color'),
+                    backgroundImage: $(this).css('background-image')
+                };
+            }).get();
+        }
+
+        function arePropertiesEqual(properties1, properties2) {
+            return (
+                properties1.dataValue === properties2.dataValue &&
+                properties1.backgroundColor === properties2.backgroundColor &&
+                properties1.backgroundImage === properties2.backgroundImage
+            );
+        }
+
         function shiftCells(direction) {
-            // Create a copy of the current data-values
-            const dataValues = cells.map(function () {
-                return $(this).attr('data-value');
-            }).get();
-
-            const backgroundColors = cells.map(function () {
-                return $(this).css('background-color');
-            }).get();
-
-            const prevDataValues = previewCells.map(function () {
-                return $(this).attr('data-value');
-            }).get();
-
-            const prevBackgroundColors = previewCells.map(function () {
-                return $(this).css('background-color');
-            }).get();
+            // Create arrays of cell properties for the cells
+            const cellProperties = getCellProperties(cells);
 
             // Shift the cells based on the direction
+            const changes = [];
             for (let i = 0; i < totalCells; i++) {
                 const currentCell = getRowCol(i);
+                const currentImage = $('body').children(`input[data-id="${i + 1}"]`);
 
                 let newRow = currentCell.row;
                 let newCol = currentCell.col;
 
                 switch (direction) {
                     case 'up':
-                        newRow = (currentCell.row + 1) % ROWS;
+                        newRow = (newRow + 1) % ROWS;
                         break;
                     case 'down':
-                        newRow = (currentCell.row - 1 + ROWS) % ROWS;
+                        newRow = (newRow - 1 + ROWS) % ROWS;
                         break;
                     case 'left':
-                        newCol = (currentCell.col + 1) % COLS;
+                        newCol = (newCol + 1) % COLS;
                         break;
                     case 'right':
-                        newCol = (currentCell.col - 1 + COLS) % COLS;
+                        newCol = (newCol - 1 + COLS) % COLS;
                         break;
                 }
 
-                const newIndex = getIndex(newRow, newCol);
-                $(cells[i]).attr('data-value', dataValues[newIndex]);
-                $(cells[i]).css('background-color', backgroundColors[newIndex]);
-                $(previewCells[i]).attr('data-value', prevDataValues[newIndex]);
-                $(previewCells[i]).css('background-color', prevBackgroundColors[newIndex]);
+                const newIndex = newRow * COLS + newCol;
+                const targetCells = $(cells[i]).add(previewCells[i]);
+                const targetProperties = cellProperties[newIndex];
+
+                if (currentImage.length > 0) {
+                    changes.push({ currentImage, newIndex });
+                }
+
+                // Check if the current properties are different from the target properties
+                if (!arePropertiesEqual(cellProperties[i], targetProperties)) {
+                    targetCells.attr('data-value', targetProperties.dataValue)
+                        .css({
+                            'background-color': targetProperties.backgroundColor,
+                            'background-image': targetProperties.backgroundImage
+                        });
+                }
+            }
+            for (const { currentImage, newIndex } of changes) {
+                currentImage.attr('data-id', newIndex + 1);
             }
         }
 
-        // Check the arrow key pressed and call the shiftCells function
         switch (keyCode) {
             case 37: // Left arrow key
+                e.preventDefault();
                 shiftCells('left');
                 break;
             case 38: // Up arrow key
+                e.preventDefault();
                 shiftCells('up');
                 break;
             case 39: // Right arrow key
+                e.preventDefault();
                 shiftCells('right');
                 break;
             case 40: // Down arrow key
+                e.preventDefault();
                 shiftCells('down');
                 break;
         }
