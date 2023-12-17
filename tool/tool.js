@@ -633,6 +633,7 @@ function clearGrid() {
             input.val('');
         }
     }
+    $('#house-form-description').val('');
     generateRooms();
     $('#room-labels').children('span').show();
 }
@@ -645,9 +646,11 @@ function upload_plan(file) {
         reader.onload = function (e) {
             const plan = JSON.parse(String(e.target.result));
             // grid generation
+            const cells = $('.cell');
+            const previewCells = $('.prev-cell');
             for (let i = 0; i < plan.data.length; i++) {
-                const cell = $($('.cell')[i]);
-                const previewCell = $($('.prev-cell')[i]);
+                const cell = $(cells[i]);
+                const previewCell = $(previewCells[i]);
                 cell.attr('data-value', plan.data[i]);
                 cell.css('background-color', getColor(plan.data[i]));
                 previewCell.css('background-color', getColor(plan.data[i]));
@@ -674,7 +677,7 @@ function upload_plan(file) {
                         const transfer = new DataTransfer();
                         transfer.items.add(file);
                         if (cellId > 0) {
-                            const cell = $($('.cell')[cellId - 1]);
+                            const cell = $(cells[cellId - 1]);
                             const input = makeImageInput(cell);
                             const inputElement = input[0];
                             inputElement.files = transfer.files;
