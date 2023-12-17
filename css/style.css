@@ -148,8 +148,15 @@ body {
         font-size: 36pt;
     }
 
+    & > #login-status-info {
+        font-size: 20pt;
+        text-align: center;
+        min-height: 32pt;
+        padding: 0 0 10pt 0;
+    }
+
     & > form {
-        padding: 32pt 48pt;
+        padding: 0 48pt 32pt 48pt;
         align-items: center;
         display: grid;
         grid-template-columns: auto 1fr;
@@ -207,17 +214,41 @@ body {
     display: grid;
     grid-template-columns: auto auto;
 
-    & > a {
-        color: aliceblue;
-        user-select: none;
-        font-family: 'Open Sans', Verdana, sans-serif;
-        text-decoration: none !important;
+    #header-title-container {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 16pt;
+
+        & > i, & > a {
+            color: aliceblue;
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+            align-self: center;
+            transition: font-size 250ms ease-in-out;
+        }
+
+        & > a {
+            font-family: 'Open Sans', Verdana, sans-serif;
+        }
     }
 
-    & > i {
-        color: aliceblue;
-        cursor: pointer;
-        transition: font-size 250ms ease-in-out;
+    #header-button-container {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 16pt;
+
+        .username {
+            color: aliceblue;
+        }
+
+        & > i, & > a {
+            color: aliceblue;
+            cursor: pointer;
+            text-decoration: none;
+            align-self: center;
+            transition: font-size 250ms ease-in-out;
+        }
     }
 }
 

@@ -37,6 +37,25 @@ const HOUSE_PLAN_CELL_COLORS = [
 ];
 
 $(document).ready(() => {
+    const loggedUser = getLoggedUser();
+    if (isUserAdmin(loggedUser)) {
+        $('#header-title-container')
+            .append($('<i class="fa fa-edit" aria-hidden="true">')
+                .on('click', () => {
+                    window.location.href = `./tool.html?id=${getUrlParameters().get('id')}`;
+                }))
+            .append($('<i class="fa fa-trash" aria-hidden="true">')
+                .on('click', () => {
+                    const houseId = getUrlParameters().get('id');
+                    $.ajax({
+                        url: makeEndpointWith(`/api/delete/house/id/${houseId}`),
+                        method: 'post',
+                    }).done((_) => {
+                        window.location.href = './index.html';
+                    });
+                }));
+    }
+
     $('#scroller').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop;

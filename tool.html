@@ -5,11 +5,10 @@
         <script src="https://code.jquery.com/jquery-3.7.1.js"
                 integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-        <script src="../js/script.js"></script>
-        <script src="./common.js"></script>
-        <script src="./tool.js"></script>
-        <link rel="stylesheet" href="../css/style.css">
-        <link rel="stylesheet" href="tool.css">
+        <script src="./js/script.js"></script>
+        <script src="./tool/tool.js"></script>
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="./tool/tool.css">
         <title>PlanTool</title>
     </head>
     <body>
@@ -28,8 +27,13 @@
             </div>
         </div>
         <div id="header">
-            <a href="../index.html">PropertEase</a>
-            <i class="fa-solid fa-user"></i>
+            <div id="header-title-container">
+                <a href="index.html">PropertEase</a>
+            </div>
+            <div id="header-button-container">
+                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-sign-out"></i>
+            </div>
         </div>
         <div id="scroller">
             <div id="room-name">
@@ -88,7 +92,7 @@
                                  data-value="0"
                                  style="padding: 0; border: none; margin-bottom: 10pt; border-radius: 5pt"></div>
                             <div style="margin-bottom: 5pt;">
-                                <button onclick="download_plan()"><i class="fa-solid fa-download"></i></button>
+                                <button onclick="downloadPlan()"><i class="fa-solid fa-download"></i></button>
                                 <label for="upload_button"><i class="fa-solid fa-upload"></i></label>
                                 <input id="upload_button" type="file" accept="application/json" style="display: none">
                                 <button onclick="generateRooms()"><i class="fa-solid fa-cube"></i></button>
@@ -177,7 +181,6 @@
                                 <label for="house-form-terrace">Terrace</label>
                                 <input id="house-form-terrace" type="number" min="0" placeholder="Square Meters">
                             </div>
-
 
                             <!-- Balcony -->
                             <div class="entry">

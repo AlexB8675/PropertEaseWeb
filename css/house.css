@@ -178,10 +178,12 @@
             grid-column: 1 / 4;
 
             #house-plan-container {
+                width: 50%;
                 aspect-ratio: 1 / 1;
                 overflow: hidden;
                 display: grid;
                 grid-template-columns: repeat(50, 1fr);
+                justify-self: center;
             }
         }
 

@@ -93,7 +93,7 @@ class LocalStorage extends Storage {
 }
 
 function makeEndpointWith(uri) {
-    const endpoint = 'http://93.41.228.90:8080';
+    const endpoint = 'http://localhost:8080';
     return `${endpoint}${uri}`;
 }
 
@@ -135,6 +135,19 @@ function getUrlParameters() {
     return new URLSearchParams(window.location.search);
 }
 
+function getLoggedUser() {
+    if (SessionStorage.has('user')) {
+        const user = JSON.parse(SessionStorage.get('user')).user;
+        user.permissions = BigInt(user.permissions);
+        return user;
+    }
+    return null;
+}
+
+function isUserAdmin(user) {
+    return user && (user.permissions & 0x80000000n) === 0x80000000n;
+}
+
 $(document).ready(function () {
     'use strict';
 
@@ -147,37 +160,65 @@ $(document).ready(function () {
             });
     }
 
+    const loggedUser = getLoggedUser();
+    const signinButton = $('#header-button-container > i[class~="fa-user"]');
+    const signoutButton = $('#header-button-container > i[class~="fa-sign-out"]');
+    if (loggedUser) {
+        signinButton.css({
+            'display': 'none',
+        });
+        $('#header-button-container')
+            .prepend($('<a class="fas fa-tools" href="./tool.html">'))
+            .prepend($('<label class="username">').text(`Welcome, ${loggedUser.username}`));
+    } else {
+        signoutButton.css({
+            'display': 'none',
+        });
+    }
+
     const loginContainer = $('#login');
     const blurContainer = $('.blur');
-    $('#header > i').on('click', () => {
-        loginContainer
-            .css({
-                'opacity': 1,
-                'visibility': 'visible',
-            });
-        blurContainer
-            .css({
-                'opacity': 1,
-                'pointer-events': 'all',
-            })
-            .on('mousedown', function (event) {
-                if (event.target !== this) {
-                    return;
-                }
-                loginContainer.css({
-                    'opacity': 0,
-                    'visibility': 'hidden',
+    signinButton
+        .on('click', () => {
+            loginContainer
+                .css({
+                    'opacity': 1,
+                    'visibility': 'visible',
                 });
-                blurContainer
-                    .css({
-                        'opacity': '0',
-                        'pointer-events': 'none',
-                    })
-                    .off('mousedown');
-            });
-    });
+            blurContainer
+                .css({
+                    'opacity': 1,
+                    'pointer-events': 'all',
+                })
+                .on('mousedown', function (event) {
+                    if (event.target !== this) {
+                        return;
+                    }
+                    loginContainer.css({
+                        'opacity': 0,
+                        'visibility': 'hidden',
+                    });
+                    blurContainer
+                        .css({
+                            'opacity': '0',
+                            'pointer-events': 'none',
+                        })
+                        .off('mousedown');
+                });
+        });
+    signoutButton
+        .on('click', () => {
+            SessionStorage.clear();
+            window.location.reload();
+        });
     $('#login-form').on('submit', (event) => {
         event.preventDefault();
+    });
+    $('#login-form > input').on('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            $('#login-button').trigger('click');
+        }
     });
     $('#login-button').on('click', async () => {
         const username = $('#login-username-input').val();
@@ -188,14 +229,28 @@ $(document).ready(function () {
             type: 'signin',
         }, {
             done: (data) => {
-                console.log(data);
                 $('#login-username-input').val('');
                 $('#login-password-input').val('');
-                blurContainer.mousedown();
+                $('#login-status-info')
+                    .css({
+                        'color': 'green',
+                    })
+                    .text('Login Successful');
                 SessionStorage.set('user', JSON.stringify(data));
+                setTimeout(() => {
+                    $('#login-status-info').text('');
+                    window.location.reload();
+                }, 500);
             },
-            error: (error) => {
-                console.error(error);
+            error: (_) => {
+                $('#login-status-info')
+                    .css({
+                        'color': 'red',
+                    })
+                    .text('Login Failed: Wrong username or password');
+                setTimeout(() => {
+                    $('#login-status-info').text('');
+                }, 1000);
             }
         });
     });
@@ -207,11 +262,15 @@ $(document).ready(function () {
             password: password,
             type: 'signup',
         }, {
-            done: (data) => {
-                console.log(data);
-                $('#login-username-input').val('');
-                $('#login-password-input').val('');
-                blurContainer.mousedown();
+            done: (_) => {
+                $('#login-status-info')
+                    .css({
+                        'color': 'green',
+                    })
+                    .text('Registration Successful: Please login');
+                setTimeout(() => {
+                    $('#login-status-info').text('');
+                }, 500);
             },
             error: (error) => {
                 console.error(error);

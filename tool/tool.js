@@ -23,6 +23,10 @@ class HousePlan {
 }
 
 $(document).ready(function () {
+    const loggedUser = getLoggedUser();
+    if (!isUserAdmin(loggedUser)) {
+        window.location.href = './index.html';
+    }
     $(document).on('keydown', function (e) {
         const keyCode = e.keyCode;
 
@@ -310,7 +314,7 @@ $(document).ready(function () {
     });
 
     $('#upload_button').on('change', function () {
-        upload_plan($(this)[0].files[0]);
+        uploadPlan($(this)[0].files[0]);
     });
 
     $(".prev-cell").on('mouseover', function () {
@@ -354,6 +358,21 @@ $(document).ready(function () {
             stack.push({ x: x, y: y + 1 });
         }
     }
+
+    const houseId = getUrlParameters().get('id');
+    if (houseId) {
+        $.ajax({
+            url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
+            method: 'get',
+            dataType: 'json',
+        }).done((response) => {
+            const { _, plan } = response[0]
+            uploadPlan(new File([plan], 'plan.json', {
+                type: 'text/plain',
+                lastModified: Date.now()
+            }));
+        });
+    }
 });
 
 function setupHouseSubmitForm() {
@@ -373,28 +392,19 @@ function setupHouseSubmitForm() {
     });
     $('#submit-house-form').on('submit', async function (event) {
         event.preventDefault();
-        if (!check_download()) {
+        if (!isDownloadReady()) {
             return;
         }
 
         const result = await makeHousePlanData();
-        const form = $(this);
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'post',
             data: JSON.stringify(result),
             processData: false,
             contentType: 'application/json'
-        }).done(_ => {
-            form
-                .find('input, select, textarea')
-                .val(String());
-            form
-                .find('button')
-                .css({
-                    'background-image': '',
-                });
-            clearGrid();
+        }).done((data) => {
+            window.location.href = `./house.html?id=${data.id}`;
         }).fail((error) => {
             console.error(error);
         });
@@ -419,13 +429,14 @@ function makeImageInput(cell) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 cell.css('background-image', `url(${e.target.result})`);
-                previewCell.addClass('picture-container')
+                previewCell
+                    .addClass('picture-container')
                     .css('background-image', `url(${e.target.result})`)
                     .on('mousedown', function () {
                         $(this).toggleClass('shown-picture');
                         if ($(this).hasClass('shown-picture')) {
                             const img = new Image();
-                            img.src = $(this).css('background-image').replace('url("', '').replace('")', '');
+                            img.src = String(e.target.result);
                             const bgImgWidth = img.width;
                             const bgImgHeight = img.height;
                             $(this).css('padding-top', `${bgImgHeight / bgImgWidth * 80}%`);
@@ -567,7 +578,7 @@ function getColor(data) {
     return (isNaN(dataIndex) || dataIndex === 0) ? 'transparent' : $(`#color-selector > div:nth-child(${dataIndex})`).css('background-color');
 }
 
-function check_download() {
+function isDownloadReady() {
     // Check if the rooms have been generated and filled
     const generated_rooms = $('#room-labels');
     if (generated_rooms.children('.room-label').length === 0) {
@@ -586,8 +597,8 @@ function check_download() {
     return true;
 }
 
-async function download_plan() {
-    if (!check_download()) {
+async function downloadPlan() {
+    if (!isDownloadReady()) {
         return;
     }
     const result = JSON.stringify(await makeHousePlanData());
@@ -600,13 +611,13 @@ async function download_plan() {
 
 function clearGrid() {
     let cells = $('.cell')
-    let prevcells = $('.prev-cell')
+    let previewCells = $('.prev-cell')
     cells.attr('data-value', 0);
     cells.css('background-color', 'transparent');
     cells.css('background-image', '');
 
-    prevcells.css('background-color', 'transparent');
-    prevcells.css('background-image', '');
+    previewCells.css('background-color', 'transparent');
+    previewCells.css('background-image', '');
     $('body')
         .find('input.main-input-image')
         .remove();
@@ -634,11 +645,14 @@ function clearGrid() {
         }
     }
     $('#house-form-description').val('');
+    $('#submit-house-main-image').css({
+        'background-image': 'images/placeholder.svg',
+    });
     generateRooms();
     $('#room-labels').children('span').show();
 }
 
-function upload_plan(file) {
+function uploadPlan(file) {
     if (file) {
         showLoader();
         clearGrid();
@@ -714,9 +728,6 @@ function upload_plan(file) {
                     .replace('house-form-', '')
                     .replace('-', '_');
                 const value = plan.info[label];
-                if (value === undefined) {
-                    continue;
-                }
                 const parseOptionValue = (value) => {
                     if (value.parent().attr('type') === 'number') {
                         return parseInt(value.val(), 10);
@@ -776,10 +787,8 @@ function generateRooms() {
             let container = $('<div>').addClass('room-label');
             let label = $('<label>').attr('data-value', item.data).css('background-color', item.color);
             let input = $('<input>').attr('type', 'text');
-
             // Append label and input to the container
             container.append(label).append(input);
-
             // Append the container to the "room-labels" div
             roomLabels.append(container);
         }
@@ -787,11 +796,10 @@ function generateRooms() {
 }
 
 function isRoom(color) {
-    return (color !== 'rgba(0, 0, 0, 0)' &&
-        color !== 'rgb(240, 248, 255)' &&   //Window
-        color !== 'rgb(105, 105, 105)' &&   //DoorL
-        //color !== 'rgb(169, 169, 169)' &&   //DoorR
-        color !== 'rgb(0, 0, 0)')           //Wall
+    return color !== 'rgba(0, 0, 0, 0)' &&
+           color !== 'rgb(240, 248, 255)' &&   // Window
+           color !== 'rgb(105, 105, 105)' &&   // DoorL
+           color !== 'rgb(0, 0, 0)';           // Wall
 }
 
 function showLoader() {

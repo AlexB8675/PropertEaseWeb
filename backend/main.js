@@ -114,8 +114,8 @@ registerPostApiEndpoint(app, database, {
         const password = makeSha512Hash(request.body.password);
         return [username, password];
     },
-    callback: (result, rows) => {
-
+    callback: (result, _) => {
+        result.send({});
     },
     error: (request, result, error) => {
         if (error.code === 'SQLITE_CONSTRAINT') {
@@ -123,6 +123,19 @@ registerPostApiEndpoint(app, database, {
                 code: 'PEB_ERROR_USERNAME_TAKEN',
             });
         }
+    }
+});
+
+registerPostApiEndpoint(app, database, {
+    endpoint: '/api/delete/house/id/:houseId',
+    query: `delete from House where id = ?`,
+    parameters: (request) => [request.params.houseId],
+    callback: (result, _) => {
+        result.send({});
+    },
+    error: (request, result, error) => {
+        console.log(error);
+        result.status(404).send({});
     }
 });
 
@@ -134,7 +147,16 @@ app.post('/api/data/tool/upload', (request, result) => {
             result.status(500).send({});
             return;
         }
-        result.send({});
+        database.all('select max(id) as id from House', (error, rows) => {
+            if (error) {
+                console.error(error);
+                result.status(500).send({});
+                return;
+            }
+            result.send({
+                id: rows[0].id,
+            });
+        });
     });
 });
 

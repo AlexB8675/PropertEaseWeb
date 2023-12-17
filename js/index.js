@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
     $('#card-container').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
