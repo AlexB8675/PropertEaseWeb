@@ -1,3 +1,7 @@
+$.fn.exists = function () {
+    return this.length !== 0;
+}
+
 class Storage {
     static set(x, key, value) {
         x.setItem(key, value);
@@ -89,7 +93,7 @@ class LocalStorage extends Storage {
 }
 
 function makeEndpointWith(uri) {
-    const endpoint = 'http://localhost:8080';
+    const endpoint = 'http://93.41.228.90:8080';
     return `${endpoint}${uri}`;
 }
 
@@ -101,11 +105,11 @@ function makePriceAsCurrency(price) {
     });
 }
 
-function makeLoginRequest(info, callbacks) {
+async function makeLoginRequest(info, callbacks) {
     if (info.username === '' || info.password === '') {
         return;
     }
-    return $.ajax({
+    return await $.ajax({
         url: makeEndpointWith(`/api/login/${info.type}`),
         method: 'post',
         data: {
@@ -119,11 +123,10 @@ function makeLoginRequest(info, callbacks) {
     }));
 }
 
-function imagesFromJson(json) {
+function imagesFromHousePlan(house) {
     const images = new Map();
-    for (const each of json) {
-        const [key, value] = Object.entries(each).flat();
-        images.set(key, value);
+    for (const { cellId, imageId } of house.indices) {
+        images.set(cellId, house.images[imageId]);
     }
     return images;
 }
@@ -165,51 +168,54 @@ $(document).ready(function () {
                     'opacity': 0,
                     'visibility': 'hidden',
                 });
-                blurContainer.css({
-                    'opacity': '0',
-                    'pointer-events': 'none',
-                });
+                blurContainer
+                    .css({
+                        'opacity': '0',
+                        'pointer-events': 'none',
+                    })
+                    .off('mousedown');
             });
     });
     $('#login-form').on('submit', (event) => {
         event.preventDefault();
     });
-    $('#login-button').on('click', () => {
+    $('#login-button').on('click', async () => {
         const username = $('#login-username-input').val();
         const password = $('#login-password-input').val();
-        makeLoginRequest({
+        await makeLoginRequest({
             username: username,
             password: password,
             type: 'signin',
         }, {
             done: (data) => {
                 console.log(data);
+                $('#login-username-input').val('');
+                $('#login-password-input').val('');
+                blurContainer.mousedown();
+                SessionStorage.set('user', JSON.stringify(data));
             },
             error: (error) => {
                 console.error(error);
             }
-        }).then(() => {
-            $('#login-username-input').val('');
-            $('#login-password-input').val('');
         });
     });
-    $('#register-button').on('click', () => {
+    $('#register-button').on('click', async () => {
         const username = $('#login-username-input').val();
         const password = $('#login-password-input').val();
-        makeLoginRequest({
+        await makeLoginRequest({
             username: username,
             password: password,
             type: 'signup',
         }, {
             done: (data) => {
                 console.log(data);
+                $('#login-username-input').val('');
+                $('#login-password-input').val('');
+                blurContainer.mousedown();
             },
             error: (error) => {
                 console.error(error);
             }
-        }).then(() => {
-            $('#login-username-input').val('');
-            $('#login-password-input').val('');
         });
     });
 });

@@ -11,14 +11,14 @@
 
 #scroller {
     background: #242424;
-    grid-template-rows: minmax(max-content, 100%) min-content;
+    grid-template-rows: auto min-content;
 }
 
 #house-ui {
     --border-radius: 16px;
     --grid-gap: 16pt;
 
-    width: clamp(800pt, 70%, 1200pt);
+    width: clamp(800pt, 80%, 1200pt);
     padding: 32pt;
     justify-content: center;
     justify-self: center;
