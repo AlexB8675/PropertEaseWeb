@@ -1,9 +1,7 @@
 #scroller {
+    box-shadow: 0 2px 4px 4px #202020;
+    background: #202020;
     padding: 30pt 0;
-}
-
-body {
-    background-color: #202020;
 }
 
 #room-name {

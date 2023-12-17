@@ -1,7 +1,3 @@
-$.fn.exists = function () {
-    return this.length !== 0;
-}
-
 class Storage {
     static set(x, key, value) {
         x.setItem(key, value);
@@ -93,7 +89,7 @@ class LocalStorage extends Storage {
 }
 
 function makeEndpointWith(uri) {
-    const endpoint = 'http://localhost:8080';
+    const endpoint = 'http://93.41.228.90:8080';
     return `${endpoint}${uri}`;
 }
 
@@ -112,6 +108,7 @@ async function makeLoginRequest(info, callbacks) {
     return await $.ajax({
         url: makeEndpointWith(`/api/login/${info.type}`),
         method: 'post',
+        cache: false,
         data: {
             username: info.username,
             password: info.password,

@@ -373,6 +373,7 @@ $(document).ready(function () {
             url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
             method: 'get',
             dataType: 'json',
+            cache: false,
         }).done((response) => {
             const { _, plan } = response[0]
             uploadPlan(new File([plan], 'plan.json', {
@@ -409,8 +410,9 @@ function setupHouseSubmitForm() {
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'post',
             data: JSON.stringify(result),
+            cache: false,
             processData: false,
-            contentType: 'application/json'
+            contentType: 'application/json',
         }).done((data) => {
             window.location.href = `./house.html?id=${data.id}`;
         }).fail((error) => {

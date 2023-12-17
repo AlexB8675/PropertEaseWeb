@@ -37,25 +37,6 @@ const HOUSE_PLAN_CELL_COLORS = [
 ];
 
 $(document).ready(() => {
-    const loggedUser = getLoggedUser();
-    if (isUserAdmin(loggedUser)) {
-        $('#header-title-container')
-            .append($('<i class="fa fa-edit" aria-hidden="true">')
-                .on('click', () => {
-                    window.location.href = `./tool.html?id=${getUrlParameters().get('id')}`;
-                }))
-            .append($('<i class="fa fa-trash" aria-hidden="true">')
-                .on('click', () => {
-                    const houseId = getUrlParameters().get('id');
-                    $.ajax({
-                        url: makeEndpointWith(`/api/delete/house/id/${houseId}`),
-                        method: 'post',
-                    }).done((_) => {
-                        window.location.href = './index.html';
-                    });
-                }));
-    }
-
     $('#scroller').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop;
@@ -86,10 +67,32 @@ $(document).ready(() => {
     });
 
     const houseId = getUrlParameters().get('id');
+    if (houseId) {
+        const loggedUser = getLoggedUser();
+        if (isUserAdmin(loggedUser)) {
+            $('#header-title-container')
+                .append($('<i class="fa fa-edit" aria-hidden="true">')
+                    .on('click', () => {
+                        window.location.href = `./tool.html?id=${getUrlParameters().get('id')}`;
+                    }))
+                .append($('<i class="fa fa-trash" aria-hidden="true">')
+                    .on('click', () => {
+                        const houseId = getUrlParameters().get('id');
+                        $.ajax({
+                            url: makeEndpointWith(`/api/delete/house/id/${houseId}`),
+                            method: 'post',
+                            cache: false,
+                        }).done((_) => {
+                            window.location.href = './index.html';
+                        });
+                    }));
+        }
+    }
     $.ajax({
         url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
         method: 'get',
         dataType: 'json',
+        cache: false,
     }).done((response) => {
         const { _, plan } = response[0];
         const house = JSON.parse(plan);
@@ -136,6 +139,9 @@ $(document).ready(() => {
             cells.push($(`<div class="preview-cell" style="background-color: ${HOUSE_PLAN_CELL_COLORS[value]}" data-value="${value}"></div>`))
         }
         for (const [index, image] of images.entries()) {
+            if (index === 0) {
+                continue;
+            }
             cells[index]
                 .addClass('picture-container')
                 .css({

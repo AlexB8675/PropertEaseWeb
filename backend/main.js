@@ -134,7 +134,7 @@ registerPostApiEndpoint(app, database, {
         result.send({});
     },
     error: (request, result, error) => {
-        console.log(error);
+        console.error(error);
         result.status(404).send({});
     }
 });

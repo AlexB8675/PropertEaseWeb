@@ -38,6 +38,7 @@ $(document).ready(function () {
         url: makeEndpointWith('/api/data/houses'),
         method: 'get',
         dataType: 'json',
+        cache: false,
     }).done((data) => {
         const mainCardContainer = $('#cards');
         const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
