@@ -180,12 +180,13 @@
             grid-column: 1 / 4;
 
             #house-plan-container {
-                width: 50%;
+                width: 55%;
+                padding: 1%;
                 aspect-ratio: 1 / 1;
                 overflow: hidden;
+                justify-self: center;
                 display: grid;
                 grid-template-columns: repeat(50, 1fr);
-                justify-self: center;
 
                 .preview-cell {
                     background-size: cover;

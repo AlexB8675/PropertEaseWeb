@@ -176,11 +176,12 @@ button i {
 }
 
 .hovered-cell {
+    z-index: 2;
     transform: scale(3);
 }
 
 .picture-container {
-    z-index: 2;
+    z-index: 3;
 }
 
 .shown-picture {
