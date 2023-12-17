@@ -11,7 +11,7 @@
 
 #scroller {
     background: #242424;
-    grid-template-rows: minmax(max-content, 100%) min-content;
+    grid-template-rows: auto min-content;
 }
 
 #house-ui {

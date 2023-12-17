@@ -90,8 +90,8 @@
                             <div style="margin-bottom: 5pt;">
                                 <button onclick="download_plan()"><i class="fa-solid fa-download"></i></button>
                                 <label for="upload_button"><i class="fa-solid fa-upload"></i></label>
-                                <input id="upload_button" type="file" accept=".hplan" style="display: none">
-                                <button onclick="generate_rooms()"><i class="fa-solid fa-cube"></i></button>
+                                <input id="upload_button" type="file" accept="application/json" style="display: none">
+                                <button onclick="generateRooms()"><i class="fa-solid fa-cube"></i></button>
                             </div>
                             <div id="tool-window">
                                 <button data-value="31"><i class="fa-solid fa-trowel-bricks"></i></button>
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr; justify-items: center; row-gap: 25pt;">
-                            <button onclick="clear_grid()" style="margin-bottom: 10pt"><i class="fa-solid fa-trash"></i>
+                            <button onclick="clearGrid()" style="margin-bottom: 10pt"><i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </div>

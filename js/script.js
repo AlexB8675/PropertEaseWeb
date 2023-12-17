@@ -119,11 +119,10 @@ async function makeLoginRequest(info, callbacks) {
     }));
 }
 
-function imagesFromJson(json) {
+function imagesFromHousePlan(house) {
     const images = new Map();
-    for (const each of json) {
-        const [key, value] = Object.entries(each).flat();
-        images.set(key, value);
+    for (const { cellId, imageId } of house.indices) {
+        images.set(cellId, house.images[imageId]);
     }
     return images;
 }

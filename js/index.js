@@ -46,27 +46,29 @@ $(document).ready(function () {
                 </div>
                 <div class="content">
                     <label class="contract">${type + " for " + ((contract) ? "Sale" : "Rent")}</label>
-                    <label class="address">${city + " " + cap + ", " + address}</label>
+                    <label class="address">${city} ${cap}</label>
+                    <label class="address">${address}</label>
                     <label class="price">${makePriceAsCurrency(price)}</label>
                 </div>
             </a>
         `.trim();
 
-        for (const house of data) {
-            const images = imagesFromJson(JSON.parse(house.images));
-            const mainImage = images.has("0") ?
-                images.get("0") :
-                "images/placeholder.svg";
+        for (const { id, plan } of data) {
+            const house = JSON.parse(plan);
+            const images = imagesFromHousePlan(house);
+            const mainImage = images.has(0) ?
+                images.get(0) :
+                'images/placeholder.svg';
             const card = $(
                 cardTemplate(
-                    house.id,
-                    house.address,
-                    house.city,
-                    house.cap,
-                    house.contract,
-                    house.price,
-                    mainImage,
-                    house.e_type
+                    id,
+                    house.info.address,
+                    house.info.city,
+                    house.info.zip,
+                    house.info.contract,
+                    house.info.price,
+                    mainImage.data,
+                    house.info.house
                 )
             );
             const cardImage = card.find('img');

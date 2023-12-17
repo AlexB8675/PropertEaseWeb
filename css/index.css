@@ -1,5 +1,5 @@
 #scroller {
-    grid-template-rows: min-content minmax(max-content, 100%) min-content;
+    grid-template-rows: min-content auto min-content;
 }
 
 #search-area {
@@ -82,13 +82,13 @@
     & > div {
         --grid-column-gap: 40pt;
         --grid-padding: 32pt;
-        --grid-max-width: 310pt;
+        --grid-max-width: 330pt;
         --grid-max-column: 3;
         --grid-total-width: calc(var(--grid-max-width) * var(--grid-max-column));
         --grid-total-padding: calc(var(--grid-padding) * 2);
         --grid-total-column-gap: calc(var(--grid-column-gap) * (var(--grid-max-column) - 1));
         width: min(var(--grid-total-width) + var(--grid-total-column-gap) + var(--grid-total-padding), calc(100% - var(--grid-total-padding)));
-        padding: 20pt var(--grid-padding);
+        padding: 16pt var(--grid-padding);
         justify-content: center;
         display: grid;
         grid-template-columns: repeat(auto-fill, var(--grid-max-width));
@@ -100,7 +100,7 @@
             overflow: hidden;
             background-color: #181818;
             border-radius: 8px;
-            width: 310pt;
+            width: var(--grid-max-width);
             height: min-content;
             filter: drop-shadow(0px 0px 15px #000000);
             perspective: 600px;
@@ -145,7 +145,7 @@
             .content {
                 padding: 20pt;
                 display: grid;
-                grid-template-rows: repeat(3, min-content);
+                grid-auto-rows: min-content;
 
                 .contract {
                     font-weight: bold;
