@@ -1,3 +1,7 @@
+$.fn.exists = function () {
+    return this.length !== 0;
+}
+
 class Storage {
     static set(x, key, value) {
         x.setItem(key, value);

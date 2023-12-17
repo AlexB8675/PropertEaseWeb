@@ -275,6 +275,7 @@ button i {
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        background-image: url("../images/placeholder.svg");
     }
 
     #submit-plan-button {
@@ -327,6 +328,7 @@ button i {
             background: #242424;
             border-radius: 64px 0 0 64px;
             padding: 6pt 6pt 6pt 18pt;
+            align-content: center;
         }
 
         & > select {
