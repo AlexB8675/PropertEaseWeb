@@ -160,6 +160,13 @@ button i {
     background-color: #181818;
 }
 
+#preview-image {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .prev-cell {
     width: 10pt;
     height: 10pt;
@@ -179,15 +186,9 @@ button i {
 }
 
 .shown-picture {
-    width: 80%;
-    height: 0;
-    background-repeat: no-repeat;
-    background-size: contain;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0s;
+    background: transparent;
+    transition: all 250ms;
+    z-index: 4;
 }
 
 .room-label {

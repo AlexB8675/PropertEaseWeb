@@ -5,14 +5,16 @@
         <meta name="description" content="description">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="black">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="./css/style.css">
         <link rel="stylesheet" href="./css/house.css">
+        <link rel="stylesheet" href="./tool/tool.css">
         <link rel="manifest" href="./manifest.json">
         <script src="https://code.jquery.com/jquery-3.7.1.js"
                 integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-        <script src="js/script.js"></script>
-        <script src="js/houses.js"></script>
+        <script src="./tool/common.js"></script>
+        <script src="./js/script.js"></script>
+        <script src="./js/houses.js"></script>
         <script async defer
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&callback=initMap"></script>
         <script>
@@ -60,6 +62,7 @@
             </div>
         </div>
         <div id="scroller">
+            <div id="room-name"></div>
             <div id="house-ui">
                 <div id="house-displayer">
                     <div id="slider">
@@ -154,7 +157,9 @@
                             <i class="fa-brands fa-flipboard"></i>
                             <label>House Plan</label>
                         </div>
-                        <div id="house-plan-container"></div>
+                        <div id="house-plan-container">
+                            <div class="shown-picture" id="preview-image"></div>
+                        </div>
                     </div>
                     <div id="house-energy" class="displayer">
                         <div class="section-title">

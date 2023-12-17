@@ -136,7 +136,7 @@ $(document).ready(function () {
     });
 
     const gridContainer = $('#grid-container');
-    const prev = $('#preview');
+    const previewCellContainer = $('#preview');
 
     for (let i = 0; i < ROWS * COLS; i++) {
         const cell = $('<div>').addClass('cell').attr('data-value', '0');
@@ -144,10 +144,11 @@ $(document).ready(function () {
     }
     for (let i = 0; i < ROWS * COLS; i++) {
         const cell = $('<div>').addClass('prev-cell').attr('data-value', '0');
-        prev.append(cell);
+        previewCellContainer.append(cell);
     }
 
-    let cell = $('.cell')
+    let cells = $('.cell')
+    const previewCells = $('.prev-cell');
     let color_selector = $('#color-selector');
     let data = 0
     let isLeftMousePressed = false;
@@ -161,45 +162,57 @@ $(document).ready(function () {
         { value: "image_upload", icon: "fa-camera", color: '#363636', specialBehavior: "camera", selected: false } // Image Upload
     ];
 
-    $('.prev-cell').on('mousemove', function (e) {
-        let mouseX = e.pageX - mouseDiv.outerWidth();
-        let mouseY = e.pageY - mouseDiv.outerHeight();
-        mouseDiv.css("left", mouseX);
-        mouseDiv.css("top", mouseY);
+    previewCells
+        .on('mousemove', function (e) {
+            const mouseX = e.pageX - mouseDiv.outerWidth();
+            const mouseY = e.pageY - mouseDiv.outerHeight();
+            mouseDiv.css("left", mouseX);
+            mouseDiv.css("top", mouseY);
 
-        const roomName = $('#room-name');
-        // Get the color of the hovered cell
-        let hoveredColor = $(this).css("background-color");
+            const roomName = $('#room-name');
+            // Get the color of the hovered cell
+            const hoveredColor = $(this).css("background-color");
+            if (isRoom(hoveredColor)) {
+                // Find the room label with the corresponding background color
+                const correspondingRoomLabel = $('#room-labels .room-label label[data-value]').filter(function () {
+                    return $(this).css("background-color") === hoveredColor;
+                });
 
-        if (isRoom(hoveredColor)) {
-            // Find the room label with the corresponding background color
-            let correspondingRoomLabel = $('#room-labels .room-label label[data-value]').filter(function () {
-                return $(this).css("background-color") === hoveredColor;
-            });
+                // Get the text of the room label
+                const roomLabelText = correspondingRoomLabel.closest('.room-label').find('input[type="text"]').val();
+                roomName
+                    .empty()
+                    .text(roomLabelText);
+                const squareCount = $('.prev-cell').filter(function () {
+                    return $(this).css("background-color") === hoveredColor;
+                }).length;
+                roomName
+                    .append(`<div> sqm: ${squareCount / 4}<\div>`)
+                    .show();
+            } else {
+                // Hide the room name if the color is transparent
+                roomName.hide();
+            }
+        })
+        .on('mouseover', function () {
+            const color = $(this).css("background-color");
+            previewCells
+                .filter(function () {
+                    return $(this).hasClass('hovered-cell');
+                })
+                .removeClass('hovered-cell');
+            if (isRoom(color)) {
+                const cellsToChange = $(`.prev-cell[style*="background-color: ${color}"]`);
+                cellsToChange.addClass('hovered-cell');
+            }
+        });
 
-            // Get the text of the room label
-            let roomLabelText = correspondingRoomLabel.closest('.room-label').find('input[type="text"]').val();
-
-            roomName.empty();
-            // Set the room name content
-            roomName.text(roomLabelText);
-            let squareCount = $('.prev-cell').filter(function () {
-                return $(this).css("background-color") === hoveredColor;
-            }).length;
-            roomName.append(`<div> sqm: ${squareCount / 4}<\div>`);
-            // Show the room name
-            roomName.show();
-        } else {
-            // Hide the room name if the color is transparent
-            roomName.hide();
-        }
-    });
-
-    prev.on('mouseleave', function () {
+    previewCellContainer.on('mouseleave', function () {
+        previewCells.removeClass('hovered-cell');
         $('#room-name').hide();
     });
 
-    cell.on('mousedown', function (event) {
+    cells.on('mousedown', function (event) {
         switch (event.which) {
             case 1:
                 isLeftMousePressed = true;
@@ -230,18 +243,22 @@ $(document).ready(function () {
         }
     });
 
-    cell.on('mouseover mousedown', function () {
+    cells.on('mouseover mousedown', function () {
         if (!tools[3].selected && !tools[4].selected) {
             if (isLeftMousePressed) {
-                $(this).css("background-color", getColor(data))
+                $(this).css('background-color', getColor(data))
                     .attr("data-value", data.value);
-                $(`#preview > div:nth-child(${$(this).index() + 2})`)
-                    .css("background-color", getColor(data));
+                $($('.prev-cell')[$(this).index()])
+                    .css('background-color', getColor(data));
             } else if (isRightMousePressed) {
-                $(this).css({ "background-color": "transparent", "background-image": "" })
+                $(this)
+                    .css({
+                        'background-color': 'transparent',
+                        'background-image': ''
+                    })
                     .removeClass('picture-container')
-                    .attr("data-value", 0);
-                $(`#preview > div:nth-child(${$(this).index() + 2})`)
+                    .attr('data-value', 0);
+                $($('.prev-cell')[$(this).index()])
                     .css({ 'background-color': 'transparent', 'background-image': '' })
                     .removeClass('picture-container');
                 $('body')
@@ -251,7 +268,7 @@ $(document).ready(function () {
         }
     });
 
-    cell.on('click', function () {
+    cells.on('click', function () {
         // Check if the Image Upload tool is selected
         if (tools[4].selected) {
             const clickedCell = $(this);
@@ -315,15 +332,6 @@ $(document).ready(function () {
 
     $('#upload_button').on('change', function () {
         uploadPlan($(this)[0].files[0]);
-    });
-
-    $(".prev-cell").on('mouseover', function () {
-        const color = $(this).css("background-color");
-        $(".prev-cell").removeClass('hovered-cell');
-        if (isRoom(color)) {
-            const cells_toChange = $('.prev-cell[style*="background-color: ' + color + '"]');
-            cells_toChange.addClass('hovered-cell');
-        }
     });
 
     setupHouseSubmitForm();
@@ -413,7 +421,7 @@ function setupHouseSubmitForm() {
 
 function makeImageInput(cell) {
     const body = $('body');
-    const previewCell = $(`#preview > div:nth-child(${cell.index() + 2})`);
+    const previewCell = $($('.prev-cell')[cell.index()]);
     const previousInput = body.find(`input[data-id="${cell.index() + 1}"]`);
     if (previousInput.length > 0) {
         previousInput.remove();
@@ -433,16 +441,32 @@ function makeImageInput(cell) {
                     .addClass('picture-container')
                     .css('background-image', `url(${e.target.result})`)
                     .on('mousedown', function () {
-                        $(this).toggleClass('shown-picture');
-                        if ($(this).hasClass('shown-picture')) {
-                            const img = new Image();
-                            img.src = String(e.target.result);
-                            const bgImgWidth = img.width;
-                            const bgImgHeight = img.height;
-                            $(this).css('padding-top', `${bgImgHeight / bgImgWidth * 80}%`);
-                        } else {
-                            $(this).css('padding-top', '');
-                        }
+                        const gcd = (a, b) => {
+                            if (b === 0) {
+                                return a;
+                            }
+                            return gcd(b, a % b);
+                        };
+                        const image = new Image();
+                        image.src = e.target.result;
+                        const common = gcd(image.width, image.height);
+                        $('#preview-image')
+                            .css({
+                                'width': 'auto',
+                                'height': '100%',
+                                'aspect-ratio': `${image.width / common} / ${image.height / common}`,
+                                'background': `url(${e.target.result}) no-repeat no-repeat`,
+                                'background-size': 'cover'
+                            })
+                            .on('mousedown', function () {
+                                $(this)
+                                    .css({
+                                        'width': '',
+                                        'height': '',
+                                        'background': ''
+                                    })
+                                    .off('mousedown');
+                            });
                     });
             };
             reader.readAsDataURL(file);
@@ -793,13 +817,6 @@ function generateRooms() {
             roomLabels.append(container);
         }
     });
-}
-
-function isRoom(color) {
-    return color !== 'rgba(0, 0, 0, 0)' &&
-           color !== 'rgb(240, 248, 255)' &&   // Window
-           color !== 'rgb(105, 105, 105)' &&   // DoorL
-           color !== 'rgb(0, 0, 0)';           // Wall
 }
 
 function showLoader() {
