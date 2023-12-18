@@ -18,11 +18,23 @@ class HousePlan {
     }
 }
 
+function getCurrentHouseId() {
+    if (getUrlParameters().has('id')) {
+        return parseInt(getUrlParameters().get('id'), 10);
+    }
+    return null;
+}
+
+function shouldEdit() {
+    return getUrlParameters().has('id');
+}
+
 $(document).ready(function () {
     const loggedUser = getLoggedUser();
     if (!isUserAdmin(loggedUser)) {
         window.location.href = './index.html';
     }
+
     $(document).on('keydown', function (e) {
         const keyCode = e.keyCode;
 
@@ -32,10 +44,6 @@ $(document).ready(function () {
 
         // Calculate the total number of cells
         const totalCells = ROWS * COLS;
-
-        function getIndex(row, col) {
-            return row * COLS + col;
-        }
 
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
@@ -149,7 +157,6 @@ $(document).ready(function () {
     let data = 0
     let isLeftMousePressed = false;
     let isRightMousePressed = false;
-    let mouseDiv = $('#room-name');
     let tools = [
         { value: "33", icon: "fa-border-all", color: 'black', specialBehavior: null, selected: false },  // Wall
         { value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false },  // Door
@@ -160,12 +167,12 @@ $(document).ready(function () {
 
     previewCells
         .on('mousemove', function (e) {
-            const mouseX = e.pageX - mouseDiv.outerWidth();
-            const mouseY = e.pageY - mouseDiv.outerHeight();
-            mouseDiv.css("left", mouseX);
-            mouseDiv.css("top", mouseY);
-
             const roomName = $('#room-name');
+            const mouseX = e.pageX - roomName.outerWidth();
+            const mouseY = e.pageY - roomName.outerHeight();
+            roomName.css("left", mouseX);
+            roomName.css("top", mouseY);
+
             // Get the color of the hovered cell
             const hoveredColor = $(this).css("background-color");
             if (isRoom(hoveredColor)) {
@@ -231,8 +238,9 @@ $(document).ready(function () {
     cells.on('mouseover mousedown', function () {
         if (!tools[3].selected && !tools[4].selected) {
             if (isLeftMousePressed) {
-                $(this).css('background-color', getColor(data))
-                    .attr("data-value", data.value);
+                $(this)
+                    .css('background-color', getColor(data))
+                    .attr('data-value', data.value);
                 $($('.prev-cell')[$(this).index()])
                     .css('background-color', getColor(data));
             } else if (isRightMousePressed) {
@@ -352,10 +360,9 @@ $(document).ready(function () {
         }
     }
 
-    const houseId = getUrlParameters().get('id');
-    if (houseId) {
+    if (shouldEdit()) {
         $.ajax({
-            url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
+            url: makeEndpointWith(`/api/data/houses/id/${getCurrentHouseId()}`),
             method: 'get',
             dataType: 'json',
             cache: false,
@@ -394,7 +401,10 @@ function setupHouseSubmitForm() {
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),
             type: 'post',
-            data: JSON.stringify(result),
+            data: JSON.stringify({
+                id: getCurrentHouseId(),
+                plan: result
+            }),
             cache: false,
             processData: false,
             contentType: 'application/json',
@@ -408,7 +418,6 @@ function setupHouseSubmitForm() {
 
 function makeImageInput(cell) {
     const body = $('body');
-    const previewCell = $($('.prev-cell')[cell.index()]);
     const previousInput = body.find(`input[data-id="${cell.index() + 1}"]`);
     if (previousInput.length > 0) {
         previousInput.remove();
@@ -419,6 +428,7 @@ function makeImageInput(cell) {
     // Create an input element
     const input = $('<input class="main-input-image" type="file" style="display: none">');
     input.on('change', function () {
+        const previewCell = $($('.prev-cell')[cell.index()]);
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
@@ -435,7 +445,7 @@ function makeImageInput(cell) {
                             return gcd(b, a % b);
                         };
                         const image = new Image();
-                        image.src = e.target.result;
+                        image.src = String(e.target.result);
                         const common = gcd(image.width, image.height);
                         $('#preview-image')
                             .css({
@@ -640,10 +650,6 @@ function clearGrid() {
         return;
     }
     for (let i = 0; i < labelInfo.length; i++) {
-        const label = $(labelInfo[i])
-            .attr('for')
-            .replace('house-form-', '')
-            .replace('-', '_');
         const input = $(inputInfo[i]);
         if (input.is('select')) {
             input

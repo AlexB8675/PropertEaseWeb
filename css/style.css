@@ -281,7 +281,7 @@ body {
         }
     }
 
-    & > img {
+    & > a > img {
         height: 80pt;
     }
 }

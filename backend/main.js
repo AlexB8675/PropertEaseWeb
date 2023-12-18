@@ -141,23 +141,37 @@ registerPostApiEndpoint(app, database, {
 
 app.post('/api/data/tool/upload', (request, result) => {
     console.log(request.body);
-    database.run(`insert into House (plan) values (?)`, JSON.stringify(request.body), (error) => {
-        if (error) {
-            console.error(error);
-            result.status(500).send({});
-            return;
-        }
-        database.all('select max(id) as id from House', (error, rows) => {
+    const { id, plan } = request.body;
+    if (!id) {
+        database.run(`insert into House (plan) values (?)`, JSON.stringify(plan), (error) => {
+            if (error) {
+                console.error(error);
+                result.status(500).send({});
+                return;
+            }
+            database.all('select max(id) as id from House', (error, rows) => {
+                if (error) {
+                    console.error(error);
+                    result.status(500).send({});
+                    return;
+                }
+                result.send({
+                    id: rows[0].id,
+                });
+            });
+        });
+    } else {
+        database.run(`update House set plan = ? where id = ?`, JSON.stringify(plan), id, (error) => {
             if (error) {
                 console.error(error);
                 result.status(500).send({});
                 return;
             }
             result.send({
-                id: rows[0].id,
+                id: id,
             });
         });
-    });
+    }
 });
 
 const port = 8080;
