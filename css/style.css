@@ -275,16 +275,16 @@ body {
     box-shadow: 0 2px 4px 4px #181818;
     font-size: 20pt;
     padding: 10pt;
+    justify-content: space-between;
     display: grid;
     grid-template-columns: auto auto;
     grid-column-gap: 50pt;
-    justify-content: space-between;
 
     & > div {
+        position: relative;
         font-size: 14pt;
         display: grid;
         grid-template-columns: auto;
-        position: relative;
 
         & > a {
             white-space: nowrap;
@@ -293,8 +293,8 @@ body {
         }
     }
 
-    & > img {
-        height: 60pt;
+    & > a > img {
+        height: 80pt;
     }
 }
 
