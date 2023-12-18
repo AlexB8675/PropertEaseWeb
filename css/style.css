@@ -101,6 +101,12 @@ input, button, label, select, textarea {
     height: unset;
 }
 
+label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 select {
     color: aliceblue;
     background-color: #202020;
@@ -125,7 +131,6 @@ body {
     --vertical-padding: 32pt;
 
     position: fixed;
-    min-width: 540pt;
     width: min(540pt, calc(100% - var(--vertical-padding) * 2));
     padding: var(--vertical-padding) 16pt;
     background: #242424;
@@ -138,16 +143,6 @@ body {
     justify-self: center;
     display: grid;
     transition: all 250ms ease-in-out;
-
-    & > * {
-        overflow: hidden;
-    }
-
-    & > label {
-        text-align: center;
-        color: aliceblue;
-        font-size: 36pt;
-    }
 
     & > #login-status-info {
         font-size: 20pt;
@@ -166,11 +161,21 @@ body {
         cursor: pointer;
     }
 
+    & > * {
+        overflow: hidden;
+    }
+
+    & > label {
+        text-align: center;
+        color: aliceblue;
+        font-size: 36pt;
+    }
+
     & > form {
         padding: 0 48pt 32pt 48pt;
         align-items: center;
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: min-content auto;
         grid-row-gap: 20pt;
 
         & > label {
@@ -184,6 +189,7 @@ body {
         }
 
         & > input {
+            width: 100%;
             font-size: 20pt;
             color: aliceblue;
             background: #181818;
@@ -194,6 +200,7 @@ body {
 
     & > div {
         padding: 12pt 0;
+        min-width: 256pt;
         width: 70%;
         justify-self: center;
         display: grid;
@@ -294,7 +301,7 @@ body {
     }
 
     & > a > img {
-        height: 80pt;
+        height: 60pt;
     }
 }
 
@@ -341,11 +348,7 @@ body {
     }
 
     #login {
-        min-width: unset;
         width: 100%;
-        height: 100%;
-        align-content: center;
-
         & > form {
             padding: 0;
             grid-template-columns: 1fr;
@@ -360,13 +363,9 @@ body {
         }
 
         & > .submit-buttons {
-            grid-template-columns: 1fr;
-            row-gap: 10pt;
-            height: fit-content;
-
-            & > button {
-                font-size: 18pt;
-            }
+            justify-content: center;
+            grid-template-columns: 0.5fr;
+            grid-row-gap: 10pt;
         }
     }
 }

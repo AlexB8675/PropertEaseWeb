@@ -89,6 +89,7 @@
         --grid-total-column-gap: calc(var(--grid-column-gap) * (var(--grid-max-column) - 1));
         width: min(var(--grid-total-width) + var(--grid-total-column-gap) + var(--grid-total-padding), calc(100% - var(--grid-total-padding)));
         padding: 16pt var(--grid-padding);
+        justify-items: center;
         justify-content: center;
         display: grid;
         grid-template-columns: repeat(auto-fill, var(--grid-max-width));
@@ -174,11 +175,27 @@
 }
 
 @media only screen and (width <= 48em) {
-    #search-area {
-        padding: 16pt 0;
-    }
+    #scroller {
+        #search-area {
+            padding-left: 8pt;
+            padding-right: 8pt;
+        }
 
-    #cards {
-        width: 100vw !important;
+        #cards {
+            --grid-max-width-mobile: 240pt;
+            grid-template-columns: auto;
+
+            .card {
+                width: min(max(var(--grid-max-width-mobile), 100%), var(--grid-max-width));
+
+                & > .image > img {
+                    aspect-ratio: 4 / 3;
+                }
+
+                & > .content {
+                    padding: 16pt;
+                }
+            }
+        }
     }
 }

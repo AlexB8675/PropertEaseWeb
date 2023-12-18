@@ -122,7 +122,7 @@ async function makeLoginRequest(info, callbacks) {
 
 function imagesFromHousePlan(house) {
     const images = new Map();
-    for (const {cellId, imageId} of house.indices) {
+    for (const { cellId, imageId } of house.indices) {
         images.set(cellId, house.images[imageId]);
     }
     return images;
@@ -205,19 +205,7 @@ $(document).ready(function () {
         });
 
     $('#close').on('mousedown', function (event) {
-        if (event.target !== this) {
-            return;
-        }
-        loginContainer.css({
-            'opacity': 0,
-            'visibility': 'hidden',
-        });
-        blurContainer
-            .css({
-                'opacity': '0',
-                'pointer-events': 'none',
-            })
-            .off('mousedown');
+        blurContainer.trigger('mousedown');
     });
 
     signoutButton
