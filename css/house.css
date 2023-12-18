@@ -270,6 +270,9 @@
 }
 
 .detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: aliceblue;
     font-size: 15pt;
 

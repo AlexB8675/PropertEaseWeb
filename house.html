@@ -15,26 +15,10 @@
         <script src="./tool/common.js"></script>
         <script src="./js/script.js"></script>
         <script src="./js/houses.js"></script>
-        <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&callback=initMap"></script>
-        <script>
-            function initMap() {
-                const mapOptions = {
-                    center: {lat: 40.85669708251953, lng: 14.28452205657959},
-                    zoom: 14,
-                    disableDefaultUI: true,
-                    mapId: '62208738a58b12e9',
-                    zoomControl: false,
-                    gestureHandling: "cooperative",
-                };
-                const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                const marker = new google.maps.Marker({
-                    position: {lat: 40.85669708251953, lng: 14.28452205657959},
-                    map: map,
-                    title: 'Nome Via della Casa',
-                });
-            }
-        </script>
+        <script
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&libraries=places&callback=initMap"
+                async
+                defer></script>
         <title>PropertEaseWeb</title>
     </head>
     <body>
@@ -212,5 +196,38 @@
                 </a>
             </div>
         </div>
+
+        <script>
+            let map;
+            let marker;
+            let placeService;
+            async function initMap() {
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+                map = new Map(document.getElementById('map'), {
+                    mapId: '62208738a58b12e9',
+                    zoom: 15,
+                    disableDefaultUI: true,
+                    zoomControl: false,
+                    gestureHandling: 'cooperative',
+                });
+                placeService = new google.maps.places.PlacesService(map);
+                placeService.textSearch({
+                    query: `${$('#house-address').text()}, ${$('#house-city').text()}`
+                }, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        const data = results[0];
+                        map.setCenter(data.geometry.location);
+                        marker = new AdvancedMarkerElement({
+                            map: map,
+                            position: { lat: data.geometry.location.lat(), lng: data.geometry.location.lng() },
+                            title: 'Casa'
+                        });
+                    }
+                });
+            }
+
+            initMap();
+        </script>
     </body>
 </html>

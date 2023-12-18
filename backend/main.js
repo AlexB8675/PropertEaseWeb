@@ -17,7 +17,7 @@ function handleRequest(request, result, info) {
     if (info.query) {
         database.all(info.query, info.parameters(request), (error, rows) => {
             if (error) {
-                info?.error(request, result, error);
+                info.error(request, result, error);
                 console.error(error);
                 return;
             }
@@ -76,6 +76,18 @@ registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/id/:houseId',
     query: 'select * from House where id = ?',
     parameters: (request) => [request.params.houseId],
+    callback: (result, rows) => {
+        if (rows.length > 0) {
+            result.send(rows);
+        } else {
+            result.status(404).send({});
+        }
+    }
+});
+registerGetApiEndpoint(app, database, {
+    endpoint: '/api/data/houses/city/:city',
+    query: 'select * from House where city like %?%',
+    parameters: (request) => [request.params.city],
     callback: (result, rows) => {
         if (rows.length > 0) {
             result.send(rows);
