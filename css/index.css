@@ -172,3 +172,13 @@
         }
     }
 }
+
+@media only screen and (width <= 48em) {
+    #search-area {
+        padding: 16pt 0;
+    }
+
+    #cards {
+        width: 100vw !important;
+    }
+}
