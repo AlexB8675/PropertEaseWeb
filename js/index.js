@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     $('#card-container').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
@@ -34,14 +33,43 @@ $(document).ready(function () {
             }, 250);
         });
 
-    $.ajax({
-        url: makeEndpointWith('/api/data/houses'),
-        method: 'get',
-        dataType: 'json',
-        cache: false,
-    }).done((data) => {
-        const mainCardContainer = $('#cards');
-        const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
+    function cleanString(inputString) {
+        // Convert the string to lowercase and remove non-alphanumeric characters
+        return inputString.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    $("#search-field").on('keydown', function (e){
+        if (e.which === 13) {
+            searchQuery($(this).val());
+        }
+    });
+    $("label[for='search-field']").on('mousedown', function() {
+        searchQuery($("#search-field").val());
+    });
+
+    function searchQuery(to_search){
+        $.ajax({
+            url: makeEndpointWith(`/api/data/houses/city/${to_search}`),
+            method: 'get',
+            dataType: 'json',
+            cache: false,
+        }).done((data) => {
+            renderCards(data);
+        }).fail(() => {
+            renderCards();
+        });
+    }
+
+    function renderCards(ids){
+        $.ajax({
+            url: makeEndpointWith('/api/data/houses'),
+            method: 'get',
+            dataType: 'json',
+            cache: false,
+        }).done((data) => {
+            const mainCardContainer = $('#cards');
+            mainCardContainer.empty();
+            const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
             <a class="card" href="house.html?id=${id}">
                 <div class="image">
                     <div class="generic-triangle"></div>
@@ -56,64 +84,72 @@ $(document).ready(function () {
             </a>
         `.trim();
 
-        for (const { id, plan } of data) {
-            const house = JSON.parse(plan);
-            const images = imagesFromHousePlan(house);
-            const mainImage = images.has(0) ?
-                images.get(0) :
-                'images/placeholder.svg';
-            const card = $(
-                cardTemplate(
-                    id,
-                    house.info.address,
-                    house.info.city,
-                    house.info.zip,
-                    house.info.contract,
-                    house.info.price,
-                    mainImage.data,
-                    house.info.house
-                )
-            );
-            const cardImage = card.find('img');
-            let mouseOverTimeout = -1;
-            card
-                .on('mouseover', () => {
-                    cardImage
-                        .css({'transform': 'translateZ(0) scale(1.05)'})
-                        .addClass('shimmer-effect');
-                    clearTimeout(mouseOverTimeout);
-                    mouseOverTimeout = setTimeout(() => {
-                        mouseOverTimeout = -1;
-                    }, 500);
-                })
-                .on('mouseleave', () => {
-                    cardImage
-                        .css({'transform': 'translateZ(0) scale(1.10)'})
-                        .removeClass('shimmer-effect');
-                })
-                .on('mousemove', (event) => {
-                    const height = card.height();
-                    const width = card.width();
-                    const xVal = 2 * event.offsetX;
-                    const yVal = 2 * event.offsetY;
+            for (const { id, plan } of data) {
+                if(ids && !ids.find((element)=>{
+                    return element === id;
+                })){
+                    continue;
+                }
+                const house = JSON.parse(plan);
+                const images = imagesFromHousePlan(house);
+                const mainImage = images.has(0) ?
+                    images.get(0) :
+                    'images/placeholder.svg';
+                const card = $(
+                    cardTemplate(
+                        id,
+                        house.info.address,
+                        house.info.city,
+                        house.info.zip,
+                        house.info.contract,
+                        house.info.price,
+                        mainImage.data,
+                        house.info.house
+                    )
+                );
+                const cardImage = card.find('img');
+                let mouseOverTimeout = -1;
+                card
+                    .on('mouseover', () => {
+                        cardImage
+                            .css({'transform': 'translateZ(0) scale(1.05)'})
+                            .addClass('shimmer-effect');
+                        clearTimeout(mouseOverTimeout);
+                        mouseOverTimeout = setTimeout(() => {
+                            mouseOverTimeout = -1;
+                        }, 500);
+                    })
+                    .on('mouseleave', () => {
+                        cardImage
+                            .css({'transform': 'translateZ(0) scale(1.10)'})
+                            .removeClass('shimmer-effect');
+                    })
+                    .on('mousemove', (event) => {
+                        const height = card.height();
+                        const width = card.width();
+                        const xVal = 2 * event.offsetX;
+                        const yVal = 2 * event.offsetY;
 
-                    const yRotation = 2 * ((xVal - width / 2) / width);
-                    const xRotation = -2 * ((yVal - height / 2) / height);
+                        const yRotation = 2 * ((xVal - width / 2) / width);
+                        const xRotation = -2 * ((yVal - height / 2) / height);
 
-                    const rotationString = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
-                    const transformString = `perspective(600px) translateZ(0) scale(1.02) ${rotationString}`;
-                    card.css('transform', transformString);
-                })
-                .on('mouseout', () => {
-                    card.css('transform', 'perspective(600px) translateZ(0) scale(1) rotateX(0) rotateY(0)');
-                })
-                .on('mousedown', () => {
-                    card.css('transform', 'perspective(600px) translateZ(0) scale(0.98) rotateX(0) rotateY(0)');
-                })
-                .on('mouseup', () => {
-                    card.css('transform', 'perspective(600px) translateZ(0) scale(1.02) rotateX(0) rotateY(0)');
-                });
-            mainCardContainer.append(card);
-        }
-    });
+                        const rotationString = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+                        const transformString = `perspective(600px) translateZ(0) scale(1.02) ${rotationString}`;
+                        card.css('transform', transformString);
+                    })
+                    .on('mouseout', () => {
+                        card.css('transform', 'perspective(600px) translateZ(0) scale(1) rotateX(0) rotateY(0)');
+                    })
+                    .on('mousedown', () => {
+                        card.css('transform', 'perspective(600px) translateZ(0) scale(0.98) rotateX(0) rotateY(0)');
+                    })
+                    .on('mouseup', () => {
+                        card.css('transform', 'perspective(600px) translateZ(0) scale(1.02) rotateX(0) rotateY(0)');
+                    });
+                mainCardContainer.append(card);
+            }
+        });
+    }
+
+    renderCards();
 });

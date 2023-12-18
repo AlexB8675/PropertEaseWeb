@@ -95,21 +95,21 @@
                                  data-value="0"
                                  style="padding: 0; border: none; margin-bottom: 10pt; border-radius: 5pt"></div>
                             <div style="margin-bottom: 5pt;">
-                                <button onclick="downloadPlan()"><i class="fa-solid fa-download"></i></button>
-                                <label for="upload_button"><i class="fa-solid fa-upload"></i></label>
+                                <button onclick="downloadPlan()"><i title="download to device" class="fa-solid fa-download"></i></button>
+                                <label for="upload_button"><i title="upload from device" class="fa-solid fa-upload"></i></label>
                                 <input id="upload_button" type="file" accept="application/json" style="display: none">
-                                <button onclick="generateRooms()"><i class="fa-solid fa-cube"></i></button>
+                                <button onclick="generateRooms()"><i title="generate room names" class="fa-solid fa-cube"></i></button>
                             </div>
                             <div id="tool-window">
-                                <button data-value="31"><i class="fa-solid fa-trowel-bricks"></i></button>
-                                <button data-value="34"><i class="fa-solid fa-door-closed"></i></button>
-                                <button data-value="32"><i class="fa-solid fa-border-all"></i></button>
-                                <button id="fill_bucket"><i class="fa-solid fa-fill-drip"></i></button>
-                                <button id="image_upload"><i class="fa-solid fa-camera"></i></button>
+                                <button data-value="31"><i title="walls" class="fa-solid fa-trowel-bricks"></i></button>
+                                <button data-value="34"><i title="doors" class="fa-solid fa-door-closed"></i></button>
+                                <button data-value="32"><i title="windows" class="fa-solid fa-border-all"></i></button>
+                                <button id="fill_bucket"><i title="fill bucket" class="fa-solid fa-fill-drip"></i></button>
+                                <button id="image_upload"><i title="insert photo" class="fa-solid fa-camera"></i></button>
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr; justify-items: center; row-gap: 25pt;">
-                            <button onclick="clearGrid()" style="margin-bottom: 10pt"><i class="fa-solid fa-trash"></i>
+                            <button onclick="clearGrid()" style="margin-bottom: 10pt"><i title="erase all" class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </div>
