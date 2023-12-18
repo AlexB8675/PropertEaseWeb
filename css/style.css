@@ -81,6 +81,7 @@ select:-webkit-autofill:focus {
 }
 
 a {
+    color: aliceblue;
     text-decoration: none;
 
     &:hover {
@@ -259,11 +260,30 @@ body {
 }
 
 #footer {
+    position: relative;
     background: #181818;
     box-shadow: 0 2px 4px 4px #181818;
     color: aliceblue;
     font-size: 20pt;
     padding: 10pt;
+    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 50pt;
+
+    & > div {
+        display: grid;
+        grid-template-columns: auto;
+
+        & > a {
+            white-space: nowrap;
+            width: min-content;
+        }
+    }
+
+    & > img {
+        height: 80pt;
+    }
 }
 
 .section-title {
