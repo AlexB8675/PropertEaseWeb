@@ -1,7 +1,3 @@
-// Define the number of rows and columns
-const ROWS = 50;
-const COLS = 50;
-
 class HousePlan {
     constructor() {
         this.data = [];
@@ -194,18 +190,7 @@ $(document).ready(function () {
                 roomName.hide();
             }
         })
-        .on('mouseover', function () {
-            const color = $(this).css("background-color");
-            previewCells
-                .filter(function () {
-                    return $(this).hasClass('hovered-cell');
-                })
-                .removeClass('hovered-cell');
-            if (isRoom(color)) {
-                const cellsToChange = $(`.prev-cell[style*="background-color: ${color}"]`);
-                cellsToChange.addClass('hovered-cell');
-            }
-        });
+        .on('mouseover', changeCellColor(previewCells));
 
     previewCellContainer.on('mouseleave', function () {
         previewCells.removeClass('hovered-cell');

@@ -185,26 +185,7 @@ $(document).ready(() => {
         const housePlanContainer = $('#house-plan-container');
         housePlanContainer.append(cells);
         const previewCells = $('.preview-cell');
-        const changeCellColor = () => {
-            let lastColor = null;
-            return function () {
-                if (!lastColor) {
-                    lastColor = $(this).css("background-color");
-                }
-                const color = $(this).css("background-color");
-                if (lastColor !== color) {
-                    previewCells.removeClass('hovered-cell');
-                }
-                if (isRoom(color)) {
-                    previewCells
-                        .filter(function () {
-                            return $(this).css("background-color") === color;
-                        })
-                        .addClass('hovered-cell');
-                    lastColor = $(this).css("background-color");
-                }
-            }
-        }
+
         previewCells
             .on('mousemove', function (event) {
                 const mouseX = event.pageX - roomContainer.outerWidth();
@@ -228,7 +209,7 @@ $(document).ready(() => {
                     roomContainer.hide();
                 }
             })
-            .on('mouseover', changeCellColor());
+            .on('mouseover', changeCellColor(previewCells));
         housePlanContainer.on('mouseleave', function () {
             previewCells.removeClass('hovered-cell');
             roomContainer.hide();

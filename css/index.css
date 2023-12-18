@@ -1,5 +1,5 @@
 #scroller {
-    grid-template-rows: min-content auto min-content;
+    grid-template-rows: min-content auto max-content;
 }
 
 #search-area {
