@@ -1,39 +1,4 @@
-$(document).ready(function () {
-
-
-    $('#card-container').on('mousemove', function (e) {
-        let x = e.pageX - this.offsetLeft;
-        let y = e.pageY - this.offsetTop + $('#scroller').scrollTop();
-        $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
-    });
-
-    const selectorSale = $('#selector-sale');
-    const selectorRent = $('#selector-rent');
-    const selector = $('#selector');
-    selector.html(selectorSale.html());
-    selectorSale
-        .on('click', () => {
-            selector
-                .css({
-                    'transform': 'translateX(0)',
-                });
-            setTimeout(() => {
-                selector.html(selectorSale.html());
-            }, 250);
-        });
-    selectorRent
-        .on('click', () => {
-            const offsetSale = selectorSale.offset();
-            const offsetRent = selectorRent.offset();
-            selector
-                .css({
-                    'transform': `translateX(${Math.abs(offsetSale.left - offsetRent.left)}px)`,
-                });
-            setTimeout(() => {
-                selector.html(selectorRent.html());
-            }, 250);
-        });
-
+function renderCards(ids){
     $.ajax({
         url: makeEndpointWith('/api/data/houses'),
         method: 'get',
@@ -41,6 +6,7 @@ $(document).ready(function () {
         cache: false,
     }).done((data) => {
         const mainCardContainer = $('#cards');
+        mainCardContainer.empty();
         const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
             <a class="card" href="house.html?id=${id}">
                 <div class="image">
@@ -57,6 +23,11 @@ $(document).ready(function () {
         `.trim();
 
         for (const { id, plan } of data) {
+            if(ids && !ids.find((element)=>{
+                return element === id;
+            })){
+                continue;
+            }
             const house = JSON.parse(plan);
             const images = imagesFromHousePlan(house);
             const mainImage = images.has(0) ?
@@ -116,4 +87,63 @@ $(document).ready(function () {
             mainCardContainer.append(card);
         }
     });
+}
+
+function searchQuery(search){
+    $.ajax({
+        url: makeEndpointWith(`/api/data/houses/city/${search}`),
+        method: 'get',
+        dataType: 'json',
+        cache: false,
+    }).done((data) => {
+        renderCards(data);
+    }).fail(() => {
+        renderCards();
+    });
+}
+
+$(document).ready(function () {
+    $('#card-container').on('mousemove', function (event) {
+        let x = event.pageX - this.offsetLeft;
+        let y = event.pageY - this.offsetTop + $('#scroller').scrollTop();
+        $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
+    });
+
+    const selectorSale = $('#selector-sale');
+    const selectorRent = $('#selector-rent');
+    const selector = $('#selector');
+    selector.html(selectorSale.html());
+    selectorSale
+        .on('click', () => {
+            selector
+                .css({
+                    'transform': 'translateX(0)',
+                });
+            setTimeout(() => {
+                selector.html(selectorSale.html());
+            }, 250);
+        });
+    selectorRent
+        .on('click', () => {
+            const offsetSale = selectorSale.offset();
+            const offsetRent = selectorRent.offset();
+            selector
+                .css({
+                    'transform': `translateX(${Math.abs(offsetSale.left - offsetRent.left)}px)`,
+                });
+            setTimeout(() => {
+                selector.html(selectorRent.html());
+            }, 250);
+        });
+
+    $("#search-field").on('keydown', function (event){
+        if (event.which === 13) {
+            searchQuery($(this).val());
+        }
+    });
+    $("label[for='search-field']").on('mousedown', function() {
+        searchQuery($("#search-field").val());
+    });
+
+    renderCards();
 });
