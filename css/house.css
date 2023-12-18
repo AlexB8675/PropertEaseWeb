@@ -12,8 +12,8 @@
 #scroller {
     background: #242424;
     box-shadow: 0 2px 4px 4px #242424;
-    grid-template-rows: auto max-content;
     padding: 0 !important;
+    grid-template-rows: auto max-content;
 }
 
 #house-ui {
@@ -22,7 +22,6 @@
 
     width: clamp(800pt, 100%, 1200pt);
     padding: 32pt 80pt;
-    justify-content: center;
     justify-self: center;
     display: grid;
     grid-gap: var(--grid-gap);
