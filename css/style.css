@@ -124,7 +124,7 @@ body {
 #login {
     --vertical-padding: 32pt;
 
-    position: absolute;
+    position: fixed;
     min-width: 540pt;
     width: min(540pt, calc(100% - var(--vertical-padding) * 2));
     padding: var(--vertical-padding) 16pt;
@@ -153,7 +153,17 @@ body {
         font-size: 20pt;
         text-align: center;
         min-height: 32pt;
-        padding: 0 0 10pt 0;
+        margin-bottom: 10pt;
+        align-self: center;
+    }
+
+    & > #close {
+        position: absolute;
+        right: 20pt;
+        top: 20pt;
+        color: darkgray;
+        font-size: 25pt;
+        cursor: pointer;
     }
 
     & > form {
@@ -263,7 +273,6 @@ body {
     position: relative;
     background: #181818;
     box-shadow: 0 2px 4px 4px #181818;
-    color: aliceblue;
     font-size: 20pt;
     padding: 10pt;
     display: grid;
@@ -271,17 +280,21 @@ body {
     grid-column-gap: 50pt;
     justify-content: space-between;
 
-    & > div{
+    & > div {
+        font-size: 14pt;
         display: grid;
         grid-template-columns: auto;
-        & > a{
+        position: relative;
+
+        & > a {
             white-space: nowrap;
             width: min-content;
+            color: darkgray;
         }
     }
 
-    & > img{
-        height: 80pt;
+    & > img {
+        height: 60pt;
     }
 }
 
@@ -305,5 +318,55 @@ body {
 
     & > i {
         margin-right: 2pt;
+    }
+}
+
+@media only screen and (width <= 48em) {
+    #footer {
+        grid-template-columns: auto;
+        justify-content: center;
+
+        & > div {
+            grid-template-columns: 1fr;
+
+            &::after {
+                position: relative;
+                width: 100%;
+                height: 2px;
+                content: "";
+                margin: 8pt 0;
+                background: linear-gradient(90deg, transparent, #727272, transparent);
+            }
+        }
+    }
+
+    #login {
+        min-width: unset;
+        width: 100%;
+        height: 100%;
+        align-content: center;
+
+        & > form {
+            padding: 0;
+            grid-template-columns: 1fr;
+
+            & > label {
+                display: none;
+            }
+
+            & > input {
+                font-size: 16pt;
+            }
+        }
+
+        & > .submit-buttons {
+            grid-template-columns: 1fr;
+            row-gap: 10pt;
+            height: fit-content;
+
+            & > button {
+                font-size: 18pt;
+            }
+        }
     }
 }
