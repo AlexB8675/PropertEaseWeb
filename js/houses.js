@@ -113,11 +113,11 @@ async function initialize() {
         $('#house-address').text(`${house.info.city}, ${house.info.address}, ${house.info.zip}`);
         $('#house-floor').text(house.info.floor);
         $('#house-elevator').text(house.info.elevator ? 'Yes' : 'No');
-        $('#house-balcony').text(house.info.balconies);
-        $('#house-terrace').text(house.info.terrace);
-        $('#house-garden').text(house.info.garden);
-        $('#house-accessories').text(house.info.accessories);
-        $('#house-bedrooms').text(house.info.bedrooms);
+        $('#house-balcony').text(house.info.balconies || 'No');
+        $('#house-terrace').text(house.info.terrace || 'No');
+        $('#house-garden').text(house.info.garden || 'No');
+        $('#house-accessories').text(house.info.accessories || 'No');
+        $('#house-bedrooms').text(house.info.bedrooms || 'No');
         $('#house-description').text(house.info.description);
         $(`#energy-bar div:nth-child(${energyClassIndex + 1})`).css({
             'color': 'aliceblue'
