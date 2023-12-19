@@ -4,7 +4,7 @@
 - [OneDrive Parthenope](https://studentiuniparthenope-my.sharepoint.com/:p:/g/personal/alexandr_benbaccar001_studenti_uniparthenope_it/Ee6KwVJelLJHin2qzNJS0aABSmvxKxIUtsIDnkvrNbuIlw?e=3dGPjz)
 
 ## Running
-To build and run this project you need to install the [Docker Engine](https://docs.docker.com/engine/install/) and run the following commands
+To build and run this project you need to install the [Docker Engine](https://docs.docker.com/get-docker/) and run the following commands
 ```bash
 git clone https://github.com/AlexB8675/PropertEaseWeb.git
 cd PropertEaseWeb
