@@ -36,7 +36,7 @@ const HOUSE_PLAN_CELL_COLORS = [
     'dimgray',
 ];
 
-$(document).ready(() => {
+async function initialize() {
     $('#scroller').on('mousemove', function (e) {
         let x = e.pageX - this.offsetLeft;
         let y = e.pageY - this.offsetTop;
@@ -88,7 +88,7 @@ $(document).ready(() => {
                     }));
         }
     }
-    $.ajax({
+    await $.ajax({
         url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
         method: 'get',
         dataType: 'json',
@@ -118,7 +118,6 @@ $(document).ready(() => {
         $('#house-garden').text(house.info.garden);
         $('#house-accessories').text(house.info.accessories);
         $('#house-bedrooms').text(house.info.bedrooms);
-        $('#house-sqm').text(0);
         $('#house-description').text(house.info.description);
         $(`#energy-bar div:nth-child(${energyClassIndex + 1})`).css({
             'color': 'aliceblue'
@@ -210,6 +209,9 @@ $(document).ready(() => {
                 }
             })
             .on('mouseover', changeCellColor(previewCells));
+        $('#house-sqm').text(previewCells.filter(function () {
+            return isRoom($(this).css("background-color"));
+        }).length / 4);
         housePlanContainer.on('mouseleave', function () {
             previewCells.removeClass('hovered-cell');
             roomContainer.hide();
@@ -218,4 +220,4 @@ $(document).ready(() => {
     }).fail((_) => {
         $('#slider-images').append(`<img data-value='0' src="images/placeholder.svg" class="selected-img" alt/>`);
     });
-});
+}

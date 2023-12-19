@@ -30,9 +30,7 @@ function renderCards(ids){
             }
             const house = JSON.parse(plan);
             const images = imagesFromHousePlan(house);
-            const mainImage = images.has(0) ?
-                images.get(0) :
-                'images/placeholder.svg';
+            const mainImage = images.has(0) ? images.get(0).data : 'images/placeholder.svg';
             const card = $(
                 cardTemplate(
                     id,
@@ -41,7 +39,7 @@ function renderCards(ids){
                     house.info.zip,
                     house.info.contract,
                     house.info.price,
-                    mainImage.data,
+                    mainImage,
                     house.info.house
                 )
             );

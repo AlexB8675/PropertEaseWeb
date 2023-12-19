@@ -233,6 +233,7 @@ body {
     grid-template-columns: auto auto;
 
     #header-title-container {
+        padding: 0 32pt 0 0;
         display: grid;
         grid-auto-flow: column;
         grid-column-gap: 16pt;

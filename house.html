@@ -17,8 +17,6 @@
         <script src="./tool/common.js"></script>
         <script src="./js/script.js"></script>
         <script src="./js/houses.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&libraries=places&callback=initMap"
-                async></script>
         <title>PropertEaseWeb</title>
     </head>
     <body>
@@ -197,13 +195,16 @@
             </div>
         </div>
 
-        <script async defer>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&libraries=places&callback=initMap" async defer></script>
+        <script defer>
             let map;
             let marker;
             let placeService;
             async function initMap() {
+                await initialize();
                 const { Map } = await google.maps.importLibrary("maps");
                 const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+                const address = `${$('#house-address').text()}`;
                 map = new Map(document.getElementById('map'), {
                     mapId: '62208738a58b12e9',
                     zoom: 15,
@@ -213,7 +214,7 @@
                 });
                 placeService = new google.maps.places.PlacesService(map);
                 placeService.textSearch({
-                    query: `${$('#house-address').text()}, ${$('#house-city').text()}`
+                    query: address
                 }, (results, status) => {
                     if (status === google.maps.places.PlacesServiceStatus.OK) {
                         const data = results[0];
@@ -221,13 +222,11 @@
                         marker = new AdvancedMarkerElement({
                             map: map,
                             position: { lat: data.geometry.location.lat(), lng: data.geometry.location.lng() },
-                            title: 'Casa'
+                            title: address
                         });
                     }
                 });
             }
-
-            initMap();
         </script>
     </body>
 </html>
