@@ -141,7 +141,7 @@ async function initialize() {
             if (index === 0) {
                 continue;
             }
-            cells[index]
+            cells[index - 1]
                 .addClass('picture-container')
                 .css({
                     'background-image': `url(${image.data})`

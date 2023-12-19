@@ -288,6 +288,7 @@
 
 #house-description {
     min-height: 100pt;
+    white-space: unset;
 }
 
 @media only screen and (width <= 48em) {
