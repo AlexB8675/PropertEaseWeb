@@ -260,7 +260,7 @@ button i {
     overflow: hidden;
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-gap: 24pt;
+    grid-gap: 10pt;
     grid-column: 1 / 3;
 }
 

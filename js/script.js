@@ -89,7 +89,7 @@ class LocalStorage extends Storage {
 }
 
 function makeEndpointWith(uri) {
-    const endpoint = 'http://93.41.228.90:8080';
+    const endpoint = 'http://127.0.0.1:13331';
     return `${endpoint}${uri}`;
 }
 
