@@ -10,8 +10,9 @@
         <link rel="manifest" href="./manifest.json">
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/e861ef950b.js" crossorigin="anonymous"></script>
-        <script src="js/script.js"></script>
-        <script src="js/index.js"></script>
+        <script src="./tool/common.js"></script>
+        <script src="./js/script.js"></script>
+        <script src="./js/index.js"></script>
         <title>PropertEaseWeb</title>
     </head>
     <body>
@@ -44,8 +45,8 @@
             <div id="search-area">
                 <span>Welcome to <b>PropertEase</b></span>
                 <div id="selector-container">
-                    <button id="selector-sale">Sale</button>
-                    <button id="selector-rent">Rent</button>
+                    <button id="selector-sale" data-value="0">Sale</button>
+                    <button id="selector-rent" data-value="1">Rent</button>
                     <div id="selector"></div>
                 </div>
                 <div id="search-bar">
@@ -54,6 +55,12 @@
                 </div>
             </div>
             <div id="card-container">
+                <div class="loader">
+                    <div class="loader-ring">
+                        <div class="loader-ring-light"></div>
+                        <div class="loader-ring-track"></div>
+                    </div>
+                </div>
                 <div id="cards"></div>
             </div>
             <div id="footer">

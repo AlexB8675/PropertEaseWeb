@@ -89,7 +89,7 @@ class LocalStorage extends Storage {
 }
 
 function makeEndpointWith(uri) {
-    const endpoint = 'http://93.41.228.90:8080';
+    const endpoint = 'http://127.0.0.1:13331';
     return `${endpoint}${uri}`;
 }
 
@@ -158,15 +158,17 @@ $(document).ready(function () {
     }
 
     const loggedUser = getLoggedUser();
+    const buttonContainer = $('#header-button-container');
     const signinButton = $('#header-button-container > i[class~="fa-user"]');
     const signoutButton = $('#header-button-container > i[class~="fa-sign-out"]');
     if (loggedUser) {
         signinButton.css({
             'display': 'none',
         });
-        $('#header-button-container')
-            .prepend($('<a class="fas fa-tools" href="./tool.html">'))
-            .prepend($('<label class="username">').text(`Welcome, ${loggedUser.username}`));
+        if (isUserAdmin(loggedUser)) {
+            buttonContainer.prepend($('<a class="fas fa-tools" href="./tool.html">'))
+        }
+        buttonContainer.prepend($('<label class="username">').text(`Welcome, ${loggedUser.username}`));
     } else {
         signoutButton.css({
             'display': 'none',
@@ -265,6 +267,7 @@ $(document).ready(function () {
             type: 'signup',
         }, {
             done: (_) => {
+                $('#login-password-input').val('');
                 $('#login-status-info')
                     .css({
                         'color': 'green',

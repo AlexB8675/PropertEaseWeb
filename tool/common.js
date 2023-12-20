@@ -28,3 +28,13 @@ function changeCellColor(previewCells) {
         }
     }
 }
+
+function showLoader() {
+    $('.loader').css('opacity', 1);
+}
+
+function hideLoader() {
+    setTimeout(function () {
+        $('.loader').css('opacity', 0);
+    }, 1);
+}

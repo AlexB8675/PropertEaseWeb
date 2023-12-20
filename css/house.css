@@ -1,3 +1,7 @@
+.loader {
+    background: #242424;
+}
+
 .displayer {
     background-color: #181818;
     padding: 10pt;
@@ -8,12 +12,11 @@
     filter: drop-shadow(0px 0px 15px #000000);
 }
 
-
 #scroller {
     background: #242424;
     box-shadow: 0 2px 4px 4px #242424;
-    grid-template-rows: auto max-content;
     padding: 0 !important;
+    grid-template-rows: auto max-content;
 }
 
 #house-ui {
@@ -22,7 +25,6 @@
 
     width: clamp(800pt, 100%, 1200pt);
     padding: 32pt 80pt;
-    justify-content: center;
     justify-self: center;
     display: grid;
     grid-gap: var(--grid-gap);
@@ -270,6 +272,9 @@
 }
 
 .detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: aliceblue;
     font-size: 15pt;
 
@@ -286,6 +291,7 @@
 
 #house-description {
     min-height: 100pt;
+    white-space: unset;
 }
 
 @media only screen and (width <= 48em) {

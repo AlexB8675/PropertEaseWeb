@@ -1,6 +1,7 @@
-function renderCards(ids){
+function renderCards(ids, contract){
+    showLoader();
     $.ajax({
-        url: makeEndpointWith('/api/data/houses'),
+        url: makeEndpointWith('/api/data/houses/main'),
         method: 'get',
         dataType: 'json',
         cache: false,
@@ -14,34 +15,37 @@ function renderCards(ids){
                     <img draggable="false" src="${image}" alt="placeholder.svg">
                 </div>
                 <div class="content">
-                    <label class="contract">${type + " for " + ((contract) ? "Sale" : "Rent")}</label>
+                    <label class="contract">${type + " for " + ((contract) ? "Rent" : "Sale")}</label>
                     <label class="address">${city} ${cap}</label>
                     <label class="address">${address}</label>
-                    <label class="price">${makePriceAsCurrency(price)}</label>
+                    <label class="price">${makePriceAsCurrency(price)}${((contract) ? "/Month" : "")}</label>
                 </div>
             </a>
         `.trim();
 
-        for (const { id, plan } of data) {
-            if(ids && !ids.find((element)=>{
+        for (const { id, plan: house } of data) {
+            if (ids && !ids.find((element) => {
                 return element === id;
-            })){
+            })) {
                 continue;
             }
-            const house = JSON.parse(plan);
+            if (contract === null) {
+                contract = house.info.contract;
+            }
+            if (house.info.contract !== contract) {
+                continue;
+            }
             const images = imagesFromHousePlan(house);
-            const mainImage = images.has(0) ?
-                images.get(0) :
-                'images/placeholder.svg';
+            const mainImage = images.has(0) ? images.get(0).data : 'images/placeholder.svg';
             const card = $(
                 cardTemplate(
                     id,
                     house.info.address,
                     house.info.city,
                     house.info.zip,
-                    house.info.contract,
+                    contract,
                     house.info.price,
-                    mainImage.data,
+                    mainImage,
                     house.info.house
                 )
             );
@@ -86,26 +90,28 @@ function renderCards(ids){
                 });
             mainCardContainer.append(card);
         }
+        hideLoader();
     });
 }
 
 function searchQuery(search){
+    showLoader();
     $.ajax({
         url: makeEndpointWith(`/api/data/houses/city/${search}`),
         method: 'get',
         dataType: 'json',
         cache: false,
     }).done((data) => {
-        renderCards(data);
+        renderCards(data, null);
     }).fail(() => {
-        renderCards();
+        renderCards(null, null);
     });
 }
 
 $(document).ready(function () {
     $('#card-container').on('mousemove', function (event) {
-        let x = event.pageX - this.offsetLeft;
-        let y = event.pageY - this.offsetTop + $('#scroller').scrollTop();
+        const x = event.pageX - this.offsetLeft;
+        const y = event.pageY - this.offsetTop + $('#scroller').scrollTop();
         $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
     });
 
@@ -114,7 +120,7 @@ $(document).ready(function () {
     const selector = $('#selector');
     selector.html(selectorSale.html());
     selectorSale
-        .on('click', () => {
+        .on('click', function () {
             selector
                 .css({
                     'transform': 'translateX(0)',
@@ -122,9 +128,10 @@ $(document).ready(function () {
             setTimeout(() => {
                 selector.html(selectorSale.html());
             }, 250);
+            renderCards(null, parseInt($(this).data('value')));
         });
     selectorRent
-        .on('click', () => {
+        .on('click', function () {
             const offsetSale = selectorSale.offset();
             const offsetRent = selectorRent.offset();
             selector
@@ -134,6 +141,7 @@ $(document).ready(function () {
             setTimeout(() => {
                 selector.html(selectorRent.html());
             }, 250);
+            renderCards(null, parseInt($(this).data('value')));
         });
 
     $("#search-field").on('keydown', function (event){
@@ -145,5 +153,5 @@ $(document).ready(function () {
         searchQuery($("#search-field").val());
     });
 
-    renderCards();
+    selectorSale.trigger('click');
 });
