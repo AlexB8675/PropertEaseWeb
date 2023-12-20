@@ -57,6 +57,10 @@
     display: grid;
     grid-template-columns: auto min-content;
 
+    & > input {
+        min-width: 0;
+    }
+
     & > label {
         border-radius: 0 64px 64px 0;
         background-color: #242424;

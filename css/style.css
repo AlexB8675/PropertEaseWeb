@@ -352,8 +352,14 @@ body {
         }
     }
 
-    & > a > img {
-        height: 60pt;
+    & > a {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+
+        & > img {
+            height: 60pt;
+        }
     }
 }
 
@@ -381,6 +387,14 @@ body {
 }
 
 @media only screen and (width <= 48em) {
+    #header {
+        #header-button-container {
+            .username {
+                display: none;
+            }
+        }
+    }
+
     #footer {
         grid-template-columns: auto;
         justify-content: center;
