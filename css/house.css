@@ -1,3 +1,7 @@
+.loader {
+    background: #242424;
+}
+
 .displayer {
     background-color: #181818;
     padding: 10pt;
@@ -7,7 +11,6 @@
     border-radius: 20pt;
     filter: drop-shadow(0px 0px 15px #000000);
 }
-
 
 #scroller {
     background: #242424;

@@ -216,7 +216,7 @@ async function initialize() {
             previewCells.removeClass('hovered-cell');
             roomContainer.hide();
         });
-
+        hideLoader();
     }).fail((_) => {
         $('#slider-images').append(`<img data-value='0' src="images/placeholder.svg" class="selected-img" alt/>`);
     });

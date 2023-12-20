@@ -46,6 +46,12 @@
             </div>
         </div>
         <div id="scroller">
+            <div class="loader">
+                <div class="loader-ring">
+                    <div class="loader-ring-light"></div>
+                    <div class="loader-ring-track"></div>
+                </div>
+            </div>
             <div id="room-name"></div>
             <div id="house-ui">
                 <div id="house-displayer">
@@ -195,6 +201,7 @@
             </div>
         </div>
 
+        <script>showLoader();</script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSLZX8avlfOCjPckDHT7WKnhGXPNwajnY&libraries=places&callback=initMap" async defer></script>
         <script defer>
             let map;
