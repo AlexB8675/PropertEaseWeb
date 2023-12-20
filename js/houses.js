@@ -137,6 +137,16 @@ async function initialize() {
         for (const [index, value] of house.data.entries()) {
             cells.push($(`<div class="preview-cell" style="background-color: ${HOUSE_PLAN_CELL_COLORS[value]}" data-value="${value}"></div>`))
         }
+
+        const rooms = new Map();
+        for (const { label, value } of house.rooms) {
+            rooms.set(value, label);
+        }
+        const roomContainer = $('#room-name');
+        const housePlanContainer = $('#house-plan-container');
+        housePlanContainer.append(cells);
+        const previewCells = $('.preview-cell');
+
         for (const [index, image] of images.entries()) {
             if (index === 0) {
                 continue;
@@ -153,6 +163,7 @@ async function initialize() {
                         }
                         return gcd(b, a % b);
                     };
+                    roomContainer.hide();
                     const innerImage = new Image();
                     innerImage.src = image.data;
                     const common = gcd(innerImage.width, innerImage.height);
@@ -175,15 +186,6 @@ async function initialize() {
                         })
                 });
         }
-
-        const rooms = new Map();
-        for (const { label, value } of house.rooms) {
-            rooms.set(value, label);
-        }
-        const roomContainer = $('#room-name');
-        const housePlanContainer = $('#house-plan-container');
-        housePlanContainer.append(cells);
-        const previewCells = $('.preview-cell');
 
         previewCells
             .on('mousemove', function (event) {

@@ -447,6 +447,7 @@ function makeImageInput(cell) {
                         const image = new Image();
                         image.src = String(e.target.result);
                         const common = gcd(image.width, image.height);
+                        $('#room-name').hide();
                         $('#preview-image')
                             .css({
                                 'width': 'auto',
