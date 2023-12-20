@@ -71,6 +71,35 @@ registerGetApiEndpoint(app, database, {
     }
 });
 registerGetApiEndpoint(app, database, {
+    endpoint: '/api/data/houses/main',
+    query: 'select * from House',
+    parameters: _ => [],
+    callback: (result, _, rows) => {
+        let newData = [];
+        for (const { id, plan } of rows) {
+            const current = JSON.parse(plan);
+            const indices = current
+                .indices
+                .filter(({ cellId, _ }) => {
+                    return cellId === 0;
+                });
+            const imageIndex = indices.length > 0 ? indices[0].imageId : null;
+            const images = imageIndex !== null ? [current.images[imageIndex]] : [];
+            newData.push({
+                id: id,
+                plan: {
+                    data: current.data,
+                    info: current.info,
+                    indices: indices,
+                    images: images,
+                    rooms: current.rooms,
+                }
+            });
+        }
+        result.send(newData);
+    }
+});
+registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/types',
     query: 'select * from Type',
     parameters: _ => [],
