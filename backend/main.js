@@ -1,11 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const sqlite = require('sqlite3').verbose();
-const crypto = require('crypto');
-const app = express();
-const fs = require('fs');
+const express = require('express');      // To implement a web server
+const bodyParser = require('body-parser');         // To parse multipart form data
+const cors = require('cors'); // To allow cross-origin requests
+const sqlite = require('sqlite3').verbose();        // To implement a database
+const crypto = require('crypto');                        // To implement password hashing
 
+const app = express();
+
+// Password hashing
 function makeSha512Hash(string) {
     const hash = crypto.createHash('sha512');
     const data = hash.update(String(string), 'utf-8');
@@ -16,6 +17,7 @@ function cleanString(inputString) {
     return inputString.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
+// Utility function to handle web requests and eventually invoke dbms
 function handleRequest(request, result, info) {
     console.log("request received: \"", request ,"\",");
     if (info.query) {
@@ -57,7 +59,7 @@ const database = new sqlite.Database('../main.sqlite', (error) => {
     if (error) {
         console.error(error.message);
     }
-    console.log('connected to the main database.');
+    console.log('Connected to the main database.');
 });
 app.use(cors());
 app.use(bodyParser.json({
@@ -77,6 +79,7 @@ registerGetApiEndpoint(app, database, {
     }
 });
 
+// Retrieves the house main info for the card and its cover image (if it exists)
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/main',
     query: 'select * from House',

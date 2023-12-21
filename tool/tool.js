@@ -190,7 +190,7 @@ $(document).ready(function () {
                     return $(this).css("background-color") === hoveredColor;
                 }).length;
                 roomName
-                    .append(`<div> sqm: ${squareCount / 4}<\div>`)
+                    .append(`<div> sqm: ${squareCount / 4}</div>`)
                     .show();
             } else {
                 // Hide the room name if the color is transparent

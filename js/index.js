@@ -1,5 +1,8 @@
 function renderCards(ids, contract){
+    // Hide the page with a loader until all the functions are run
     showLoader();
+
+    // Make an AJAX request to retrieve the house info to be shown in the cards
     $.ajax({
         url: makeEndpointWith('/api/data/houses/main'),
         method: 'get',
@@ -7,7 +10,11 @@ function renderCards(ids, contract){
         cache: false,
     }).done((data) => {
         const mainCardContainer = $('#cards');
+
+        // Empty the container to allow different results when filters are to be applied
         mainCardContainer.empty();
+
+        // Definition of the card html body
         const cardTemplate = (id, address, city, cap, contract, price, image, type) => `
             <a class="card" href="house.html?id=${id}">
                 <div class="image">
@@ -21,22 +28,34 @@ function renderCards(ids, contract){
                     <label class="price">${makePriceAsCurrency(price)}${((contract) ? "/Month" : "")}</label>
                 </div>
             </a>
-        `.trim();
+        `;
 
+        // Appends the cards to the container
         for (const { id, plan: house } of data) {
+
+            // If the cards are filtered, check if the card has to be rendered
             if (ids && !ids.find((element) => {
                 return element === id;
             })) {
                 continue;
             }
+
+            // If no house contract is specified, defaults to "sale"
             if (contract === null) {
                 contract = house.info.contract;
             }
+
+            // If the house contract is filtered, only render accordingly
             if (house.info.contract !== contract) {
                 continue;
             }
+
             const images = imagesFromHousePlan(house);
+
+            // If the house has a cover image, apply it, else, show a placeholder
             const mainImage = images.has(0) ? images.get(0).data : 'images/placeholder.svg';
+
+            // Apply the gathered info to create a card according to the previously defined template
             const card = $(
                 cardTemplate(
                     id,
@@ -49,9 +68,15 @@ function renderCards(ids, contract){
                     house.info.house
                 )
             );
+
             const cardImage = card.find('img');
+
+            // Stops the shimmer animation if the mouse leaves the card
             let mouseOverTimeout = -1;
+
+            // Adds all the events to the card container
             card
+                // Apply the shimmer effect on mouse hover
                 .on('mouseover', () => {
                     cardImage
                         .css({'transform': 'translateZ(0) scale(1.05)'})
@@ -61,11 +86,13 @@ function renderCards(ids, contract){
                         mouseOverTimeout = -1;
                     }, 500);
                 })
+                // Stops the shimmer effect on mouse leave
                 .on('mouseleave', () => {
                     cardImage
                         .css({'transform': 'translateZ(0) scale(1.10)'})
                         .removeClass('shimmer-effect');
                 })
+                // Apply the 3D effect on mouse hover
                 .on('mousemove', (event) => {
                     const height = card.height();
                     const width = card.width();
@@ -79,6 +106,7 @@ function renderCards(ids, contract){
                     const transformString = `perspective(600px) translateZ(0) scale(1.02) ${rotationString}`;
                     card.css('transform', transformString);
                 })
+                // Stops the 3D effect on mouse leave
                 .on('mouseout', () => {
                     card.css('transform', 'perspective(600px) translateZ(0) scale(1) rotateX(0) rotateY(0)');
                 })
@@ -88,33 +116,45 @@ function renderCards(ids, contract){
                 .on('mouseup', () => {
                     card.css('transform', 'perspective(600px) translateZ(0) scale(1.02) rotateX(0) rotateY(0)');
                 });
+
             mainCardContainer.append(card);
         }
+
+        // Once everything has been rendered, remove the loader
         hideLoader();
     });
 }
 
+// Sends AJAX requetso to query the databes according to the searchbar content
 function searchQuery(search){
-    showLoader();
     $.ajax({
         url: makeEndpointWith(`/api/data/houses/city/${search}`),
         method: 'get',
         dataType: 'json',
         cache: false,
     }).done((data) => {
+        // Renders cards with according filtes
         renderCards(data, null);
     }).fail(() => {
+        // If the query fails, display all the cards
         renderCards(null, null);
     });
 }
 
 $(document).ready(function () {
+
+    // Gradient around mouse position in the scroller
     $('#card-container').on('mousemove', function (event) {
+
+        // Get the x and y position relative to the scroller div
         const x = event.pageX - this.offsetLeft;
         const y = event.pageY - this.offsetTop + $('#scroller').scrollTop();
+
+        // Apply the gradient background centered on the mouse position
         $(this).css('background', `radial-gradient(ellipse 450pt 450pt at ${x}px ${y}px, #323232 0%, #242424 100%`);
     });
 
+    // Render the line under the "Sale" and "Rent" filters
     const selectorSale = $('#selector-sale');
     const selectorRent = $('#selector-rent');
     const selector = $('#selector');
@@ -144,14 +184,18 @@ $(document).ready(function () {
             renderCards(null, parseInt($(this).data('value')));
         });
 
+    // Calls the AJAX function to filter cards when pressing ENTER
     $("#search-field").on('keydown', function (event){
         if (event.which === 13) {
             searchQuery($(this).val());
         }
     });
+
+    // Calls the AJAX function to filter cards when clicking on the magnifying glass
     $("label[for='search-field']").on('mousedown', function() {
         searchQuery($("#search-field").val());
     });
 
+    // Defaults to "Sale" filter when first rendering
     selectorSale.trigger('click');
 });
