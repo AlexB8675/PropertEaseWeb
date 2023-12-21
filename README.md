@@ -1,7 +1,7 @@
 # PropertEaseWeb
 
 ## Project Proposal
-- [OneDrive Parthenope](https://studentiuniparthenope-my.sharepoint.com/:p:/g/personal/alexandr_benbaccar001_studenti_uniparthenope_it/Ee6KwVJelLJHin2qzNJS0aABSmvxKxIUtsIDnkvrNbuIlw?e=3dGPjz)
+- [OneDrive Parthenope](https://studentiuniparthenope-my.sharepoint.com/:p:/g/personal/alexandr_benbaccar001_studenti_uniparthenope_it/Edavrqbk98pHhYt6iivneegBkedgNNEckfzpn82c0q-KDg?e=Hrj34M)
 
 ## Running
 To build and run this project you need to install the [Docker Engine](https://docs.docker.com/get-docker/) and run the following commands
