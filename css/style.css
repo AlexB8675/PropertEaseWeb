@@ -140,7 +140,7 @@ a {
     }
 }
 
-input, button, label, select, textarea {
+input, button, label, select, textarea, a {
     resize: none;
     outline: none;
     border: none;
@@ -152,7 +152,7 @@ input, button, label, select, textarea {
     height: unset;
 }
 
-label {
+label, a {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

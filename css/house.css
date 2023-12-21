@@ -150,10 +150,11 @@
                     justify-items: left;
                     font-size: 20pt;
                     display: grid;
-                    grid-template-columns: 1fr 8fr;
+                    grid-template-columns: 1fr 5fr;
                     grid-column-gap: 10pt;
 
                     & > a {
+                        max-width: 100%;
                         text-align: center;
                         color: aliceblue;
                     }
