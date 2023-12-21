@@ -47,6 +47,12 @@ function registerPostApiEndpoint(app, database, info) {
     });
 }
 
+function registerDeleteApiEndpoint(app, database, info) {
+    app.delete(info.endpoint, (request, result) => {
+        handleRequest(request, result, info);
+    });
+}
+
 const database = new sqlite.Database('../main.sqlite', (error) => {
     if (error) {
         console.error(error.message);
@@ -70,6 +76,7 @@ registerGetApiEndpoint(app, database, {
         result.send(rows);
     }
 });
+
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/main',
     query: 'select * from House',
@@ -99,6 +106,7 @@ registerGetApiEndpoint(app, database, {
         result.send(newData);
     }
 });
+
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/types',
     query: 'select * from Type',
@@ -107,6 +115,7 @@ registerGetApiEndpoint(app, database, {
         result.send(rows);
     }
 });
+
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/id/:houseId',
     query: 'select * from House where id = ?',
@@ -119,6 +128,20 @@ registerGetApiEndpoint(app, database, {
         }
     }
 });
+
+registerDeleteApiEndpoint(app, database, {
+    endpoint: '/api/data/houses/id/:houseId',
+    query: `delete from House where id = ?`,
+    parameters: (request) => [request.params.houseId],
+    callback: (result, _, __) => {
+        result.send({});
+    },
+    error: (request, result, error) => {
+        console.error(error);
+        result.status(404).send({});
+    }
+});
+
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/city/:city',
     query: "select * from House",
@@ -182,50 +205,39 @@ registerPostApiEndpoint(app, database, {
 });
 
 registerPostApiEndpoint(app, database, {
-    endpoint: '/api/delete/house/id/:houseId',
-    query: `delete from House where id = ?`,
-    parameters: (request) => [request.params.houseId],
-    callback: (result, _, __) => {
-        result.send({});
-    },
-    error: (request, result, error) => {
-        console.error(error);
-        result.status(404).send({});
-    }
-});
-
-app.post('/api/data/tool/upload', (request, result) => {
-    console.log(request.body);
-    const { id, plan } = request.body;
-    if (!id) {
-        database.run(`insert into House (plan) values (?)`, JSON.stringify(plan), (error) => {
-            if (error) {
-                console.error(error);
-                result.status(500).send({});
-                return;
-            }
-            database.all('select max(id) as id from House', (error, rows) => {
+    endpoint: '/api/data/tool/upload',
+    callback: (request, result) => {
+        const { id, plan } = request.body;
+        if (!id) {
+            database.run(`insert into House (plan) values (?)`, JSON.stringify(plan), (error) => {
+                if (error) {
+                    console.error(error);
+                    result.status(500).send({});
+                    return;
+                }
+                database.all('select max(id) as id from House', (error, rows) => {
+                    if (error) {
+                        console.error(error);
+                        result.status(500).send({});
+                        return;
+                    }
+                    result.send({
+                        id: rows[0].id,
+                    });
+                });
+            });
+        } else {
+            database.run(`update House set plan = ? where id = ?`, JSON.stringify(plan), id, (error) => {
                 if (error) {
                     console.error(error);
                     result.status(500).send({});
                     return;
                 }
                 result.send({
-                    id: rows[0].id,
+                    id: id,
                 });
             });
-        });
-    } else {
-        database.run(`update House set plan = ? where id = ?`, JSON.stringify(plan), id, (error) => {
-            if (error) {
-                console.error(error);
-                result.status(500).send({});
-                return;
-            }
-            result.send({
-                id: id,
-            });
-        });
+        }
     }
 });
 

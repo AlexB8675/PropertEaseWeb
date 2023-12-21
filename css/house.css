@@ -24,7 +24,7 @@
     --grid-gap: 16pt;
 
     width: clamp(800pt, 100%, 1200pt);
-    padding: 32pt 150pt;
+    padding: 32pt 100pt;
     justify-self: center;
     display: grid;
     grid-gap: var(--grid-gap);
@@ -155,7 +155,7 @@
 
                     & > a {
                         max-width: 100%;
-                        text-align: center;
+                        text-align: left;
                         color: aliceblue;
                         overflow: hidden;
                         text-overflow: unset;

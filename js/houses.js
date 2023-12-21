@@ -79,8 +79,8 @@ async function initialize() {
                     .on('click', () => {
                         const houseId = getUrlParameters().get('id');
                         $.ajax({
-                            url: makeEndpointWith(`/api/delete/house/id/${houseId}`),
-                            method: 'post',
+                            url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
+                            method: 'delete',
                             cache: false,
                         }).done((_) => {
                             window.location.href = './index.html';
