@@ -15,6 +15,6 @@ docker run -dit --name propert-ease-container -p 8080:80 -p 13331:13331 propert-
 If the previous commands are successful you can now [open](http://localhost:8080) the web app.
 
 ## Developers
-Amore Gabriel 
-Ben Baccar Alexandr
-De Micco Carmine
+- Amore Gabriel | 0124002585
+- Ben Baccar Alexandr | 0124002586
+- De Micco Carmine | 0124002630
