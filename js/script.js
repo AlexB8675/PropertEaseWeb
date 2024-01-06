@@ -1,3 +1,4 @@
+// Utility Base Class to handle sessionStorage and localStorage
 class Storage {
     static set(x, key, value) {
         x.setItem(key, value);
@@ -28,6 +29,7 @@ class Storage {
     }
 }
 
+// Derived Class, handles sessionStorage
 class SessionStorage extends Storage {
     static set(key, value) {
         super.set(window.sessionStorage, key, value);
@@ -58,6 +60,7 @@ class SessionStorage extends Storage {
     }
 }
 
+// Derived Class, handles localStorage
 class LocalStorage extends Storage {
     static set(key, value) {
         super.set(window.localStorage, key, value);
@@ -88,11 +91,13 @@ class LocalStorage extends Storage {
     }
 }
 
+// Utility function to make an endpoint with the given URI
 function makeEndpointWith(uri) {
     const endpoint = 'http://127.0.0.1:13331';
     return `${endpoint}${uri}`;
 }
 
+// Utility function to convert a price to a currency string
 function makePriceAsCurrency(price) {
     return price.toLocaleString('en-US', {
         style: 'currency',
@@ -101,6 +106,8 @@ function makePriceAsCurrency(price) {
     });
 }
 
+// Utility function to allow easy signin/signup requests, user should
+// provide done/fail callbacks to handle the response
 async function makeLoginRequest(info, callbacks) {
     if (info.username === '' || info.password === '') {
         return;
@@ -120,9 +127,13 @@ async function makeLoginRequest(info, callbacks) {
     }));
 }
 
+// Maps each cellId to an image
 function imagesFromHousePlan(house) {
     const images = new Map();
-    for (const { cellId, imageId } of house.indices) {
+    for (const {
+        cellId,
+        imageId
+    } of house.indices) {
         images.set(cellId, house.images[imageId]);
     }
     return images;
@@ -161,6 +172,8 @@ $(document).ready(function () {
     const buttonContainer = $('#header-button-container');
     const signinButton = $('#header-button-container > i[class~="fa-user"]');
     const signoutButton = $('#header-button-container > i[class~="fa-sign-out"]');
+
+    // Displays button according to user permissions
     if (loggedUser) {
         signinButton.css({
             'display': 'none',
@@ -175,55 +188,59 @@ $(document).ready(function () {
         });
     }
 
+    // Display the login interface
     const loginContainer = $('#login');
     const blurContainer = $('.blur');
-    signinButton
-        .on('click', () => {
-            loginContainer
-                .css({
-                    'opacity': 1,
-                    'visibility': 'visible',
-                });
-            blurContainer
-                .css({
-                    'opacity': 1,
-                    'pointer-events': 'all',
-                })
-                .on('mousedown', function (event) {
-                    if (event.target !== this) {
-                        return;
-                    }
-                    loginContainer.css({
-                        'opacity': 0,
-                        'visibility': 'hidden',
-                    });
-                    blurContainer
-                        .css({
-                            'opacity': '0',
-                            'pointer-events': 'none',
-                        })
-                        .off('mousedown');
-                });
+    signinButton.on('click', () => {
+        loginContainer.css({
+            'opacity': 1,
+            'visibility': 'visible',
         });
+        blurContainer
+            .css({
+                'opacity': 1,
+                'pointer-events': 'all',
+            })
+            .on('mousedown', function (event) {
+                if (event.target !== this) {
+                    return;
+                }
+                loginContainer.css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                });
+                blurContainer
+                    .css({
+                        'opacity': '0',
+                        'pointer-events': 'none',
+                    })
+                    .off('mousedown');
+            });
+    });
 
     $('#close').on('mousedown', function (event) {
         blurContainer.trigger('mousedown');
     });
 
-    signoutButton
-        .on('click', () => {
-            SessionStorage.clear();
-            window.location.reload();
-        });
+    signoutButton.on('click', () => {
+        SessionStorage.clear();
+        window.location.reload();
+    });
+
+    // Avoid default form submission and page refresh
     $('#login-form').on('submit', (event) => {
         event.preventDefault();
     });
+
+    // Prevents default behaviour and logs in on ENTER key press
     $('#login-form > input').on('keydown', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             $('#login-button').trigger('click');
         }
     });
+
+    // Calls the AJAX makeLoginRequest function and displays outcome accordingly
     $('#login-button').on('click', async () => {
         const username = $('#login-username-input').val();
         const password = $('#login-password-input').val();
@@ -258,6 +275,7 @@ $(document).ready(function () {
             }
         });
     });
+
     $('#register-button').on('click', async () => {
         const username = $('#login-username-input').val();
         const password = $('#login-password-input').val();

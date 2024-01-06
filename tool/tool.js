@@ -1,3 +1,4 @@
+// Utility class to define the structure of a House Plan
 class HousePlan {
     constructor() {
         this.data = [];
@@ -45,12 +46,14 @@ $(document).ready(function () {
         // Calculate the total number of cells
         const totalCells = ROWS * COLS;
 
+        // Utility function to convert an [x, y] encoded coordinate to a flat index
         function getRowCol(index) {
             const row = Math.floor(index / COLS);
             const col = index % COLS;
             return { row, col };
         }
 
+        // Utility function to get the properties of a cell such as the color and its background image
         function getCellProperties(cellArray) {
             return cellArray.map(function () {
                 return {
@@ -61,6 +64,7 @@ $(document).ready(function () {
             }).get();
         }
 
+        // Utility function to check if two cell properties are equal
         function arePropertiesEqual(properties1, properties2) {
             return (
                 properties1.dataValue === properties2.dataValue &&
@@ -69,6 +73,7 @@ $(document).ready(function () {
             );
         }
 
+        // Allows the user to shift the cells using the arrow keys
         function shiftCells(direction) {
             // Create arrays of cell properties for the cells
             const cellProperties = getCellProperties(cells);
@@ -82,6 +87,7 @@ $(document).ready(function () {
                 let newRow = currentCell.row;
                 let newCol = currentCell.col;
 
+                // Get direction of the shift
                 switch (direction) {
                     case 'up':
                         newRow = (newRow + 1) % ROWS;
@@ -97,6 +103,7 @@ $(document).ready(function () {
                         break;
                 }
 
+                // Get target cells and properties
                 const newIndex = newRow * COLS + newCol;
                 const targetCells = $(cells[i]).add(previewCells[i]);
                 const targetProperties = cellProperties[newIndex];
@@ -142,6 +149,7 @@ $(document).ready(function () {
     const gridContainer = $('#grid-container');
     const previewCellContainer = $('#preview');
 
+    // Generate the main grid and preview grid
     for (let i = 0; i < ROWS * COLS; i++) {
         const cell = $('<div>').addClass('cell').attr('data-value', '0');
         gridContainer.append(cell);
@@ -151,13 +159,15 @@ $(document).ready(function () {
         previewCellContainer.append(cell);
     }
 
-    let cells = $('.cell')
+    // Prepare the various elements for usage later
+    const cells = $('.cell')
     const previewCells = $('.prev-cell');
-    let color_selector = $('#color-selector');
-    let data = 0
+    let currentDataValue = 0;
+    let colorSelector = $('#color-selector');
     let isLeftMousePressed = false;
     let isRightMousePressed = false;
-    let tools = [
+    // Prepare tools
+    const tools = [
         { value: "33", icon: "fa-border-all", color: 'black', specialBehavior: null, selected: false },  // Wall
         { value: "35", icon: "fa-door-closed", color: 'dimgray', specialBehavior: null, selected: false },  // Door
         { value: "32", icon: "fa-trowel-bricks", color: 'aliceblue', specialBehavior: null, selected: false }, // Window
@@ -190,7 +200,7 @@ $(document).ready(function () {
                     return $(this).css("background-color") === hoveredColor;
                 }).length;
                 roomName
-                    .append(`<div> sqm: ${squareCount / 4}<\div>`)
+                    .append(`<div> sqm: ${squareCount / 4}</div>`)
                     .show();
             } else {
                 // Hide the room name if the color is transparent
@@ -199,11 +209,13 @@ $(document).ready(function () {
         })
         .on('mouseover', changeCellColor(previewCells));
 
+    // Removes room name when mouse leaves the preview grid
     previewCellContainer.on('mouseleave', function () {
         previewCells.removeClass('hovered-cell');
         $('#room-name').hide();
     });
 
+    // Inserts the chosen value on the clicked cell
     cells.on('mousedown', function (event) {
         switch (event.which) {
             case 1:
@@ -214,7 +226,7 @@ $(document).ready(function () {
                 $("#selected-color")
                     .css('background-color', $(this).css('background-color'))
                     .attr('data-value', $(this).attr('data-value'));
-                data = $(this).data();
+                currentDataValue = $(this).data();
                 break;
             case 3:
                 isRightMousePressed = true;
@@ -222,6 +234,7 @@ $(document).ready(function () {
         }
     });
 
+    // Handles mouse events
     $(document).on('mouseup', function (event) {
         switch (event.which) {
             case 1:
@@ -236,14 +249,17 @@ $(document).ready(function () {
     });
 
     cells.on('mouseover mousedown', function () {
+        // Special behavior for the Fill Bucket tool and the Camera tool
         if (!tools[3].selected && !tools[4].selected) {
             if (isLeftMousePressed) {
+                // This adds the selected color or the chosen image to the cell
                 $(this)
-                    .css('background-color', getColor(data))
-                    .attr('data-value', data.value);
+                    .css('background-color', getColor(currentDataValue))
+                    .attr('data-value', currentDataValue.value);
                 $($('.prev-cell')[$(this).index()])
-                    .css('background-color', getColor(data));
+                    .css('background-color', getColor(currentDataValue));
             } else if (isRightMousePressed) {
+                // Otherwise, initialize the cell to its default state
                 $(this)
                     .css({
                         'background-color': 'transparent',
@@ -251,9 +267,11 @@ $(document).ready(function () {
                     })
                     .removeClass('picture-container')
                     .attr('data-value', 0);
+                // Initialize the equivalent's preview cell to its default state
                 $($('.prev-cell')[$(this).index()])
                     .css({ 'background-color': 'transparent', 'background-image': '' })
                     .removeClass('picture-container');
+                // Remove the image input if it exists
                 $('body')
                     .children(`input[data-id="${$(this).index() + 1}"]`)
                     .remove();
@@ -291,8 +309,9 @@ $(document).ready(function () {
         }
     }
 
-    color_selector.children().on('click', function () {
-        data = $(this).data();
+    // Handles the tool window
+    colorSelector.children().on('click', function () {
+        currentDataValue = $(this).data();
         resetToolWindow((tool) => {
             return tool.specialBehavior === null;
         });
@@ -319,16 +338,20 @@ $(document).ready(function () {
         // Change the color based on the index
         if (!tools[3].selected && !tools[4].selected) {
             selectedColor.css('background-color', tools[selectedIndex].color);
-            data = $(this).data();
+            currentDataValue = $(this).data();
         }
     });
 
+    // Loads the House Plan of the uploaded file
     $('#upload_button').on('change', function () {
         uploadPlan($(this)[0].files[0]);
     });
 
+    // Call for setup of all the form inputs and buttons
     setupHouseSubmitForm();
 
+    // This function fills the cells surrounding a given position [x, y] with the selected color
+    // until all cells have encountered a different color or the edge of the grid
     function fillBucket(x, y) {
         const stack = [{ x: x, y: y }];
         const cells = $(`.cell`);
@@ -360,6 +383,7 @@ $(document).ready(function () {
         }
     }
 
+    // If the tool is in edit mode (i.e: has an ID of the house to edit in its URL, get the file plan of the House and load it)
     if (shouldEdit()) {
         $.ajax({
             url: makeEndpointWith(`/api/data/houses/id/${getCurrentHouseId()}`),
@@ -376,7 +400,10 @@ $(document).ready(function () {
     }
 });
 
+// Gives handlers to the form inputs and buttons as well as requesting extra info from the server to fill <select>
+// elements where necessary
 function setupHouseSubmitForm() {
+    // Fill house types
     $.ajax({
         url: makeEndpointWith('/api/data/types'),
         method: 'get',
@@ -386,11 +413,13 @@ function setupHouseSubmitForm() {
             $('#house-form-house').append(`<option value="${each.name}">${each.name}</option>`);
         }
     });
+    // Handles the user clicking on the upload main image button
     $('#submit-house-main-image').on('click', function (event) {
         event.preventDefault();
         const input = makeButtonImageInput();
         input.trigger('click');
     });
+    // Handles submission of the form
     $('#submit-house-form').on('submit', async function (event) {
         event.preventDefault();
         if (!isDownloadReady()) {
@@ -416,6 +445,7 @@ function setupHouseSubmitForm() {
     });
 }
 
+// Utility function to make an input element for any given cell, with the relevant handlers already applied
 function makeImageInput(cell) {
     const body = $('body');
     const previousInput = body.find(`input[data-id="${cell.index() + 1}"]`);
@@ -427,6 +457,7 @@ function makeImageInput(cell) {
     cell.css('background-image', `url('camera.svg')`);
     // Create an input element
     const input = $('<input class="main-input-image" type="file" style="display: none">');
+    // Add default handler for selecting images
     input.on('change', function () {
         const previewCell = $($('.prev-cell')[cell.index()]);
         const file = this.files[0];
@@ -475,6 +506,7 @@ function makeImageInput(cell) {
     return input;
 }
 
+// Utility function to return the main button image input element with the relevant handlers already applied
 function makeButtonImageInput() {
     return $('<input class="main-input-image" type="file" accept="image/*" style="display: none">')
         .on('change', function () {
@@ -499,12 +531,16 @@ function makeButtonImageInput() {
         });
 }
 
+// Core function to generate the House Plan from the provided info
 async function makeHousePlanData() {
+    // Make a new house plan
     const result = new HousePlan();
+    // Inserts all the cell's values
     $('.cell')
         .each(function () {
             result.data.push(parseInt($(this).attr('data-value'), 10));
         });
+    // Inserts all the room's labels and associated cell values
     $('#room-labels label[data-value]')
         .each(function () {
             const value = $(this).attr('data-value');
@@ -518,10 +554,12 @@ async function makeHousePlanData() {
                 value: parseInt(value, 10),
             });
         });
+    // Inserts all the images and their associated cell values
     const images = new Map();
     $('body')
         .children('input.main-input-image')
         .each(function () {
+            // This allows to associate multiple cells to the same image without duplicating image data
             const id = parseInt($(this).attr('data-id'), 10);
             const file = this.files[0];
             if (images.has(file.name)) {
@@ -536,6 +574,7 @@ async function makeHousePlanData() {
                 });
             }
         });
+    // Inserts all the images and their associated cell IDs
     for (const [_, { file, indices }] of images.entries()) {
         const currentId = result.images.length;
         result.images.push({
@@ -567,6 +606,7 @@ async function makeHousePlanData() {
         }
         return value.val().trim();
     }
+    // Get all info from the form
     const formEntries = $('#submit-house-info').find('.entry');
     const labelInfo = formEntries.find('label');
     const inputInfo = formEntries.find('input, select');
@@ -582,6 +622,7 @@ async function makeHousePlanData() {
         result.info[label] = maybeParseInt($(inputInfo[i]));
     }
     result.info['description'] = $('#house-form-description').val().trim();
+    // Finally, return the House Plan as a JSON object
     return result.toJSON();
 }
 
@@ -607,6 +648,7 @@ function isDownloadReady() {
         alert("Define the house plan spaces first");
         return false;
     } else {
+        // Check if any of the rooms have been left empty
         let emptyInput = generated_rooms.find('input[type="text"]').filter(function () {
             return $(this).val().trim() === '';
         });
@@ -623,6 +665,7 @@ async function downloadPlan() {
     if (!isDownloadReady()) {
         return;
     }
+    // Download the House Plan as a JSON file
     const result = JSON.stringify(await makeHousePlanData());
     const blob = new Blob([result], { type: 'text/plain' });
     const element = document.createElement('a');
@@ -631,7 +674,9 @@ async function downloadPlan() {
     element.click();
 }
 
+// Utility function to clear the grid and reset all the form inputs and buttons
 function clearGrid() {
+    // First, clear the grid and the preview grid
     let cells = $('.cell')
     let previewCells = $('.prev-cell')
     cells.attr('data-value', 0);
@@ -640,9 +685,11 @@ function clearGrid() {
 
     previewCells.css('background-color', 'transparent');
     previewCells.css('background-image', '');
+    // Then, clear all the image inputs
     $('body')
         .find('input.main-input-image')
         .remove();
+    // Reset all form inputs and buttons
     const formEntries = $('#submit-house-info').find('.entry');
     const labelInfo = formEntries.find('label');
     const inputInfo = formEntries.find('input, select');
@@ -670,16 +717,22 @@ function clearGrid() {
     $('#room-labels').children('span').show();
 }
 
+// Core function to load a given House Plan
 function uploadPlan(file) {
     if (file) {
+        // Parsing a House Plan takes some time, show a loading screen to prevent visible pop-in of data
         showLoader();
+        // First, reset everything to its default state
         clearGrid();
+        // Then, read the house plan file
         const reader = new FileReader();
         reader.onload = function (e) {
+            // Assume the file is a valid House Plan JSON file
             const plan = JSON.parse(String(e.target.result));
             // grid generation
             const cells = $('.cell');
             const previewCells = $('.prev-cell');
+            // Fill all cells using the data-values in the plan
             for (let i = 0; i < plan.data.length; i++) {
                 const cell = $(cells[i]);
                 const previewCell = $(previewCells[i]);
@@ -687,32 +740,40 @@ function uploadPlan(file) {
                 cell.css('background-color', getColor(plan.data[i]));
                 previewCell.css('background-color', getColor(plan.data[i]));
             }
-            // room generation
+            // Generate all rooms and associate them with their respective cell values and labels
             generateRooms();
             for (const room of plan.rooms) {
                 const label = $(`#room-labels label[data-value="${room.value}"]`);
                 const input = label.closest('.room-label').find('input[type="text"]');
                 input.val(room.label);
             }
-            // image generation
+            // Generate all images and associate them with their respective cell IDs
             for (const { cellId, imageId } of plan.indices) {
                 const fileInfo = plan.images[imageId];
+                // Load base64
                 fetch(fileInfo.data)
                     .then((value) => {
+                        // Return image as blob to insert this into the files array of an input element
                         return value.blob();
                     })
                     .then((blob) => {
+                        // Create a new file
                         const file = new File([blob], fileInfo.name, {
                             type: fileInfo.type,
                             lastModified: fileInfo.lastModified
                         });
+                        // And add it to a data transfer object
                         const transfer = new DataTransfer();
                         transfer.items.add(file);
                         if (cellId > 0) {
                             const cell = $(cells[cellId - 1]);
+                            // Then create an input element as if the user was clicking on the cell with the
+                            // camera upload tool
                             const input = makeImageInput(cell);
+                            // Associate the image file to the input element
                             const inputElement = input[0];
                             inputElement.files = transfer.files;
+                            // Trigger the default handler added by `makeImageInput` to insert the image into the cell
                             input.trigger('change');
                         } else if (cellId === 0) {
                             const input = makeButtonImageInput();
@@ -732,7 +793,7 @@ function uploadPlan(file) {
                         }
                     });
             }
-            // info generation
+            // Fill all form inputs from the house plan's data
             const formEntries = $('#submit-house-info').find('.entry');
             const labelInfo = formEntries.find('label');
             const inputInfo = formEntries.find('input, select');
@@ -771,6 +832,7 @@ function uploadPlan(file) {
             }
             $('#house-form-description').val(plan.info['description']);
             $('#upload_button').val('');
+            // Finally hide the loading screen
             hideLoader();
         };
         reader.readAsText(file);
@@ -779,6 +841,7 @@ function uploadPlan(file) {
     }
 }
 
+// Utility function to generate all the rooms given the current grid
 function generateRooms() {
     let roomLabels = $('#room-labels');
     roomLabels.children('span').hide();

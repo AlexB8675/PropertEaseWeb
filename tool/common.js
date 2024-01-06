@@ -8,6 +8,7 @@ function isRoom(color) {
            color !== 'rgb(0, 0, 0)';           // Wall
 }
 
+// Prevent the function to be calle dif the hovered room is the same
 function changeCellColor(previewCells) {
     let lastColor = null;
     return function () {
