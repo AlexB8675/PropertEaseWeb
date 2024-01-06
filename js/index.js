@@ -1,4 +1,4 @@
-function renderCards(ids, contract){
+function renderCards(ids, contract) {
     // Hide the page with a loader until all the functions are run
     showLoader();
 
@@ -126,7 +126,7 @@ function renderCards(ids, contract){
 }
 
 // Sends AJAX requetso to query the databes according to the searchbar content
-function searchQuery(search){
+function searchQuery(search) {
     $.ajax({
         url: makeEndpointWith(`/api/data/houses/city/${search}`),
         method: 'get',
@@ -185,14 +185,14 @@ $(document).ready(function () {
         });
 
     // Calls the AJAX function to filter cards when pressing ENTER
-    $("#search-field").on('keydown', function (event){
+    $("#search-field").on('keydown', function (event) {
         if (event.which === 13) {
             searchQuery($(this).val());
         }
     });
 
     // Calls the AJAX function to filter cards when clicking on the magnifying glass
-    $("label[for='search-field']").on('mousedown', function() {
+    $("label[for='search-field']").on('mousedown', function () {
         searchQuery($("#search-field").val());
     });
 

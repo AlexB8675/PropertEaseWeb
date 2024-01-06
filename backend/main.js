@@ -1,8 +1,8 @@
-const express = require('express');      // To implement a web server
-const bodyParser = require('body-parser');         // To parse multipart form data
-const cors = require('cors'); // To allow cross-origin requests
-const sqlite = require('sqlite3').verbose();        // To implement a database
-const crypto = require('crypto');                        // To implement password hashing
+const express = require('express');             // To implement a web server
+const bodyParser = require('body-parser');      // To parse multipart form data
+const cors = require('cors');                   // To allow cross-origin requests
+const sqlite = require('sqlite3').verbose();    // To implement a database
+const crypto = require('crypto');               // To implement password hashing
 
 const app = express();
 
@@ -94,7 +94,10 @@ registerGetApiEndpoint(app, database, {
                     return cellId === 0;
                 });
             const imageIndex = indices.length > 0 ? indices[0].imageId : null;
-            const images = imageIndex !== null ? [current.images[imageIndex]] : [];
+            const images = [];
+            if (imageIndex !== null) {
+                images[imageIndex] = current.images[imageIndex];
+            }
             newData.push({
                 id: id,
                 plan: {
