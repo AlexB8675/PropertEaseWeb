@@ -1,3 +1,4 @@
+// Utility Base Class to handle sessionStorage and localStorage
 class Storage {
     static set(x, key, value) {
         x.setItem(key, value);
@@ -28,6 +29,7 @@ class Storage {
     }
 }
 
+// Derived Class, handles sessionStorage
 class SessionStorage extends Storage {
     static set(key, value) {
         super.set(window.sessionStorage, key, value);
@@ -58,6 +60,7 @@ class SessionStorage extends Storage {
     }
 }
 
+// Derived Class, handles localStorage
 class LocalStorage extends Storage {
     static set(key, value) {
         super.set(window.localStorage, key, value);
@@ -88,12 +91,13 @@ class LocalStorage extends Storage {
     }
 }
 
-// Appends endpoint to URI
+// Utility function to make an endpoint with the given URI
 function makeEndpointWith(uri) {
     const endpoint = 'http://127.0.0.1:13331';
     return `${endpoint}${uri}`;
 }
 
+// Utility function to convert a price to a currency string
 function makePriceAsCurrency(price) {
     return price.toLocaleString('en-US', {
         style: 'currency',
@@ -102,7 +106,8 @@ function makePriceAsCurrency(price) {
     });
 }
 
-
+// Utility function to allow easy signin/signup requests, user should
+// provide done/fail callbacks to handle the response
 async function makeLoginRequest(info, callbacks) {
     if (info.username === '' || info.password === '') {
         return;

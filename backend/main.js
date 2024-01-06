@@ -13,11 +13,17 @@ function makeSha512Hash(string) {
     return data.digest('hex');
 }
 
+// Utility function to clean a string, trim it and get it ready for comparison
 function cleanString(inputString) {
     return inputString.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-// Utility function to handle web requests and eventually invoke dbms
+// Utility function to handle Web Requests and potentially invoke a Database Query
+// The info object should have the following properties:
+// - endpoint: the endpoint to listen to
+// - query: the query to execute (optional)
+// - parameters: a function that returns the parameters for the query (optional)
+// - callback: a function that handles the result of the query
 function handleRequest(request, result, info) {
     console.log("request received: \"", request ,"\",");
     if (info.query) {
@@ -37,31 +43,37 @@ function handleRequest(request, result, info) {
     }
 }
 
+// Utility function to register a GET endpoint
 function registerGetApiEndpoint(app, database, info) {
     app.get(info.endpoint, (request, result) => {
         handleRequest(request, result, info);
     });
 }
 
+// Utility function to register a POST endpoint
 function registerPostApiEndpoint(app, database, info) {
     app.post(info.endpoint, (request, result) => {
         handleRequest(request, result, info);
     });
 }
 
+// Utility function to register a DELETE endpoint
 function registerDeleteApiEndpoint(app, database, info) {
     app.delete(info.endpoint, (request, result) => {
         handleRequest(request, result, info);
     });
 }
 
+// Connect to the database
 const database = new sqlite.Database('../main.sqlite', (error) => {
     if (error) {
         console.error(error.message);
     }
     console.log('Connected to the main database.');
 });
+// Use CORS to allow cross-origin requests
 app.use(cors());
+// Use body-parser to parse JSON and urlencoded data
 app.use(bodyParser.json({
     limit: '256mb',
 }));
@@ -70,6 +82,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// Retrieves all the houses from the main database
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses',
     query: 'select * from House',
@@ -86,6 +99,7 @@ registerGetApiEndpoint(app, database, {
     parameters: _ => [],
     callback: (result, _, rows) => {
         let newData = [];
+        // For each house, retrieve the main info and the cover image
         for (const { id, plan } of rows) {
             const current = JSON.parse(plan);
             const indices = current
@@ -93,11 +107,14 @@ registerGetApiEndpoint(app, database, {
                 .filter(({ cellId, _ }) => {
                     return cellId === 0;
                 });
+            // If the main image exists, get its index
             const imageIndex = indices.length > 0 ? indices[0].imageId : null;
             const images = [];
             if (imageIndex !== null) {
+                // Again if the main image exists, store it at its index
                 images[imageIndex] = current.images[imageIndex];
             }
+            // Add the slimmed down house info to the result
             newData.push({
                 id: id,
                 plan: {
@@ -109,10 +126,12 @@ registerGetApiEndpoint(app, database, {
                 }
             });
         }
+        // Send the data
         result.send(newData);
     }
 });
 
+// Retrieves the main house types from the main database
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/types',
     query: 'select * from Type',
@@ -122,6 +141,7 @@ registerGetApiEndpoint(app, database, {
     }
 });
 
+// Retrieves a house given its id
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/id/:houseId',
     query: 'select * from House where id = ?',
@@ -135,6 +155,7 @@ registerGetApiEndpoint(app, database, {
     }
 });
 
+// Deletes a house given its id
 registerDeleteApiEndpoint(app, database, {
     endpoint: '/api/data/houses/id/:houseId',
     query: `delete from House where id = ?`,
@@ -148,6 +169,7 @@ registerDeleteApiEndpoint(app, database, {
     }
 });
 
+// Retrieves houses given their City
 registerGetApiEndpoint(app, database, {
     endpoint: '/api/data/houses/city/:city',
     query: "select * from House",
@@ -169,6 +191,7 @@ registerGetApiEndpoint(app, database, {
     }
 });
 
+// Allows the user to sign in, returns permissions if successful, 401 Unauthorized otherwise
 registerPostApiEndpoint(app, database, {
     endpoint: '/api/login/signin',
     query: `select username, permissions from User where username = ? and password = ?`,
@@ -190,6 +213,7 @@ registerPostApiEndpoint(app, database, {
     }
 });
 
+// Allows the user to sign up, returns 401 Unauthorized if the username is taken
 registerPostApiEndpoint(app, database, {
     endpoint: '/api/login/signup',
     query: `insert into User values (?, ?, 0)`,
@@ -210,10 +234,15 @@ registerPostApiEndpoint(app, database, {
     }
 });
 
+// Allows upload of house plans to the main database
 registerPostApiEndpoint(app, database, {
     endpoint: '/api/data/tool/upload',
     callback: (request, result) => {
         const { id, plan } = request.body;
+        // Functionality is two-fold, if an ID is provided in the request, then this shall be treated
+        // as a PATCH request, to edit a House. Otherwise it shall be treated as a POST request requesting to
+        // create a new House.
+        // TODO: this is not idiomatic and should be changed
         if (!id) {
             database.run(`insert into House (plan) values (?)`, JSON.stringify(plan), (error) => {
                 if (error) {
@@ -221,12 +250,14 @@ registerPostApiEndpoint(app, database, {
                     result.status(500).send({});
                     return;
                 }
+                // Selects ID of the inserted house
                 database.all('select max(id) as id from House', (error, rows) => {
                     if (error) {
                         console.error(error);
                         result.status(500).send({});
                         return;
                     }
+                    // Send the inserted house's ID
                     result.send({
                         id: rows[0].id,
                     });

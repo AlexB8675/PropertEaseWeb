@@ -40,8 +40,8 @@ const HOUSE_PLAN_CELL_COLORS = [
     'dimgray',
 ];
 
-async function initialize() {   // Async was used to ensure Google Maps APIs load
-
+// Async was used to ensure Google Maps APIs load first
+async function initialize() {
     // Gradient around mouse position in the scroller
     $('#scroller').on('mousemove', function (e) {
         // Get the x and y position relative to the scroller div
