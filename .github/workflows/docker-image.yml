@@ -16,10 +16,19 @@ jobs:
       run: docker build -t propert-ease:1.0 . && docker run -dit --name propert-ease-container -p 8080:80 -p 13331:13331 propert-ease:1.0
 
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
     steps:
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+    - name: Upload Artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: '.'
     - name: Deploy GitHub Pages site
       uses: actions/deploy-pages@v4.0.3
           
