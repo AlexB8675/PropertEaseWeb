@@ -425,7 +425,15 @@ function setupHouseSubmitForm() {
         if (!isDownloadReady()) {
             return;
         }
-
+        if (shouldEdit()) {
+            if (!confirm('Confirm submission of the changes to this house plan?')) {
+                return;
+            }
+        } else {
+            if (!confirm('Confirm submission of new house plan?')) {
+                return;
+            }
+        }
         const result = await makeHousePlanData();
         $.ajax({
             url: makeEndpointWith('/api/data/tool/upload'),

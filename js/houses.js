@@ -115,6 +115,9 @@ async function initialize() {
                 // Append a delete icon with a click event that sends an AJAX request to delete the house
                 .append(
                     $('<i class="fa fa-trash" aria-hidden="true">').on('click', () => {
+                        if (!confirm('Are you sure you want to delete this house plan? (This is permanent action!)')) {
+                            return;
+                        }
                         // Send an AJAX request to the server to delete the house with the specified 'id'
                         $.ajax({
                             url: makeEndpointWith(`/api/data/houses/id/${houseId}`),
