@@ -42,7 +42,7 @@ function renderCards(ids, contract) {
 
             // If no house contract is specified, defaults to "sale"
             if (contract === null) {
-                contract = house.info.contract;
+                contract = $('#selector-sale').data('value');
             }
 
             // If the house contract is filtered, only render accordingly
